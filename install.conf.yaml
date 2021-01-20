@@ -1,7 +1,15 @@
+- defaults:
+    link:
+      relink: true
+
 - clean: ['~']
 
 - link:
-    ~/.gitconfig: gitconfig
-    ~/.zshrc: zshrc
+    ~/.gitconfig: 
+    ~/.zshrc: 
+    ~/.zshenv:
 
-
+- shell:
+  - command: ./setup-homebrew.sh
+    stdout: true
+    stderr: true
