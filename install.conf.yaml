@@ -4,17 +4,21 @@
 
 - clean: ['~']
 
+- create:
+    - ~/.config/
+    - ~/.vim/
+
+- shell:
+  - [sh pre-install.sh, Running pre installation script]
+  - command: brew bundle --verbose
+    stdin: true
+    stdout: true
+    description: Installing Homebrew formulas from Brewfile
+
 - link:
     ~/.gitconfig: git/gitconfig
     ~/.zshrc: zsh/zshrc
     ~/.zshenv: zsh/zshenv
     ~/.config/starship.toml: starship/starship.toml
 
-- create:
-    - ~/.config/
-    - ~/.vim/
 
-- shell:
-  - command: ./setup-homebrew.sh
-    stdout: true
-    stderr: true
