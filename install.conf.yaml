@@ -20,5 +20,8 @@
     ~/.zshrc: zsh/zshrc
     ~/.zshenv: zsh/zshenv
     ~/.config/starship.toml: starship/starship.toml
+    ~/.config/karabiner/karabiner.json: 
+      path: karabiner/karabiner.json
+      force: true
 
 
