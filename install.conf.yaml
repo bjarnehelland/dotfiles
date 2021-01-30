@@ -5,9 +5,14 @@
 - clean: ['~']
 
 - link:
-    ~/.gitconfig: 
-    ~/.zshrc: 
-    ~/.zshenv:
+    ~/.gitconfig: git/gitconfig
+    ~/.zshrc: zsh/zshrc
+    ~/.zshenv: zsh/zshenv
+    ~/.config/starship.toml: starship/starship.toml
+
+- create:
+    - ~/.config/
+    - ~/.vim/
 
 - shell:
   - command: ./setup-homebrew.sh

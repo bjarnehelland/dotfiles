@@ -1,16 +1,14 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-echo "\n~~~ Starting Hombrew Setup ~~~\n"
+set -e
 
-# This needs to happen earlier
-# xcode-select --install
-
-
-if exists brew; then
-  echo "brew exists, skipping install"
-else
-  echo "brew doesn't exist, continuing with install"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+if ! command -v brew >/dev/null; then
+  echo "==> Installing Homebrew ..."
+  if [[ "$OSTYPE" = darwin* ]]; then
+    curl -fsS 'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+  else
+    curl -fsSL 'https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh' | sh -c
+  fi
 fi
 
 
@@ -18,4 +16,4 @@ fi
 # It's currently exported in zshrc:
 # export HOMEBREW_CASK_OPTS="--no-quarantine"
 # https://github.com/Homebrew/homebrew-bundle/issues/474
-brew bundle --verbose
+brew bundle --file homebrew/Brewfile --verbose
