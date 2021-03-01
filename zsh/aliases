@@ -24,6 +24,9 @@ alias j="jobs"
 alias v="vim"
 alias o="open"
 alias oo="open ."
+alias ys="yarn start"
+alias yd="yarn dev"
+alias y="yarn"
 
 # List only directories
 alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
