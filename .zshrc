@@ -44,7 +44,7 @@ export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
 export PATH=~/.local/bin:$PATH
-export PATH=~/.dotfiles/bin:$PATH
+export PATH=~/.config/bin:$PATH
 
 # bun completions
 [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
