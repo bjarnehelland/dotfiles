@@ -11,6 +11,7 @@ alias nd='npm run dev'
 alias tk='tmux kill-server'
 
 alias v="nvim +GoToFile"
+alias vim="nvim"
 alias :GoToFile="nvim +GoToFile"
 
 alias ..="cd .."
