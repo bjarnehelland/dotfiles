@@ -3,12 +3,33 @@ return {
     name = "catppuccin",
     priority = 1000,
     config = function()
-        -- Load the colorscheme here.
-        -- Like many other themes, this one has different styles, and you could load
-        -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+
+        require("catppuccin").setup({
+            integrations = {
+                cmp = true,
+                gitsigns = true,
+                harpoon = true,
+                illuminate = true,
+                indent_blankline = {
+                    enabled = false,
+                    scope_color = "sapphire",
+                    colored_indent_levels = false
+                },
+                mason = true,
+                native_lsp = {
+                    enabled = true
+                },
+                notify = true,
+                nvimtree = true,
+                neotree = true,
+                symbols_outline = true,
+                telescope = true,
+                treesitter = true,
+                treesitter_context = true
+            }
+        })
+
         vim.cmd.colorscheme("catppuccin-mocha")
 
-        -- You can configure highlights by doing something like
-        -- vim.cmd.hi("Comment gui=none")
     end
 }
