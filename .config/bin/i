@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check if the script is running within a tmux session
+if [[ -n "$TMUX" ]]; then
+	current_window_name=$(tmux display-message -p '#W')
+	tmux rename-window '🤖'
+fi
+
+if [ -f package-lock.json ]; then
+	echo 'npm install'
+	npm install
+elif [ -f yarn.lock ]; then
+	echo 'yarn install'
+	yarn install
+elif [ -f pnpm-lock.yaml ]; then
+	echo 'pnpm install'
+	pnpm install
+elif [ -f bun.lockb ]; then
+	echo 'bun install'
+	bun install
+else
+	echo 'Node package not detected'
+fi
+
+# If it's run inside a tmux session, set the window name back to the original
+if [[ -n "$TMUX" ]]; then
+	tmux rename-window "$current_window_name"
+fi
