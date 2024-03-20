@@ -3,6 +3,11 @@ alias s='sesh connect $(sesh list | fzf)'
 alias k=kubectl
 alias c=clear
 
+alias gs='git status'
+alias gpp='git pull --prune'
+alias gp='git pull'
+alias gpush='git push'
+
 alias ni='npm install'
 alias ns='npm start'
 alias nb='npm run build'
