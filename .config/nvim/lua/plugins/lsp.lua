@@ -1,198 +1,113 @@
-return {{
-    "neovim/nvim-lspconfig",
-    event = {"BufReadPost"},
-    cmd = {"LspInfo", "LspInstall", "LspUninstall", "Mason"},
-    dependencies = { -- Plugin(s) and UI to automatically install LSPs to stdpath
-    "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", "WhoIsSethDaniel/mason-tool-installer.nvim",
-
-    -- Install lsp autocompletions
-    "hrsh7th/cmp-nvim-lsp", -- Progress/Status update for LSP
-    {
-        "j-hui/fidget.nvim",
-        opts = {}
-    }},
-    config = function()
-        local map_lsp_keybinds = require("user.keymaps").map_lsp_keybinds -- Has to load keymaps before pluginslsp
-
-        -- Default handlers for LSP
-        local default_handlers = {
-            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-                border = "rounded"
-            }),
-            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-                border = "rounded"
-            })
-        }
-
-        -- Function to run when neovim connects to a Lsp client
-        ---@diagnostic disable-next-line: unused-local
-        local on_attach = function(_client, buffer_number)
-            -- Pass the current buffer to map lsp keybinds
-            map_lsp_keybinds(buffer_number)
-        end
-
-        -- LSP servers and clients are able to communicate to each other what features they support.
-        --  By default, Neovim doesn't support everything that is in the LSP Specification.
-        --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-        --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-
-        -- LSP servers to install (see list here: https://github.com/williamboman/mason-lspconfig.nvim#available-lsp-servers )
-        --  Add any additional override configuration in the following tables. Available keys are:
-        --  - cmd (table): Override the default command used to start the server
-        --  - filetypes (table): Override the default list of associated filetypes for the server
-        --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-        --  - settings (table): Override the default settings passed when initializing the server.
-        --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-        local servers = {
-            -- LSP Servers
-            bashls = {},
-            cssls = {},
-            gleam = {},
-            eslint = {},
-            html = {},
-            jsonls = {},
-            lua_ls = {
-                settings = {
-                    Lua = {
-                        runtime = {
-                            version = "LuaJIT"
-                        },
-                        workspace = {
-                            checkThirdParty = false,
-                            -- Tells lua_ls where to find all the Lua files that you have loaded
-                            -- for your neovim configuration.
-                            library = {"${3rd}/luv/library", unpack(vim.api.nvim_get_runtime_file("", true))}
-                        },
-                        telemetry = {
-                            enabled = false
-                        }
-                    }
-                }
-            },
-            marksman = {},
-            ocamllsp = {},
-            nil_ls = {},
-            pyright = {},
-            sqlls = {},
-            tailwindcss = {},
-            tsserver = {},
-            yamlls = {},
-            denols = {}
-        }
-
-        local formatters = {
-            prettierd = {},
-            stylua = {}
-        }
-
-        local manually_installed_servers = {"ocamllsp", "gleam"}
-
-        local mason_tools_to_install = vim.tbl_keys(vim.tbl_deep_extend("force", {}, servers, formatters))
-
-        local ensure_installed = vim.tbl_filter(function(name)
-            return not vim.tbl_contains(manually_installed_servers, name)
-        end, mason_tools_to_install)
-
-        require("mason-tool-installer").setup({
-            auto_update = true,
-            run_on_start = true,
-            start_delay = 3000,
-            debounce_hours = 12,
-            ensure_installed = ensure_installed
-        })
-
-        -- Iterate over our servers and set them up
-        for name, config in pairs(servers) do
-            require("lspconfig")[name].setup({
-                capabilities = capabilities,
-                filetypes = config.filetypes,
-                handlers = vim.tbl_deep_extend("force", {}, default_handlers, config.handlers or {}),
-                on_attach = on_attach,
-                settings = config.settings
-            })
-        end
-
-        -- Setup mason so it can manage 3rd party LSP servers
-        require("mason").setup({
-            ui = {
-                border = "rounded"
-            }
-        })
-
-        require("mason-lspconfig").setup()
-
-        -- Configure borderd for LspInfo ui
-        require("lspconfig.ui.windows").default_options.border = "rounded"
-
-        -- Configure diagnostics border
-        vim.diagnostic.config({
-            float = {
-                border = "rounded"
-            }
-        })
-
-        function get_config(server)
-            local configs = require("lspconfig.configs")
-            return rawget(configs, server)
-        end
-
-        function disable(server, cond)
-            local util = require("lspconfig.util")
-            local def = get_config(server)
-            ---@diagnostic disable-next-line: undefined-field
-            def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config,
-                function(config, root_dir)
-                    if cond(root_dir, config) then
-                        config.enabled = false
-                    end
-                end)
-        end
-
-        if get_config("denols") and get_config("tsserver") then
-            local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-            disable("tsserver", is_deno)
-            disable("denols", function(root_dir)
-                return not is_deno(root_dir)
-            end)
-        end
-
-    end
-}, {
-    "stevearc/conform.nvim",
-    event = {"BufWritePre"},
-    cmd = {"ConformInfo"},
-    keys = {{
-        -- Customize or remove this keymap to your liking
-        "<leader>f",
-        function()
-            require("conform").format({
-                async = true,
-                lsp_fallback = true
-            })
-        end,
-        mode = "",
-        desc = "Format buffer"
-    }},
-    -- Everything in opts will be passed to setup()
-    opts = {
-        -- Define your formatters
-        formatters_by_ft = {
-            javascript = {{"prettierd", "prettier"}},
-            typescript = {{"prettierd", "prettier"}},
-            typescriptreact = {{"prettierd", "prettier"}},
-            lua = {"stylua"}
-        },
-        -- Set up format-on-save
-        format_on_save = {
-            timeout_ms = 500,
-            lsp_fallback = true
-        }
-
-    },
+return {
+  {
+    "VonHeikemen/lsp-zero.nvim",
+    branch = "v3.x",
+    lazy = true,
+    config = false,
     init = function()
-        -- If you want the formatexpr, here is the place to set it
-        vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-    end
-}}
+      -- Disable automatic setup, we are doing it manually
+      vim.g.lsp_zero_extend_cmp = 0
+      vim.g.lsp_zero_extend_lspconfig = 0
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    lazy = false,
+    config = true,
+  },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = {
+      { "L3MON4D3/LuaSnip" },
+    },
+    config = function()
+      -- Here is where you configure the autocompletion settings.
+      local lsp_zero = require("lsp-zero")
+      lsp_zero.extend_cmp()
+
+      -- And you can configure cmp even more, if you want to.
+      local cmp = require("cmp")
+      local cmp_action = lsp_zero.cmp_action()
+
+      cmp.setup({
+        sources = {
+          { name = "path" },
+          { name = "copilot" },
+          { name = "nvim_lsp" },
+          { name = "luasnip", keyword_length = 2 },
+          { name = "buffer", keyword_length = 3 },
+        },
+        formatting = lsp_zero.cmp_format({ details = true }),
+        mapping = cmp.mapping.preset.insert({
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-d>"] = cmp.mapping.scroll_docs(4),
+          ["<C-f>"] = cmp_action.luasnip_jump_forward(),
+          ["<C-b>"] = cmp_action.luasnip_jump_backward(),
+        }),
+      })
+    end,
+  },
+
+  -- LSP
+  {
+    "neovim/nvim-lspconfig",
+    cmd = { "LspInfo", "LspInstall", "LspStart" },
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      { "hrsh7th/cmp-nvim-lsp" },
+      { "williamboman/mason-lspconfig.nvim" },
+    },
+    config = function()
+      -- This is where all the LSP shenanigans will live
+      local lsp_zero = require("lsp-zero")
+      lsp_zero.extend_lspconfig()
+
+      --- if you want to know more about lsp-zero and mason.nvim
+      --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
+      lsp_zero.on_attach(function(client, bufnr)
+        -- see :help lsp-zero-keybindings
+        -- to learn the available actions
+        lsp_zero.default_keymaps({ buffer = bufnr, preserve_mappings = false })
+        vim.keymap.set(
+          "n",
+          "gr",
+          "<cmd>Telescope lsp_references<cr>",
+          { buffer = bufnr, desc = "Lists all the references" }
+        )
+
+        vim.keymap.set("n", "<leader>ca", function()
+          vim.lsp.buf.code_action()
+        end, { buffer = bufnr, desc = "Code actions" })
+      end)
+
+      lsp_zero.set_sign_icons({
+        error = "✘",
+        warn = "▲",
+        hint = "⚑",
+        info = "»",
+      })
+
+      require("mason-lspconfig").setup({
+        ensure_installed = { "tsserver", "denols", "yamlls" },
+        handlers = {
+          lsp_zero.default_setup,
+          lua_ls = function()
+            -- (Optional) Configure lua language server for neovim
+            local lua_opts = lsp_zero.nvim_lua_ls()
+            require("lspconfig").lua_ls.setup(lua_opts)
+          end,
+          tsserver = function()
+            require("lspconfig").tsserver.setup({
+              single_file_support = false,
+              root_dir = require("lspconfig.util").root_pattern("package.json"),
+            })
+          end,
+        },
+      })
+    end,
+  },
+}
