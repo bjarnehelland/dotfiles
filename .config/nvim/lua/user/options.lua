@@ -53,7 +53,7 @@ vim.opt.hlsearch = true
 vim.opt.wrap = false
 
 -- Set completeopt to have a better completion experience
-vim.opt.completeopt = {"menuone", "noselect"}
+vim.opt.completeopt = { "menuone", "noselect" }
 
 -- Enable 24-bit color
 vim.opt.termguicolors = true
@@ -75,3 +75,5 @@ vim.opt.scrolloff = 8
 -- Place a column line
 vim.opt.colorcolumn = "80"
 
+-- turn off swapfile
+vim.opt.swapfile = false
