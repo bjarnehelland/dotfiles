@@ -47,7 +47,7 @@ return { -- Highlight, edit, and navigate code
       },
     })
     -- enable nvim-ts-context-commentstring plugin for commenting tsx and jsx
-    require("ts_context_commentstring").setup({})
+    -- require("ts_context_commentstring").setup({})
 
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:

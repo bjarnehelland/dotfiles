@@ -88,6 +88,7 @@ return {
     lspconfig["denols"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
+      root_dir = require("lspconfig.util").root_pattern("deno.json"),
     })
 
     -- configure css server

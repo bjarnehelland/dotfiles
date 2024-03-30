@@ -2,7 +2,13 @@ return { -- Fuzzy Finder (files, lsp, etc)
   "nvim-telescope/telescope.nvim",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "mollerhoj/telescope-recent-files.nvim",
+    {
+      "prochri/telescope-all-recent.nvim",
+      dependencies = {
+        "kkharji/sqlite.lua",
+      },
+      opts = {},
+    },
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     "nvim-tree/nvim-web-devicons",
   },
@@ -12,6 +18,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
     telescope.setup({
       defaults = {
+        file_ignore_patterns = { ".git/", "node_modules" },
         layout_config = {
           prompt_position = "top",
         },
@@ -25,7 +32,21 @@ return { -- Fuzzy Finder (files, lsp, etc)
             ["<C-k>"] = actions.move_selection_previous, -- move to prev result
             ["<C-j>"] = actions.move_selection_next, -- move to next result
             ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+            ["<c-d>"] = actions.delete_buffer,
           },
+        },
+        vimgrep_arguments = {
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--hidden",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+          -- "--ignore-file",
+          -- ".gitignore",
+          "--trim",
         },
       },
       pickers = {
@@ -44,7 +65,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
         },
         find_files = {
           prompt_prefix = " ",
-          -- find_command = { "fd", "-H" },
         },
         live_grep = {
           prompt_prefix = "󰱽 ",
@@ -56,14 +76,13 @@ return { -- Fuzzy Finder (files, lsp, etc)
     })
 
     telescope.load_extension("fzf")
-    telescope.load_extension("recent-files")
 
     -- set keymaps
     local keymap = vim.keymap -- for conciseness
 
-    keymap.set("n", "<leader>ff", function()
-      require("telescope").extensions["recent-files"].recent_files({})
-    end, { desc = "Fuzzy find files in cwd" })
+    keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
+    keymap.set("n", "<leader>fg", "<cmd>Telescope git_files<cr>", { desc = "Fuzzy find git files" })
+    keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "List all buffers" })
     keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
     keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
     keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
