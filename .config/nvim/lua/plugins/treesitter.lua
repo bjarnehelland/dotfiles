@@ -26,6 +26,13 @@ return { -- Highlight, edit, and navigate code
       },
       -- ensure these language parsers are installed
       ensure_installed = {
+        "c",
+        "lua",
+        "vim",
+        "vimdoc",
+        "query",
+        "vim",
+        "lua",
         "json",
         "javascript",
         "typescript",
@@ -39,11 +46,8 @@ return { -- Highlight, edit, and navigate code
         "svelte",
         "graphql",
         "bash",
-        "lua",
-        "vim",
         "dockerfile",
         "gitignore",
-        "query",
       },
     })
     -- enable nvim-ts-context-commentstring plugin for commenting tsx and jsx

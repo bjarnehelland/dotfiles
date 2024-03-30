@@ -1,5 +1,6 @@
 return { -- Fuzzy Finder (files, lsp, etc)
   "nvim-telescope/telescope.nvim",
+  lazy = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
     {
@@ -76,22 +77,16 @@ return { -- Fuzzy Finder (files, lsp, etc)
     })
 
     telescope.load_extension("fzf")
-
-    -- set keymaps
-    local keymap = vim.keymap -- for conciseness
-
-    keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
-    keymap.set("n", "<leader>fg", "<cmd>Telescope git_files<cr>", { desc = "Fuzzy find git files" })
-    keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "List all buffers" })
-    keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-    keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
-    keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
-
-    -- See `:help telescope.builtin`
-    -- local builtin = require("telescope.builtin")
-    -- vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-    -- vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
-    -- vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
-    -- vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
   end,
+  keys = {
+    { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+    { "<leader>fg", "<cmd>Telescope git_files<cr>", desc = "Git files" },
+    { "<leader>fz", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+    { "<leader>fs", "<cmd>Telescope grep_string<cr>", desc = "Grep string" },
+    { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old files" },
+    { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+    { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
+    { "<leader>fc", "<cmd>Telescope commands<cr>", desc = "Commands" },
+    { "<leader>fh", "<cmd>Telescope command_history<cr>", desc = "Command history" },
+  },
 }
