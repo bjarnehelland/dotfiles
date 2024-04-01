@@ -1,10 +1,11 @@
-vim.keymap.set("v", "<C-s>", "<cmd>sort<CR>") -- Sort highlighted text in visual mode with Control+S
-vim.keymap.set("v", "<leader>rr", '"hy:%s/<C-r>h//g<left><left>') -- Replace all instances of highlighted words
-
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv") -- Move current line down
-vim.keymap.set("v", "K", ":m '>-2<CR>gv=gv") -- Move current line up
-
+vim.keymap.set("v", "<C-s>", "<cmd>sort<CR>", { desc = "Sort highlighted text in visual mode" })
+vim.keymap.set(
+  "v",
+  "<leader>rr",
+  '"hy:%s/<C-r>h//g<left><left>',
+  { desc = "Replace all instances of highlighted text" }
+)
 -- buffers
-vim.keymap.set("n", "<leader>n", ":bn<cr>")
-vim.keymap.set("n", "<leader>p", ":bp<cr>")
-vim.keymap.set("n", "<leader>x", ":bd<cr>")
+vim.keymap.set("n", "]b", "<cmd>bn<cr>", { desc = "Next buffer" })
+vim.keymap.set("n", "[b", "<cmd>bp<cr>", { desc = "Previous buffer" })
+vim.keymap.set("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close buffer" })

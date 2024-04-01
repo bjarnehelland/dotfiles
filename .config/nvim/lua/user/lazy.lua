@@ -23,16 +23,15 @@ require("lazy").setup({
   {
     import = "plugins",
   },
-  -- {
-  --   install = {
-  --     colorscheme = { "catppuccin-mocha" },
-  --   },
-  --   checker = {
-  --     enabled = true,
-  --     notify = false,
-  --   },
-  --   change_detection = {
-  --     notify = false,
-  --   },
-  -- },
+}, {
+  install = {
+    colorscheme = { "catppuccin-mocha" },
+  },
+  checker = {
+    enabled = true,
+    notify = false,
+  },
+  change_detection = {
+    notify = false,
+  },
 })

@@ -11,6 +11,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       opts = {},
     },
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "debugloop/telescope-undo.nvim",
     "nvim-tree/nvim-web-devicons",
   },
   config = function()
@@ -35,19 +36,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
             ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             ["<c-d>"] = actions.delete_buffer,
           },
-        },
-        vimgrep_arguments = {
-          "rg",
-          "--color=never",
-          "--no-heading",
-          "--hidden",
-          "--with-filename",
-          "--line-number",
-          "--column",
-          "--smart-case",
-          -- "--ignore-file",
-          -- ".gitignore",
-          "--trim",
         },
       },
       pickers = {
@@ -74,9 +62,21 @@ return { -- Fuzzy Finder (files, lsp, etc)
           prompt_prefix = "󰱽 ",
         },
       },
+      extensions = {
+        undo = {
+          side_by_side = true,
+          layout_strategy = "vertical",
+          layout_config = {
+            preview_height = 0.8,
+          }, -- telescope-undo.nvim config, see below
+        },
+        -- other extensions:
+        -- file_browser = { ... }
+      },
     })
 
     telescope.load_extension("fzf")
+    telescope.load_extension("undo")
   end,
   keys = {
     { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
@@ -88,5 +88,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help tags" },
     { "<leader>fc", "<cmd>Telescope commands<cr>", desc = "Commands" },
     { "<leader>fh", "<cmd>Telescope command_history<cr>", desc = "Command history" },
+    { "<leader>fu", "<cmd>Telescope undo<cr>", desc = "Undo history" },
+    { "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "Keymaps" },
   },
 }

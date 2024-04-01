@@ -5,6 +5,7 @@ return {
     "rcarriga/nvim-notify",
   },
   event = "VeryLazy",
+  enabled = false,
   opts = {
     presets = { inc_rename = true },
     views = {

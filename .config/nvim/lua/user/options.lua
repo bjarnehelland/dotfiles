@@ -1,3 +1,11 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- colors
+vim.opt.termguicolors = true
+vim.g.syntax = "enable"
+vim.o.winblend = 0
+
 -- Set leader key to space
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -18,7 +26,10 @@ vim.opt.clipboard = "unnamed,unnamedplus"
 -- Enable smart indenting (see https://stackoverflow.com/questions/1204149/smart-wrap-in-vim)
 vim.opt.breakindent = true
 
--- Enable persistent undo history
+-- backup
+vim.opt.backup = false
+vim.opt.swapfile = false
+vim.opt.undodir = os.getenv("HOME") .. "/.local/state/nvim/undo"
 vim.opt.undofile = true
 
 -- Enable ignorecase + smartcase for better searching
@@ -74,6 +85,3 @@ vim.opt.scrolloff = 8
 
 -- Place a column line
 vim.opt.colorcolumn = "80"
-
--- turn off swapfile
-vim.opt.swapfile = false

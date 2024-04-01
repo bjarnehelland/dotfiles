@@ -3,6 +3,7 @@ return {
   event = "InsertEnter",
   dependencies = {
     "hrsh7th/cmp-buffer", -- source for text in buffer
+    "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-path", -- source for file system paths
   },
   config = function()
@@ -10,7 +11,7 @@ return {
 
     cmp.setup({
       completion = {
-        completeopt = "menu,menuone,preview,noselect",
+        completeopt = "menu,menuone,noselect",
       },
       mapping = cmp.mapping.preset.insert({
         ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
@@ -23,11 +24,9 @@ return {
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
-        { name = "copilot" },
-
         { name = "nvim_lsp" },
-        { name = "buffer" }, -- text within current buffer
         { name = "path" }, -- file system paths
+        { name = "buffer" }, -- text within current buffer
       }),
     })
   end,
