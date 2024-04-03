@@ -1,10 +1,20 @@
 return {
   {
     "zbirenbaum/copilot.lua",
-    event = { "BufEnter" },
+    cmd = "Copilot",
+    build = ":Copilot auth",
     opts = {
-      suggestion = { enabled = true, auto_trigger = true },
+      suggestion = { enabled = false },
       panel = { enabled = false },
+      filetypes = {
+        markdown = true,
+        help = true,
+      },
     },
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = "zbirenbaum/copilot.lua",
+    opts = {},
   },
 }

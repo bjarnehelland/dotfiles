@@ -63,3 +63,8 @@ context_alias = "OPF"
 context_pattern = "k8s-login-card-dev-stacc-avidafinance-com-context"
 style = "bold green"
 context_alias = "avida-card"
+
+[[kubernetes.contexts]]
+context_pattern = "k8s-login-dev-enabling-stacc-dev-context"
+style = "bold green"
+context_alias = "enabling"

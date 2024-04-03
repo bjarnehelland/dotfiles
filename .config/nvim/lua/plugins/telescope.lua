@@ -17,7 +17,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
-
     telescope.setup({
       defaults = {
         file_ignore_patterns = { ".git/", "node_modules" },
@@ -77,6 +76,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
     telescope.load_extension("fzf")
     telescope.load_extension("undo")
+    telescope.load_extension("harpoon")
   end,
   keys = {
     { "<leader>sf", "<cmd>Telescope find_files<cr>", desc = "Find files" },
@@ -84,7 +84,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     { "<leader>sz", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
     { "<leader>ss", "<cmd>Telescope grep_string<cr>", desc = "Grep string" },
     { "<leader>so", "<cmd>Telescope oldfiles<cr>", desc = "Old files" },
-    { "<leader>sb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+    { "<leader>sb", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>", desc = "Buffers" },
     { "<leader>st", "<cmd>Telescope tags<cr>", desc = "Tags" },
     { "<leader>sr", "<cmd>Telescope registers<cr>", desc = "Registers" },
     { "<leader>sq", "<cmd>Telescope quickfix<cr>", desc = "Quickfix" },

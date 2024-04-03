@@ -89,6 +89,8 @@ return {
     capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
     local servers = {
+      dockerls = {},
+      docker_compose_language_service = {},
       tsserver = {
         single_file_support = false,
         root_dir = require("lspconfig.util").root_pattern("package.json"),

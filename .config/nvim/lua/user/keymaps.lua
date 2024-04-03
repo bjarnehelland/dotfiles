@@ -9,3 +9,4 @@ vim.keymap.set(
 vim.keymap.set("n", "]b", "<cmd>bn<cr>", { desc = "Next buffer" })
 vim.keymap.set("n", "[b", "<cmd>bp<cr>", { desc = "Previous buffer" })
 vim.keymap.set("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close buffer" })
+vim.keymap.set("n", "<leader>X", "<cmd>bd!<cr>", { desc = "Close buffer (force)" })
