@@ -25,12 +25,19 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 
+alias sz="source ~/.zshrc"
+
+alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions" 
+alias brewod="brew outdated | fzf --multi | xargs brew upgrade"
+
 function take {
     mkdir -p $1
     cd $1
 }
 
 autoload -Uz compinit && compinit
+
+export EDITOR=nvim
 
 # kubectl
 source <(kubectl completion zsh)
@@ -40,6 +47,10 @@ eval "$(fzf --zsh)"
 export FZF_DEFAULT_OPTS="--reverse --border rounded --no-info --pointer='👉' --marker=' ' --ansi --color='16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic'"
 export FZF_TMUX_OPTS="-p 55%,60%"
 export FZF_CTRL_R_OPTS="--border-label=' history ' --prompt='  '"
+
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
 # direnv
 eval "$(direnv hook zsh)"
@@ -64,6 +75,8 @@ eval "$(zoxide init zsh)"
 # starship
 eval "$(starship init zsh)"
 
+# volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
+set -a; source ~/.env; set +a

@@ -1,5 +1,5 @@
-[default_session]
-startup_command = "nvim +GoToFile"
+# [default_session]
+# startup_command = "nvim +GoToFile"
 
 [[session]]
 name = "tmux config"
@@ -9,6 +9,7 @@ startup_command = "nvim tmux.conf"
 [[session]]
 name = "nvim config"
 path = "~/.config/nvim"
+startup_command = "nvim +GoToFile"
 
 [[session]]
 name = "wezterm config"
@@ -19,3 +20,9 @@ startup_command = "nvim wezterm.lua"
 name = "sesh config"
 path = "~/.config/sesh"
 startup_command = "nvim sesh.toml"
+
+[[session]]
+name = "zsh config"
+path = "~/.config"
+startup_command = "nvim ~/.zshrc"
+

@@ -53,6 +53,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         },
         find_files = {
           prompt_prefix = " ",
+          hidden = true,
         },
         live_grep = {
           prompt_prefix = "󰱽 ",

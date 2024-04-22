@@ -35,16 +35,12 @@ return {
         end,
       }),
       sources = cmp.config.sources({
-        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "path" },
-      }, {
         { name = "buffer" },
       }),
       experimental = {
-        ghost_text = {
-          hl_group = "CmpGhostText",
-        },
+        ghost_text = true,
       },
       sorting = defaults.sorting,
     }
