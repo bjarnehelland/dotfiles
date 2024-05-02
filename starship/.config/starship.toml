@@ -68,3 +68,8 @@ context_alias = "avida-card"
 context_pattern = "k8s-login-dev-enabling-stacc-dev-context"
 style = "bold green"
 context_alias = "enabling"
+
+[[kubernetes.contexts]]
+context_pattern = "k8s-login-lba-link-stacc-dev-context"
+style = "bold green"
+context_alias = "LBA"
