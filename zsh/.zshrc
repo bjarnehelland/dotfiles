@@ -112,3 +112,4 @@ eval "$(starship init zsh)"
 # volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
