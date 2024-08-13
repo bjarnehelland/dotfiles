@@ -19,7 +19,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     local actions = require("telescope.actions")
     telescope.setup({
       defaults = {
-        file_ignore_patterns = { ".git/", "node_modules" },
+        file_ignore_patterns = { ".git/", "node_modules", "_build", ".elixir_ls" },
         layout_config = {
           prompt_position = "top",
         },

@@ -9,7 +9,7 @@ startup_command = "nvim tmux.conf"
 [[session]]
 name = "nvim config"
 path = "~/dot/nvim/.config/nvim"
-startup_command = "nvim +GoToFile"
+startup_command = "nvim ."
 
 [[session]]
 name = "wezterm config"
@@ -29,5 +29,4 @@ startup_command = "nvim .zshrc"
 [[session]]
 name = "dotfiles"
 path = "~/dot"
-startup_command = "nvim +GoToFile"
-
+startup_command = "nvim ."

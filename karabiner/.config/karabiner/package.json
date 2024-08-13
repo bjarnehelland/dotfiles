@@ -1,0 +1,14 @@
+{
+  "name": "karabiner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Max Stoiber <contact@mxstbr.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.14.1",
+    "tsm": "^2.3.0"
+  },
+  "scripts": {
+    "build": "node -r tsm rules.ts"
+  }
+}
