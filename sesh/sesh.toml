@@ -2,31 +2,11 @@
 # startup_command = "nvim +GoToFile"
 
 [[session]]
-name = "tmux config"
-path = "~/dot/tmux"
-startup_command = "nvim tmux.conf"
-
-[[session]]
-name = "nix-darwin config"
-path = "~/dot/nix-darwin"
-startup_command = "nvim ."
-
-[[session]]
-name = "nvim config"
-path = "~/dot/nvim"
-startup_command = "nvim ."
-
-[[session]]
-name = "wezterm config"
-path = "~/dot/wezterm"
-startup_command = "nvim wezterm.lua"
-
-[[session]]
-name = "sesh config"
-path = "~/dot/sesh"
-startup_command = "nvim sesh.toml"
-
-[[session]]
 name = "dotfiles"
 path = "~/dot"
+startup_command = "nvim ."
+
+[[session]]
+name = "Intrum"
+path = "~/Projects/stacc/intrum"
 startup_command = "nvim ."

@@ -5,3 +5,6 @@ build:
 
 sync:
 	darwin-rebuild switch --flake .#MacBookPro
+
+sync-debug:
+	darwin-rebuild switch --flake .#MacBookPro --show-trace
