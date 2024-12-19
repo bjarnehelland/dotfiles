@@ -19,63 +19,51 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
   };
+  # The `outputs` function will return all the build results of the flake.
+  # A flake can have many use cases and different types of outputs,
+  # parameters in `outputs` are defined in `inputs` and can be referenced by their names.
+  # However, `self` is an exception, this special parameter points to the `outputs` itself (self-reference)
+  # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    darwin,
+    home-manager,
+    ...
+  }: let
+    # TODO replace with your own username, email, system, and hostname
+    username = "bjarnehelland";
+    useremail = "bjarne81@gmail.com";
+    system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
+    hostname = "MacBookPro";
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs }:
-  let
-    configuration = { pkgs, ... }: {
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      environment.systemPackages =
-        [ 
-          pkgs.vim
-          pkgs.kubectl
-          pkgs.sshs
-          pkgs.atac
-          pkgs.portal
-          pkgs.tmux
-        ];
-
-      services.nix-daemon.enable = true;
-      nix.settings.experimental-features = "nix-command flakes";
-      programs.zsh.enable = true;  # default shell on catalina
-      system.configurationRevision = self.rev or self.dirtyRev or null;
-      system.stateVersion = 4;
-      nixpkgs.hostPlatform = "aarch64-darwin";
-      security.pam.enableSudoTouchIdAuth = true;
-
-      users.users.bjarnehelland.home = "/Users/bjarnehelland";
-      home-manager.backupFileExtension = "backup";
-      nix.configureBuildUsers = true;
-      nix.useDaemon = true;
-
-      system.defaults = {
-        dock.autohide = true;
-        dock.mru-spaces = false;
-        finder.AppleShowAllExtensions = true;
-        finder.FXPreferredViewStyle = "clmv";
-        # loginwindow.LoginwindowText = "stacc.com";
-        screencapture.location = "~/Pictures/screenshots";
-        screensaver.askForPasswordDelay = 0;
+    specialArgs =
+      inputs
+      // {
+        inherit username useremail hostname;
       };
-    };
-  in
-  {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Bjarnes-MacBook-Pro-2
-    darwinConfigurations."Bjarnes-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [ 
-        configuration
-        home-manager.darwinModules.home-manager {
+  in {
+    darwinConfigurations."${hostname}" = darwin.lib.darwinSystem {
+      inherit system specialArgs;
+      modules = [
+        ./modules/nix-core.nix
+        ./modules/system.nix
+        ./modules/apps.nix
+        ./modules/homebrew-mirror.nix # comment this line if you don't need a homebrew mirror
+        ./modules/host-users.nix
+
+        # home manager
+        home-manager.darwinModules.home-manager
+        {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.bjarnehelland = import ./home.nix;
+          home-manager.extraSpecialArgs = specialArgs;
+          home-manager.users.${username} = import ./home;
         }
       ];
-    
     };
 
-    # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."Bjarnes-MacBook-Pro-2".pkgs;
+    # nix code formatter
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
   };
 }

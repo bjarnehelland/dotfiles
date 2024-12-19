@@ -1,0 +1,30 @@
+{...}: {
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    initExtra = ''
+      export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
+    '';
+  };
+
+  home.shellAliases = {
+    k = "kubectl";
+    ll = "ls -l";
+    s = "sesh connect $(sesh list | fzf)";
+    k = "kubectl";
+    gs = "git status";
+    gpp = "git pull --prune";
+    gp = "git pull";
+    gpush = "git push";
+      
+    sz = "source ~/.zshrc";
+
+    ls = "eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions";
+    brewod = "brew outdated | fzf --multi | xargs brew upgrade";
+
+    ".." = "cd ..";
+    "..." = "cd ../..";
+    "...." = "cd ../../..";
+    "....." = "cd ../../../..";
+  };
+}
