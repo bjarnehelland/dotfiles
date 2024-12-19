@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
-    # utils
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processer https://github.com/mikefarah/yq
@@ -39,11 +39,11 @@
         };
       };
     };
- programs.zoxide = {
-    enable = true;
-  };
-  programs.direnv = {
-    enable = true;
-  };
+    zoxide = {
+      enable = true;
+    };
+    direnv = {
+      enable = true;
+    };
   };
 }

@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -8,7 +9,6 @@
   };
 
   home.shellAliases = {
-    k = "kubectl";
     ll = "ls -l";
     s = "sesh connect $(sesh list | fzf)";
     k = "kubectl";
@@ -16,7 +16,7 @@
     gpp = "git pull --prune";
     gp = "git pull";
     gpush = "git push";
-      
+
     sz = "source ~/.zshrc";
 
     ls = "eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions";

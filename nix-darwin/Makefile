@@ -1,6 +1,7 @@
 # please change 'hostname' to your hostname
-deploy:
+build:
 	nix build .#darwinConfigurations.MacBookPro.system \
 	   --extra-experimental-features 'nix-command flakes'
 
-	./result/sw/bin/darwin-rebuild switch --flake .#MacBookPro
+sync:
+	darwin-rebuild switch --flake .#MacBookPro

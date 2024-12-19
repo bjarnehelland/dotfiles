@@ -1,5 +1,5 @@
 # home.nix
-# home-manager switch 
+# home-manager switch
 
 { config, pkgs, ... }:
 
@@ -8,7 +8,7 @@
   home.homeDirectory = "/Users/bjarnehelland";
   home.stateVersion = "23.05"; # Please read the comment before changing.
 
-# Makes sense for user specific applications that shouldn't be available system-wide
+  # Makes sense for user specific applications that shouldn't be available system-wide
   home.packages = [
   ];
 
@@ -58,7 +58,7 @@
       gpp = "git pull --prune";
       gp = "git pull";
       gpush = "git push";
-      
+
       sz = "source ~/.zshrc";
 
       ls = "eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions";
@@ -108,7 +108,9 @@
   programs.fzf = {
     enable = true;
     defaultCommand = "fd --hidden --strip-cwd-prefix --exclude .git";
-    defaultOptions = [ "--reverse --border rounded --no-info --pointer='👉' --marker=' ' --ansi --color='16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic'" ];
+    defaultOptions = [
+      "--reverse --border rounded --no-info --pointer='👉' --marker=' ' --ansi --color='16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic'"
+    ];
     changeDirWidgetCommand = "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
     changeDirWidgetOptions = [ "--preview 'eza --tree --color=always {} | head -200'" ];
     historyWidgetOptions = [ "--border-label=' history ' --prompt='  '" ];
@@ -125,7 +127,7 @@
       # add_newline = false;
 
       # character = {
-      #   success_symbol = "[\uf054](white)"; 
+      #   success_symbol = "[\uf054](white)";
       #   vicmd_symbol = "[\ue62b](white)";
       #   error_symbol = "[\uf467](red)";
       # };
@@ -154,7 +156,7 @@
             context_pattern = "k8s-flow-login-test-1-opf-stacc-dev-context";
             style = "bold green";
             context_alias = "OPF";
-          } 
+          }
           {
             context_pattern = "scc-prod-opf-01-aks-admin";
             style = "bold red";

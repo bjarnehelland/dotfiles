@@ -1,4 +1,5 @@
-{ pkgs, ...}: {
+{ pkgs, ... }:
+{
 
   ##########################################################################
   #
@@ -19,6 +20,7 @@
   # Related Discussion: https://discourse.nixos.org/t/darwin-again/29331
   environment.systemPackages = with pkgs; [
     git
+    nixfmt-rfc-style
   ];
 
   # TODO To make this work, homebrew need to be installed manually, see https://brew.sh
@@ -41,13 +43,21 @@
     # `brew install`
     # TODO Feel free to add your favorite apps here.
     brews = [
-      # "aria2"  # download tool
+      "stacc/tap/blocc"
+      "stacc/tap/stacc-next"
+      "joshmedeski/sesh/sesh"
     ];
 
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
     casks = [
+      # "discord"
+      "wezterm"
+      "docker"
       # "google-chrome"
+      # "arc"
+      "raycast"
+      "bruno"
     ];
   };
 }

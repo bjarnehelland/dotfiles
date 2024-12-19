@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   programs.starship = {
     enable = true;
 
@@ -10,7 +11,7 @@
       # add_newline = false;
 
       # character = {
-      #   success_symbol = "[\uf054](white)"; 
+      #   success_symbol = "[\uf054](white)";
       #   vicmd_symbol = "[\ue62b](white)";
       #   error_symbol = "[\uf467](red)";
       # };
@@ -39,7 +40,7 @@
             context_pattern = "k8s-flow-login-test-1-opf-stacc-dev-context";
             style = "bold green";
             context_alias = "OPF";
-          } 
+          }
           {
             context_pattern = "scc-prod-opf-01-aks-admin";
             style = "bold red";
