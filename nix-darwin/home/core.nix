@@ -45,5 +45,18 @@
     direnv = {
       enable = true;
     };
+    fzf = {
+      enable = true;
+      defaultOptions = [
+        "--ansi"
+        "--border rounded"
+        "--color='16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic'"
+        "--marker=' '"
+        "--no-info"
+        "--no-separator"
+        "--pointer='👉'"
+        "--reverse"
+      ];
+    };
   };
 }

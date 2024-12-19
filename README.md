@@ -9,10 +9,9 @@ This is the home of all my dotfiles. These are files that add custom configurati
 My dotfiles are managed by [GNU Stow](https://www.gnu.org/software/stow/).
 
 1. Install [Homebrew](https://brew.sh/)
-2. Install [GNU Stow](https://www.gnu.org/software/stow/) (`brew install stow`)
-3. Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos) or [DeterminateSystems/nix-installer](https://github.com/DeterminateSystems/nix-installer).
-4. Clone this repository
-5. Run stow command
+2. Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos) or [DeterminateSystems/nix-installer](https://github.com/DeterminateSystems/nix-installer).
+3. Clone this repository
+4. Run stow command
 
 ```sh
 stow */

@@ -43,6 +43,7 @@
     # `brew install`
     # TODO Feel free to add your favorite apps here.
     brews = [
+      "stow"
       "stacc/tap/blocc"
       "stacc/tap/stacc-next"
       "joshmedeski/sesh/sesh"
@@ -56,6 +57,8 @@
       "docker"
       # "google-chrome"
       # "arc"
+      "slack"
+      # "1password"
       "raycast"
       "bruno"
     ];

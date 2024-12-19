@@ -10,7 +10,7 @@
 
   home.shellAliases = {
     ll = "ls -l";
-    s = "sesh connect $(sesh list | fzf)";
+    s = "sesh connect $(sesh list -i | fzf)";
     k = "kubectl";
     gs = "git status";
     gpp = "git pull --prune";
