@@ -37,10 +37,13 @@
           "/System/Applications/Launchpad.app"
           "/Applications/Safari.app"
           "/Applications/Arc.app"
+          "/Applications/Google Chrome.app"
+          "/Applications/Bruno.app"
           "/Applications/WezTerm.app"
           "/Applications/Cursor.app"
           "/Applications/Visual Studio Code.app"
           "/Applications/Microsoft Outlook.app"
+
           "/Applications/Slack.app"
           "/Applications/Notion.app"
           "/Applications/Discord.app"
