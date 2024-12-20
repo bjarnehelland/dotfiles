@@ -35,7 +35,7 @@
         tilesize = 32;
         persistent-apps = [
           "/System/Applications/Launchpad.app"
-          "/System/Applications/Safari.app"
+          "/Applications/Safari.app"
           "/Applications/Arc.app"
           "/Applications/WezTerm.app"
           "/Applications/Cursor.app"

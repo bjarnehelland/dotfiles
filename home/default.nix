@@ -27,11 +27,11 @@
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     stateVersion = "24.11";
 
-    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/bin";
-    file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/nvim";
-    file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/sesh";
+    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/bin";
+    file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/nvim";
+    file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/sesh";
     file.".config/wezterm".source =
-      config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/wezterm";
+      config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/wezterm";
   };
 
   # Let Home Manager install and manage itself.
