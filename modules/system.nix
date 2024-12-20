@@ -44,6 +44,7 @@
           "/Applications/Slack.app"
           "/Applications/Notion.app"
           "/Applications/Discord.app"
+          "/Applications/ChatGPT.app"
           "/System/Applications/Messages.app"
           "/Applications/1Password.app"
           "/System/Applications/System Settings.app"
