@@ -43,7 +43,8 @@
     # `brew install`
     # TODO Feel free to add your favorite apps here.
     brews = [
-      "stow"
+      "deno"
+      "oven-sh/bun/bun"
       "stacc/tap/blocc"
       "stacc/tap/stacc-next"
       "joshmedeski/sesh/sesh"
@@ -64,6 +65,7 @@
       # "microsoft-excel"
       # "microsoft-powerpoint"
       # "1password"
+      # "notion"
       "raycast"
       "bruno"
 

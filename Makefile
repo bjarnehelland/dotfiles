@@ -10,7 +10,6 @@ setup:
 	   --extra-experimental-features 'nix-command flakes'
 
 sync:
-	stow .
 	cd nix-darwin && darwin-rebuild switch --flake .#MacBookPro
 
 sync-debug:
