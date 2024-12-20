@@ -6,11 +6,13 @@ This is the home of all my dotfiles. These are files that add custom configurati
 
 My dotfiles are managed by [Nix](https://nixos.org/).
 
-1. Clone this repository
-2. Run make commands
+1. Install [Homebrew](https://brew.sh/)
+2. Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos)
+3. Run the following command to install the dotfiles:
 
-Install [Homebrew](https://brew.sh/)
-Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos) or [DeterminateSystems/nix-installer](https://github.com/DeterminateSystems/nix-installer).
+```sh
+nix run nix-darwin -- switch --flake github:bjarnehelland/dot#dot
+```
 
 ## Software
 
@@ -26,13 +28,17 @@ Install Nix package manager via [Nix Official](https://nixos.org/download.html#n
 
 ## Hardware
 
-- Laptop: [MacBook Pro](https://www.apple.com/macbook-pro-14-and-16/) (16-inch, 2023, Apple M2 Max Chip, 32GB RAM)
-- Mouse: Logitech trackball
+- Laptop: [MacBook Pro](https://www.apple.com/macbook-pro) (13-inch, 2020, Apple M1 Chip, 16GB RAM)
+- Mouse: Apple trackpad
 
 ## Keyboards
 
-- [Zsa Moonlander](https://www.zsa.io/moonlander/) (daily driver)
-- [NuPhy Air75 (v1)](https://nuphy.com/products/air75-v2) (when I'm out)
-- [KBDcraft 001 Adam](https://kbdcraft.store/products/adam)
-- [IQUNIX L80 Cosmic Traveller](https://iqunix.store/collections/80-series/products/iqunix-l80-cosmic-traveller)
-- [Zsa Ergodox EZ](https://ergodox-ez.com)
+- [HHKB hybrid type-s](https://www.hhkeyboard.com/uk/products/hybrid-type-s) (daily driver)
+
+## Notes
+
+- [NixOS](https://nixos.org)
+- [Home Manager](https://nix-community.github.io/home-manager)
+- [Nix packages](https://search.nixos.org/packages)
+- [Nix darwin](https://daiderd.com/nix-darwin/manual/index.html)
+- [Alternative Nix installer (DeterminateSystems)](https://github.com/DeterminateSystems/nix-installer)

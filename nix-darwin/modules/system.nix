@@ -18,11 +18,45 @@
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     '';
 
-    defaults = {
-      menuExtraClock.Show24Hour = true; # show 24 hour clock
+    startup.chime = false;
 
-      # other macOS's defaults configuration.
-      # ......
+    defaults = {
+      menuExtraClock.Show24Hour = true;
+      loginwindow.LoginwindowText = "Mr Helland";
+      screencapture.location = "~/Pictures/screenshots";
+      screensaver.askForPasswordDelay = 10;
+      finder = {
+        AppleShowAllExtensions = true;
+        FXPreferredViewStyle = "clmv";
+      };
+      dock = {
+        autohide = true;
+        mru-spaces = false;
+        tilesize = 32;
+        persistent-apps = [
+          "/System/Applications/Launchpad.app"
+          "/System/Applications/Safari.app"
+          "/Applications/Arc.app"
+          "/Applications/WezTerm.app"
+          "/Applications/Cursor.app"
+          "/Applications/Visual Studio Code.app"
+          "/Applications/Microsoft Outlook.app"
+          "/Applications/Slack.app"
+          "/Applications/Notion.app"
+          "/Applications/Discord.app"
+          "/System/Applications/Messages.app"
+          "/Applications/1Password.app"
+          "/System/Applications/System Settings.app"
+        ];
+      };
+      trackpad = {
+        Clicking = true;
+        TrackpadThreeFingerDrag = true;
+      };
+    };
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToControl = true;
     };
   };
 
