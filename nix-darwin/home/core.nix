@@ -6,9 +6,40 @@
     yq-go # yaml processer https://github.com/mikefarah/yq
     nmap # A utility for network discovery and security auditing
     glow # markdown previewer in terminal
+    azure-cli
   ];
 
   programs = {
+    # github cli
+    gh = {
+      enable = true;
+    };
+
+    # github dash
+    gh-dash = {
+      enable = true;
+    };
+
+    # json processor
+    jq = {
+      enable = true;
+    };
+
+    # fast file finder
+    fd = {
+      enable = true;
+    };
+
+    # git ui
+    lazygit = {
+      enable = true;
+    };
+
+    # syntax highlighting for the terminal
+    bat = {
+      enable = true;
+    };
+
     # modern vim
     neovim = {
       enable = true;
@@ -23,7 +54,7 @@
     eza = {
       enable = true;
       git = true;
-      icons = true;
+      icons = "auto";
       enableZshIntegration = true;
     };
 

@@ -27,7 +27,7 @@
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     stateVersion = "24.11";
 
-    file.".config/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/bin";
+    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/bin";
     file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/nvim";
     file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/sesh";
     file.".config/wezterm".source =

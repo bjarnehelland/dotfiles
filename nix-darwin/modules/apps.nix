@@ -25,7 +25,6 @@
 
   fonts.packages = with pkgs; [
     nerd-fonts.fira-code
-    nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
   ];
 
@@ -37,9 +36,10 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
+      autoUpdate = true;# Fetch the newest stable branch of Homebrew's git repo
+      upgrade = true;# Upgrade outdated casks, formulae, and App Store apps
       # 'zap': uninstalls all formulae(and related files) not listed here.
-      # cleanup = "zap";
+      cleanup = "zap";
     };
 
     taps = [
@@ -68,6 +68,7 @@
       "google-chrome"
       "arc"
       "slack"
+      "microsoft-auto-update"
       "microsoft-teams"
       "microsoft-outlook"
       "microsoft-word"
