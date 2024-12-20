@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, fonts, ... }:
 {
 
   ##########################################################################
@@ -23,6 +23,12 @@
     nixfmt-rfc-style
   ];
 
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+  ];
+
   # TODO To make this work, homebrew need to be installed manually, see https://brew.sh
   #
   # The apps installed by homebrew are not managed by nix, and not reproducible!
@@ -38,6 +44,9 @@
 
     taps = [
       "homebrew/services"
+      "oven-sh/bun"
+      "stacc/tap"
+      "joshmedeski/sesh"
     ];
 
     # `brew install`
@@ -53,22 +62,23 @@
     # `brew install --cask`
     # TODO Feel free to add your favorite apps here.
     casks = [
-      # "discord"
+      "discord"
       "wezterm"
       "docker"
-      # "google-chrome"
-      # "arc"
+      "google-chrome"
+      "arc"
       "slack"
-      # "microsoft-teams"
-      # "microsoft-outlook"
-      # "microsoft-word"
-      # "microsoft-excel"
-      # "microsoft-powerpoint"
-      # "1password"
-      # "notion"
+      "microsoft-teams"
+      "microsoft-outlook"
+      "microsoft-word"
+      "microsoft-excel"
+      "microsoft-powerpoint"
+      "1password"
+      "notion"
       "raycast"
       "bruno"
-
+      "cursor"
+      "visual-studio-code"
     ];
   };
 }
