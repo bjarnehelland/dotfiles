@@ -6,8 +6,6 @@
     clock24 = true;
     keyMode = "vi";
     sensibleOnTop = true;
-    shell = "${pkgs.zsh}/bin/zsh";
-    terminal = "tmux-256color";
     historyLimit = 100000;
     plugins = with pkgs.tmuxPlugins; [
       # tmuxPlugins.tokyo-night-tmux
@@ -15,7 +13,8 @@
       # cpu
       vim-tmux-navigator
       better-mouse-mode
-      sensible
+      tmux-powerline
+      # sensible
       yank
     ];
     extraConfig = ''
@@ -25,13 +24,17 @@
       set -g default-command "$SHELL"
       set-window-option -g mode-keys vi
 
+      set -g base-index 1    
+      set -g detach-on-destroy off 
+      set -g mouse on             
+      set -g renumber-windows on 
+      set -g set-clipboard on
       bind '%' split-window -c '#{pane_current_path}' -h
       bind '"' split-window -c '#{pane_current_path}'
       bind c new-window -c '#{pane_current_path}'
 
       bind -N "⌘+g lazygit " g new-window -c "#{pane_current_path}" -n "🌳" "lazygit 2> /dev/null"
       bind -N "⌘+G gh-dash " G new-window -c "#{pane_current_path}" -n "😺" "gh dash 2> /dev/null"
-      bind -N "⌘+y yazi" y new-window -c "#{pane_current_path}" -n "😺" "yazi 2> /dev/null"
       bind -N "⌘+b build" B split-window -v -l 10 b
       bind -N "⌘+d dev" D split-window -v -l 10 d
 

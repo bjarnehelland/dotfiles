@@ -58,9 +58,15 @@
       # "google-chrome"
       # "arc"
       "slack"
+      # "microsoft-teams"
+      # "microsoft-outlook"
+      # "microsoft-word"
+      # "microsoft-excel"
+      # "microsoft-powerpoint"
       # "1password"
       "raycast"
       "bruno"
+
     ];
   };
 }
