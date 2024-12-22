@@ -21,6 +21,7 @@
   environment.systemPackages = with pkgs; [
     git
     nixfmt-rfc-style
+    pam-reattach
   ];
 
   fonts.packages = with pkgs; [
@@ -36,8 +37,8 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = true;# Fetch the newest stable branch of Homebrew's git repo
-      upgrade = true;# Upgrade outdated casks, formulae, and App Store apps
+      autoUpdate = true; # Fetch the newest stable branch of Homebrew's git repo
+      upgrade = true; # Upgrade outdated casks, formulae, and App Store apps
       # 'zap': uninstalls all formulae(and related files) not listed here.
       cleanup = "zap";
     };

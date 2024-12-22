@@ -20,8 +20,6 @@ make setup
 ## Software
 
 - Terminal: [Wezterm](https://wezfurlong.org/wezterm)
-- Font: [Monaspace](https://monaspace.githubnext.com/)
-- Colors: [catppuccin](https://github.com/catppuccin/catppuccin)
 - Shell: [zsh](https://www.zsh.org)
 - Multiplexer: [tmux](https://github.com/tmux/tmux/wiki)
   - Session manager: [sesh](https://github.com/joshmedeski/sesh)

@@ -187,7 +187,7 @@ local config = {
 	},
 }
 
-config.color_scheme = "Catppuccin Mocha"
+config.color_scheme = "Tokyo Night"
 config.mouse_bindings = { -- Ctrl-click will open the link under the mouse cursor
 	{
 		event = {
