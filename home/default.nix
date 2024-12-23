@@ -32,6 +32,7 @@
     file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/sesh";
     file.".config/wezterm".source =
       config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/wezterm";
+    files.".config/gitmux".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/dot/config/gitmux";
   };
 
   # Let Home Manager install and manage itself.

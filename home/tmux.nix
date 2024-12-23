@@ -6,29 +6,44 @@
     clock24 = true;
     keyMode = "vi";
     sensibleOnTop = true;
-    historyLimit = 100000;
+    baseIndex = 1;
+    mouse = true;
     plugins = with pkgs.tmuxPlugins; [
-      # tmuxPlugins.tokyo-night-tmux
+      # {
+      #   plugin = tokyo-night-tmux;
+      #   extraConfig = ''
+      #     set -g @tokyo-night-tmux_transparent 1
+      #     set -g @tokyo-night-tmux_window_id_style digital
+      #     set -g @tokyo-night-tmux_pane_id_style hsquare
+      #     set -g @tokyo-night-tmux_zoom_id_style dsquare
+      #     set -g @tokyo-night-tmux_show_datetime 0
+      #   '';
+      # }
       # tmux-thumbs
       # cpu
+      {
+        plugin = catppuccin;
+        extraConfig = ''
+          set -g @catppuccin_window_status_style "rounded"
+          set -agF status-right "#{@catppuccin_status_gitmux}"
+
+        '';
+      }
       vim-tmux-navigator
       better-mouse-mode
-      tmux-powerline
-      # sensible
       yank
     ];
     extraConfig = ''
-
-      set -g default-terminal "tmux-256color"
-      set -ag terminal-overrides ",xterm-256color:RGB"
+      # set -g default-terminal "tmux-256color"
+      # set -ag terminal-overrides ",xterm-256color:RGB"
+      set -sa terminal-overrides ",xterm*:Tc"
       set -g default-command "$SHELL"
-      set-window-option -g mode-keys vi
 
-      set -g base-index 1    
-      set -g detach-on-destroy off 
-      set -g mouse on             
+      set -g detach-on-destroy off        
       set -g renumber-windows on 
       set -g set-clipboard on
+      set -g status-position top
+
       bind '%' split-window -c '#{pane_current_path}' -h
       bind '"' split-window -c '#{pane_current_path}'
       bind c new-window -c '#{pane_current_path}'

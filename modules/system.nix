@@ -22,7 +22,7 @@
 
     defaults = {
       menuExtraClock.Show24Hour = true;
-      loginwindow.LoginwindowText = "Mr Helland";
+      loginwindow.LoginwindowText = "Yo";
       screencapture.location = "~/Pictures/screenshots";
       screensaver.askForPasswordDelay = 10;
       finder = {
