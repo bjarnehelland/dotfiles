@@ -5,8 +5,3 @@
 name = "dotfiles"
 path = "~/dot"
 startup_command = "nvim ."
-
-[[session]]
-name = "Intrum"
-path = "~/Projects/stacc/intrum"
-startup_command = "nvim ."

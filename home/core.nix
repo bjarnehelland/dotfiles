@@ -10,16 +10,7 @@
   ];
 
   programs = {
-    # github cli
-    gh = {
-      enable = true;
-    };
-
-    # github dash
-    gh-dash = {
-      enable = true;
-    };
-
+  
     # json processor
     jq = {
       enable = true;
@@ -38,6 +29,7 @@
     # syntax highlighting for the terminal
     bat = {
       enable = true;
+      catppuccin.enable = true;
     };
 
     # modern vim

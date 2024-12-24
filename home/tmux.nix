@@ -8,30 +8,26 @@
     sensibleOnTop = true;
     baseIndex = 1;
     mouse = true;
-    plugins = with pkgs.tmuxPlugins; [
-      # {
-      #   plugin = tokyo-night-tmux;
-      #   extraConfig = ''
-      #     set -g @tokyo-night-tmux_transparent 1
-      #     set -g @tokyo-night-tmux_window_id_style digital
-      #     set -g @tokyo-night-tmux_pane_id_style hsquare
-      #     set -g @tokyo-night-tmux_zoom_id_style dsquare
-      #     set -g @tokyo-night-tmux_show_datetime 0
-      #   '';
-      # }
-      # tmux-thumbs
-      # cpu
+    escapeTime = 0;
+    historyLimit = 5000;
+    terminal = "xterm-256color";
+    catppuccin.enable = true;
+    aggressiveResize = true;
+    plugins = with pkgs; [
+      tmuxPlugins.vim-tmux-navigator
+      tmuxPlugins.better-mouse-mode
+      tmuxPlugins.yank
       {
-        plugin = catppuccin;
+        plugin = tmuxPlugins.catppuccin;
+
         extraConfig = ''
           set -g @catppuccin_window_status_style "rounded"
-          set -agF status-right "#{@catppuccin_status_gitmux}"
-
+          set -g @catppuccin_window_number_position "left"
+          set -g @catppuccin_window_status_enable "yes"
+          set -g @catppuccin_window_status_icon_enable "no"
+          set -g @catppuccin_directory_text "#{pane_current_path}"
         '';
       }
-      vim-tmux-navigator
-      better-mouse-mode
-      yank
     ];
     extraConfig = ''
       # set -g default-terminal "tmux-256color"
@@ -43,6 +39,11 @@
       set -g renumber-windows on 
       set -g set-clipboard on
       set -g status-position top
+
+      # set -g status-right-length 100
+      # set -g status-left-length 100    
+      # set -g status-left "#{E:@catppuccin_status_session}"
+      # set -g status-right "#{E:@catppuccin_status_application}"
 
       bind '%' split-window -c '#{pane_current_path}' -h
       bind '"' split-window -c '#{pane_current_path}'
