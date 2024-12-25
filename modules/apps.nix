@@ -75,6 +75,7 @@
       "cursor"
       "visual-studio-code"
       "chatgpt"
+      "ollama"
       "docker"
       "microsoft-teams"
       "microsoft-outlook"

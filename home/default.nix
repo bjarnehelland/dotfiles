@@ -27,12 +27,12 @@
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     stateVersion = "24.11";
 
-    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dot/config/bin";
-    file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dot/config/nvim";
-    file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dot/config/sesh";
+    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/bin";
+    file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/nvim";
+    file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/sesh";
     file.".config/wezterm".source =
-      config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dot/config/wezterm";
-    file.".gitmux.conf".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dot/config/gitmux/gitmux.conf";
+      config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/wezterm";
+    file.".config/tmux/gitmux.conf".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/gitmux/gitmux.conf";
   };
 
   # Let Home Manager install and manage itself.

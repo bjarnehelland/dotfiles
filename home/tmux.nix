@@ -17,9 +17,10 @@
         plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_window_status_style "rounded"
-          set -g @catppuccin_status_modules_right "session gitmux"
-          set -g @catppuccin_status_modules_left "application"
-          set -g @catppuccin_pane_status_enabled "yes"
+          set -g @catppuccin_status_modules_right "gitmux"
+          set -g @catppuccin_status_modules_left "session"
+          set -g @catppuccin_window_default_text "#W"
+          set -g @catppuccin_window_current_text "#W"
         '';
       }
       vim-tmux-navigator
@@ -28,8 +29,6 @@
   
     ];
     extraConfig = ''
-      # set -g default-terminal "tmux-256color"
-      # set -ag terminal-overrides ",xterm-256color:RGB"
       set -sa terminal-overrides ",xterm*:Tc"
       set -g default-command "$SHELL"
 

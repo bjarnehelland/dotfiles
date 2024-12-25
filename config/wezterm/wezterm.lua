@@ -37,7 +37,7 @@ local config = {
 	debug_key_events = false,
 	enable_tab_bar = false,
 	native_macos_fullscreen_mode = false,
-	window_close_confirmation = "NeverPrompt",
+	-- window_close_confirmation = "NeverPrompt",
 	window_decorations = "RESIZE",
 
 	keys = {
