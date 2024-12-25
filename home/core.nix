@@ -38,6 +38,9 @@
       viAlias = true;
       vimAlias = true;
       vimdiffAlias = true;
+      plugins = [
+        pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+      ];
     };
 
     # A modern replacement for ‘ls’
