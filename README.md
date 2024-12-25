@@ -8,9 +8,9 @@ My dotfiles are managed by [Nix](https://nixos.org/).
 
 1. Install [Homebrew](https://brew.sh/)
 2. Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos)
-3. Run `./generate_github_ssh.sh` to generate a new SSH key and add it to your GitHub account.
+3. Run `./scripts/generate_github_ssh.sh` to generate a new SSH key and add it to your GitHub account.
 ```sh
-./generate_github_ssh.sh
+./scripts/generate_github_ssh.sh
 ```
 4. Run the following command to install the dotfiles: 
 ```sh

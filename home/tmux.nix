@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, ... }: 
 {
   programs.tmux = {
     enable = true;
@@ -11,23 +11,21 @@
     escapeTime = 0;
     historyLimit = 5000;
     terminal = "xterm-256color";
-    catppuccin.enable = true;
     aggressiveResize = true;
-    plugins = with pkgs; [
-      tmuxPlugins.vim-tmux-navigator
-      tmuxPlugins.better-mouse-mode
-      tmuxPlugins.yank
+    plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = tmuxPlugins.catppuccin;
-
+        plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_window_status_style "rounded"
-          set -g @catppuccin_window_number_position "left"
-          set -g @catppuccin_window_status_enable "yes"
-          set -g @catppuccin_window_status_icon_enable "no"
-          set -g @catppuccin_directory_text "#{pane_current_path}"
+          set -g @catppuccin_status_modules_right "session gitmux"
+          set -g @catppuccin_status_modules_left "application"
+          set -g @catppuccin_pane_status_enabled "yes"
         '';
       }
+      vim-tmux-navigator
+      better-mouse-mode
+      yank
+  
     ];
     extraConfig = ''
       # set -g default-terminal "tmux-256color"
@@ -39,11 +37,6 @@
       set -g renumber-windows on 
       set -g set-clipboard on
       set -g status-position top
-
-      # set -g status-right-length 100
-      # set -g status-left-length 100    
-      # set -g status-left "#{E:@catppuccin_status_session}"
-      # set -g status-right "#{E:@catppuccin_status_application}"
 
       bind '%' split-window -c '#{pane_current_path}' -h
       bind '"' split-window -c '#{pane_current_path}'

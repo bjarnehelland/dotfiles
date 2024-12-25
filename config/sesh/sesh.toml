@@ -3,5 +3,5 @@
 
 [[session]]
 name = "dotfiles"
-path = "~/dot"
+path = "~/Code/bjarnehelland/dot"
 startup_command = "nvim ."

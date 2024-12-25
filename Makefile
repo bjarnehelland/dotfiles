@@ -8,7 +8,7 @@ install-nix:
 setup:
 	nix build .#darwinConfigurations.MacBookPro.system \
 	   --extra-experimental-features 'nix-command flakes'
-	./result/sw/bin/darwin-rebuild switch --flake .#MacBookPro
+	./result/sw/bin/darwin-rebuild switch --flake .
 
 sync:
-	darwin-rebuild switch --flake .#MacBookPro
+	darwin-rebuild switch --flake .

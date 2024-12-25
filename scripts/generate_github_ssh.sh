@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Prompt for user email
-echo "Enter your GitHub email address:"
-read email
-
 # Generate the SSH key
-ssh-keygen -t ed25519 -C "$email"
+ssh-keygen -t ed25519 -C "bjarne81@gmail.com"
 
 # Start the ssh-agent and add the SSH key
 eval "$(ssh-agent -s)"

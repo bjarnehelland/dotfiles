@@ -29,7 +29,6 @@
     # syntax highlighting for the terminal
     bat = {
       enable = true;
-      catppuccin.enable = true;
     };
 
     # modern vim
