@@ -23,6 +23,8 @@
     nixfmt-rfc-style
     pam-reattach
     gitmux
+    kubectx
+    kubelogin
   ];
 
   fonts.packages = with pkgs; [
@@ -69,6 +71,7 @@
       "arc"
       "slack"
       "1password"
+      "1password-cli"
       "notion"
       "raycast"
       "bruno"

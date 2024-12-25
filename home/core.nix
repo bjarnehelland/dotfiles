@@ -65,6 +65,11 @@
     };
     direnv = {
       enable = true;
+      config = {
+        whitelist = {
+          prefix = [ "~/Code/stacc" ];
+        };
+      };
     };
     fzf = {
       enable = true;
@@ -78,6 +83,9 @@
         "--pointer='👉'"
         "--reverse"
       ];
+    };
+    k9s = {
+      enable = true;
     };
   };
 }
