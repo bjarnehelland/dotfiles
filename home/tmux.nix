@@ -1,8 +1,10 @@
-{ pkgs, lib, ... }: let
+{ pkgs, lib, ... }:
+let
   mapScriptsToPackages = lib.attrsets.mapAttrsToList (pkgs.writeShellScriptBin);
-in {
+in
+{
 
-   home.packages = mapScriptsToPackages {
+  home.packages = mapScriptsToPackages {
     git-tmux =
       # sh
       ''
@@ -33,7 +35,7 @@ in {
     focusEvents = true;
     plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = catppuccin;  
+        plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_window_status_style "rounded"
           set -g @catppuccin_status_modules_right "gitmux"
@@ -42,13 +44,15 @@ in {
           set -g @catppuccin_window_current_text "#W"
 
           ### Git
+          set -g @catppuccin_gitmux_icon ""
+          set -g @catppuccin_gitmux_color "#89dceb" # sky
           set -g @catppuccin_gitmux_text "#(git-tmux)"
         '';
       }
       vim-tmux-navigator
       better-mouse-mode
       yank
-  
+
     ];
     extraConfig = ''
       set -sa terminal-overrides ",xterm*:Tc"
