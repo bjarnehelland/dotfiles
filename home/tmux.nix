@@ -8,7 +8,7 @@ in
     git-tmux =
       # sh
       ''
-        if [ -d .git ]; then
+        if [ -d .git ] && echo .git || git rev-parse --git-dir > /dev/null 2>&1; then
         	git fetch
         	branch=$(git rev-parse --abbrev-ref HEAD)
         	ahead=$(git rev-list --count origin/"$branch".."$branch")

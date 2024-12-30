@@ -28,6 +28,8 @@
     kubelogin
     go
     rustup
+    pnpm
+    yarn
   ];
 
   fonts.packages = with pkgs; [

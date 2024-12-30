@@ -15,9 +15,12 @@ keybind = super+g=text:\x02\x67
 keybind = super+shift+g=text:\x02\x47 
 
 # <perfix>+k (open sesh picker)
-keybind = super+l=text:\x02\x4c 
+keybind = super+k=text:\x02\x4b
 
 # <perfix>+l (switch to last session)
+keybind = super+l=text:\x02\x4c
+
+# <perfix>+s (save in neovim)
 keybind = super+s=text:\x3a\x77\x0a 
 
 # <perfix>+c (new window)
