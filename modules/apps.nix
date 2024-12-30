@@ -24,9 +24,10 @@
     git
     nixfmt-rfc-style
     pam-reattach
-    gitmux
     kubectx
     kubelogin
+    go
+    rustup
   ];
 
   fonts.packages = with pkgs; [

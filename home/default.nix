@@ -34,7 +34,6 @@ in
     file.".config/nvim".source = symlink "${dotfilesPath}/config/nvim";
     file.".config/sesh".source = symlink "${dotfilesPath}/config/sesh";
     file.".config/wezterm".source = symlink "${dotfilesPath}/config/wezterm";
-    file.".gitmux.conf".source = symlink "${dotfilesPath}/config/gitmux/gitmux.conf";
     file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
     file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source = symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
   };
