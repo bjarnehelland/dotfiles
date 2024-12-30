@@ -1,5 +1,23 @@
-{ pkgs, ... }: 
-{
+{ pkgs, lib, ... }: let
+  mapScriptsToPackages = lib.attrsets.mapAttrsToList (pkgs.writeShellScriptBin);
+in {
+
+   home.packages = mapScriptsToPackages {
+    git-tmux =
+      # sh
+      ''
+        if [ -d .git ]; then
+        	git fetch
+        	branch=$(git rev-parse --abbrev-ref HEAD)
+        	ahead=$(git rev-list --count origin/"$branch".."$branch")
+        	behind=$(git rev-list --count "$branch"..origin/"$branch")
+        	echo "$branch $ahead $behind"
+        else
+        	echo "N/A"
+        fi
+      '';
+  };
+
   programs.tmux = {
     enable = true;
     disableConfirmationPrompt = true;
@@ -12,15 +30,19 @@
     historyLimit = 5000;
     terminal = "xterm-256color";
     aggressiveResize = true;
+    focusEvents = true;
     plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = catppuccin;
+        plugin = catppuccin;  
         extraConfig = ''
           set -g @catppuccin_window_status_style "rounded"
           set -g @catppuccin_status_modules_right "gitmux"
           set -g @catppuccin_status_modules_left "session"
           set -g @catppuccin_window_default_text "#W"
           set -g @catppuccin_window_current_text "#W"
+
+          ### Git
+          set -g @catppuccin_gitmux_text "#(git-tmux)"
         '';
       }
       vim-tmux-navigator
