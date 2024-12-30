@@ -1,0 +1,23 @@
+theme = catppuccin-mocha
+macos-titlebar-style = hidden
+window-padding-x = 4,2
+window-padding-y = 6,0
+background-blur-radius = 20
+mouse-hide-while-typing = true
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 15
+
+keybind = super+g=text:\x02\x67 
+keybind = super+shift+g=text:\x02\x47 
+keybind = super+k=text:\x02\x4b
+keybind = super+l=text:\x02\x4c
+keybind = super+s=text:\x3a\x77\x0a
+keybind = super+t=text:\x02\x63
+keybind = super+w=text:\x02\x78
+keybind = super+r=reload_config
+keybind = super+n=text:\x02\x22
+keybind = super+shift+n=text:\x02\x25
+keybind = global:cmd+`=toggle_quick_terminal
+keybind = shift+ctrl+left_bracket=previous_tab
+keybind = shift+ctrl+right_bracket=next_tab

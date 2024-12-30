@@ -1,5 +1,8 @@
 { username, config, ... }:
-
+let
+	dotfilesPath = "/Users/${username}/Code/bjarnehelland/dotfiles";
+	symlink = config.lib.file.mkOutOfStoreSymlink;
+in
 {
   # import sub modules
   imports = [
@@ -27,12 +30,13 @@
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     stateVersion = "24.11";
 
-    file.".local/bin".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/bin";
-    file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/nvim";
-    file.".config/sesh".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/sesh";
-    file.".config/wezterm".source =
-      config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/wezterm";
-    file.".gitmux.conf".source = config.lib.file.mkOutOfStoreSymlink "/Users/${username}/Code/bjarnehelland/dotfiles/config/gitmux/gitmux.conf";
+    file.".local/bin".source = symlink "${dotfilesPath}/config/bin";
+    file.".config/nvim".source = symlink "${dotfilesPath}/config/nvim";
+    file.".config/sesh".source = symlink "${dotfilesPath}/config/sesh";
+    file.".config/wezterm".source = symlink "${dotfilesPath}/config/wezterm";
+    file.".gitmux.conf".source = symlink "${dotfilesPath}/config/gitmux/gitmux.conf";
+    file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
+    file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source = symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
   };
 
   # Let Home Manager install and manage itself.

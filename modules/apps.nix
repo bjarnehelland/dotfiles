@@ -68,7 +68,8 @@
     # TODO Feel free to add your favorite apps here.
     casks = [
       "discord"
-      "wezterm"
+      "ghostty"
+      "warp"
       "google-chrome"
       "arc"
       "slack"
@@ -81,6 +82,9 @@
       "visual-studio-code"
       "chatgpt"
       "ollama"
+      "raindropio"
+      "spotify"
+      "elgato-stream-deck"
       "docker"
       "microsoft-teams"
       "microsoft-outlook"
@@ -89,5 +93,9 @@
       "microsoft-powerpoint"
       "microsoft-auto-update"
     ];
+
+    masApps = {
+      "amphetamine" = 937984704;
+    };
   };
 }

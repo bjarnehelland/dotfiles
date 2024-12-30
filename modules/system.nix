@@ -37,7 +37,8 @@
           "/System/Applications/Launchpad.app"
           "/Applications/Arc.app"
           "/Applications/Bruno.app"
-          "/Applications/WezTerm.app"
+          "/Applications/Ghostty.app"
+          "/Applications/Warp.app"
           "/Applications/Cursor.app"
           "/Applications/Slack.app"
           "/Applications/Notion.app"
@@ -46,6 +47,7 @@
           "/Applications/Microsoft Teams.app"
           "/Applications/Microsoft Outlook.app"
           "/Applications/Discord.app"
+          "/Applications/Spotify.app"
           "/System/Applications/Messages.app"
           "/System/Applications/System Settings.app"
         ];
