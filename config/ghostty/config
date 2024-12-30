@@ -8,16 +8,35 @@ mouse-hide-while-typing = true
 font-family = "JetBrainsMono Nerd Font"
 font-size = 15
 
+# <perfix>+g (open lazygit window)
 keybind = super+g=text:\x02\x67 
+
+# <perfix>+G (open gh-dash)
 keybind = super+shift+g=text:\x02\x47 
-keybind = super+k=text:\x02\x4b
-keybind = super+l=text:\x02\x4c
-keybind = super+s=text:\x3a\x77\x0a
-keybind = super+t=text:\x02\x63
-keybind = super+w=text:\x02\x78
+
+# <perfix>+k (open sesh picker)
+keybind = super+l=text:\x02\x4c 
+
+# <perfix>+l (switch to last session)
+keybind = super+s=text:\x3a\x77\x0a 
+
+# <perfix>+c (new window)
+keybind = super+t=text:\x02\x63 
+
+# <perfix>+x (close window)
+keybind = super+w=text:\x02\x78 
+
+# <perfix>+r (reload config)
 keybind = super+r=reload_config
-keybind = super+n=text:\x02\x22
-keybind = super+shift+n=text:\x02\x25
-keybind = global:cmd+`=toggle_quick_terminal
-keybind = shift+ctrl+left_bracket=previous_tab
-keybind = shift+ctrl+right_bracket=next_tab
+
+# <perfix>+n (new vertical pane)
+keybind = super+n=text:\x02\x22 
+
+# <perfix>+N (new horizontal pane)
+keybind = super+shift+n=text:\x02\x25 
+
+# <perfix>+n (next tmux tab)
+keybind = super+right_bracket=text:\x02\x6e 
+
+# <perfix>+p (previous tmux tab)
+keybind = super+left_bracket=text:\x02\x70 
