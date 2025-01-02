@@ -65,6 +65,7 @@
       "stacc/tap/blocc"
       "stacc/tap/stacc-next"
       "joshmedeski/sesh/sesh"
+      "helm"
     ];
 
     # `brew install --cask`
