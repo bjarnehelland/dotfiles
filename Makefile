@@ -12,3 +12,6 @@ setup:
 
 sync:
 	darwin-rebuild switch --flake .
+
+sync-debug:
+	darwin-rebuild switch --flake . --show-trace

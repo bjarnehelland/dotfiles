@@ -93,6 +93,7 @@
       "raindropio"
       "spotify"
       "elgato-stream-deck"
+      "homerow"
       "docker"
       "microsoft-teams"
       "microsoft-outlook"
