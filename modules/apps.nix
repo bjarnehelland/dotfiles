@@ -19,7 +19,6 @@
   #
   # Related Discussion: https://discourse.nixos.org/t/darwin-again/29331
   environment.systemPackages = with pkgs; [
-    nodejs_22
     wget
     git
     nixfmt-rfc-style
@@ -28,8 +27,6 @@
     kubelogin
     go
     rustup
-    pnpm
-    yarn
   ];
 
   fonts.packages = with pkgs; [
@@ -60,12 +57,18 @@
     # `brew install`
     # TODO Feel free to add your favorite apps here.
     brews = [
+      "node"
+      "fnm"
       "deno"
       "oven-sh/bun/bun"
       "stacc/tap/blocc"
       "stacc/tap/stacc-next"
       "joshmedeski/sesh/sesh"
       "helm"
+      "helmfile"
+      "pnpm"
+      "yarn"
+      "stern"
     ];
 
     # `brew install --cask`
@@ -82,6 +85,7 @@
       "notion"
       "raycast"
       "bruno"
+      "postman"
       "cursor"
       "visual-studio-code"
       "chatgpt"
