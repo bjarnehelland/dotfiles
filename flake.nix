@@ -51,6 +51,7 @@
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/host-users.nix
+          ./modules/aerospace.nix
 
           # home manager
           home-manager.darwinModules.home-manager

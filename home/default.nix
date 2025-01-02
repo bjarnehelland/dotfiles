@@ -6,7 +6,6 @@ in
 {
   # import sub modules
   imports = [
-    ./aerospace.nix
     ./shell.nix
     ./core.nix
     ./git.nix
