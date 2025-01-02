@@ -9,6 +9,9 @@ git clone git@github.com:stacc/bolig-opf.git ~/Code/stacc/bolig-opf
 git clone git@github.com:stacc/bolig-lba.git ~/Code/stacc/bolig-lba
 git clone git@github.com:stacc/bolig-min-side.git ~/Code/stacc/bolig-min-side
 git clone git@github.com:stacc/intrum.git ~/Code/stacc/intrum
+git clone git@github.com:stacc/services-integration-proxy.git ~/Code/stacc/services-integration-proxy
+git clone git@github.com:stacc/express-sbl.git ~/Code/stacc/express-sbl
+git clone git@github.com:stacc/express-filescan.git ~/Code/stacc/express-filescan
 git clone git@github.com:stacc/environments.git ~/Code/stacc/environments
 git clone git@github.com:stacc/flow.git ~/Code/stacc/flow
 git clone git@github.com:stacc/blocc.git ~/Code/stacc/blocc
