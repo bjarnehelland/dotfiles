@@ -37,7 +37,7 @@
       username = "bjarnehelland";
       useremail = "bjarne81@gmail.com";
       system = "aarch64-darwin"; # aarch64-darwin or x86_64-darwin
-      hostname = "MacBookPro";
+      hostname = "Bjarnes-MacBook-Pro";
 
       specialArgs = inputs // {
         inherit username useremail hostname;
