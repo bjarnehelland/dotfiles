@@ -79,5 +79,14 @@
         foreach = "submodule foreach";
       };
     };
+    gpg = {
+      enable = true;
+    };
   };
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 46000;
+    maxCacheTtl = 46000;
+  };  
 }
