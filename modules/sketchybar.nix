@@ -233,11 +233,6 @@ in
     # ${sketchybar} --add item display1 left --set display1 label="Display 1" display=1
     # ${sketchybar} --add item display2 left --set display2 label="Display 2" display=2
 
-    ##### Adding Apple Logo #####
-
-    ${sketchybar} --add item apple_logo left \
-      --set apple_logo icon="" label.drawing=off icon.padding_left=9 icon.padding_right=8 icon.y_offset=1 background.corner_radius=8 background.border_width=1 background.border_color=${normalSpaceLabelColor} padding_left=-8
-
     ##### Adding Workspaces Indicators #####
 
     workspaces=$(${aerospace} list-workspaces --all)
@@ -257,7 +252,7 @@ in
 
       ${sketchybar} --add item space.$sid left \
         --set space.$sid \
-          icon.font="${nerdfontFontName}:Bold:14.0" \
+          icon.font="${sketchyAppBarFontName}:Bold:14.0" \
           icon.color=${normalSpaceIconColor} \
           label.color=${normalSpaceLabelColor} \
           label.font="${sketchyAppBarFontName}:Normal:12.0" \

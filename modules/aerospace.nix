@@ -15,11 +15,7 @@
         "exec-and-forget sketchybar"
         "exec-and-forget borders"
       ];
-      exec-on-workspace-change = [
-        "/bin/bash"
-        "-c"
-        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
-      ];
+   
 
       gaps = {    
         outer.top = 48;
@@ -64,6 +60,23 @@
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
 
         alt-shift-semicolon = "mode layout";
+      };
+      mode.layout.binding = {
+        esc = [ "mode main" ];
+        e = "layout accordion horizontal vertical";
+        h = "move left";
+        j = "move down";
+        k = "move up"
+        l = "move right";
+        alt-h = "join-with left";
+        alt-j = "join-with down";
+        alt-k = "join-with up";
+        alt-l = "join-with right";
+        f = "fullscreen";
+        "0" = [ "flatten-workspace-tree" "mode main" ];
+        g = [ "layout floating tiling" "mode main" ];
+        minus = "resize smart -100";
+        equal = "resize smart +100";
       };
     };
   };
