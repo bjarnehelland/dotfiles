@@ -119,7 +119,6 @@
     width = 6.0;
     active_color = "0xfff7768e";
     inactive_color = "0xff7aa2f7";
-    order = "above";
   };
   services.sketchybar = {
     enable = true;
