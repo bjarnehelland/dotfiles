@@ -122,6 +122,7 @@
   };
   services.sketchybar = {
     enable = true;
+
     config = ''
       sketchybar --add event aerospace_workspace_change
 
