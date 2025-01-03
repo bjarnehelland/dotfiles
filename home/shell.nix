@@ -31,5 +31,7 @@
     "..." = "cd ../..";
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
+
+    dive = "docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v \"$(pwd)\":\"$(pwd)\" -w \"$(pwd)\" -v \"$HOME/.dive.yaml\":\"$HOME/.dive.yaml\" ghcr.io/joschi/dive:latest";
   };
 }

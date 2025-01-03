@@ -36,6 +36,7 @@ in
     file.".config/wezterm".source = symlink "${dotfilesPath}/config/wezterm";
     file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
     file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source = symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
+    file."Library/Application Support/Cursor/User/settings.json".source = symlink "${dotfilesPath}/config/cursor/settings.json";
   };
 
   # Let Home Manager install and manage itself.

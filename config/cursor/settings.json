@@ -1,0 +1,10 @@
+{
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+
+    "makefile.configureOnOpen": true,
+    
+    "editor.accessibilitySupport": "off",
+    "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace"
+}

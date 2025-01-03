@@ -1,5 +1,6 @@
-{ pkgs
-, ...
+{
+  pkgs,
+  ...
 }:
 let
   sketchybar = "${pkgs.sketchybar}/bin/sketchybar";
@@ -270,33 +271,6 @@ in
 
     ${sketchybar} --add bracket spaces '/space\..*/'
 
-    ${sketchybar} --add item front_app.app e \
-      --set front_app.app \
-        icon.font="${sketchyAppBarFontName}:Normal:16.0" \
-        icon.color=${highlightSpaceIconColor} \
-        label.color=${normalSpaceIconColor} \
-        padding_right=0 \
-        label.max_chars=16 \
-        scroll_texts=on \
-        background.drawing=off \
-        script="${frontAppPlugin}" \
-      --subscribe front_app.app front_app_switched
-
-    ${sketchybar} --add item front_app.title e \
-      --set front_app.title \
-        label.font="${nerdfontFontName}:Bold:12.0" \
-        label.color=${normalSpaceLabelColor} \
-        label.max_chars=26 \
-        padding_left=0 \
-        scroll_texts=on \
-        icon.drawing=off \
-        background.drawing=off \
-        label = "Title" \
-        script="${frontAppTitlePlugin}" \
-      --subscribe front_app.title front_app_switched
-
-    ${sketchybar} --add bracket front_app '/front_app.*/'
-
     ${sketchybar} --add item clock right \
            --set clock update_freq=10 icon=  script="${clockPlugin}" padding_right=-8 label.color=${normalSpaceLabelColor} label.font="${nerdfontFontName}:Bold:12.0" \
            --add item volume right \
@@ -314,3 +288,4 @@ in
     ${sketchybar} --update
   '';
 }
+
