@@ -95,6 +95,7 @@
       "elgato-stream-deck"
       "pgadmin4"
       "font-sf-pro"
+      "bettertouchtool"
       "docker"
       "microsoft-teams"
       "microsoft-outlook"
