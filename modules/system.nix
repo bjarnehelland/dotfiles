@@ -56,6 +56,9 @@
         Clicking = true;
         TrackpadThreeFingerDrag = true;
       };
+      NSGlobalDomain = {
+        _HIHideMenuBar = true;
+      };
     };
     keyboard = {
       enableKeyMapping = true;
