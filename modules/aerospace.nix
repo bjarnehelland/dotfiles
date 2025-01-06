@@ -35,6 +35,23 @@
         alt-k = "focus up";
         alt-l = "focus right";
 
+        alt-shift-h = "move left";
+        alt-shift-j = "move down";
+        alt-shift-k = "move up";
+        alt-shift-l = "move right";
+
+        alt-shift-minus = "resize smart -50";
+        alt-shift-equal = "resize smart +50";
+
+        alt-1 = "workspace 1";
+        alt-2 = "workspace 2";
+        alt-3 = "workspace 3";
+        alt-4 = "workspace 4";
+        alt-5 = "workspace 5";
+        alt-6 = "workspace 6";
+        alt-7 = "workspace 7";
+        alt-8 = "workspace 8";
+
         alt-shift-1 = [
           "move-node-to-workspace 1"
           "workspace 1"
@@ -67,48 +84,22 @@
           "move-node-to-workspace 8"
           "workspace 8"
         ];
-        alt-shift-9 = [
-          "move-node-to-workspace 9"
-          "workspace 9"
-        ];
-
-        alt-1 = "workspace 1";
-        alt-2 = "workspace 2";
-        alt-3 = "workspace 3";
-        alt-4 = "workspace 4";
-        alt-5 = "workspace 5";
-        alt-6 = "workspace 6";
-        alt-7 = "workspace 7";
-        alt-8 = "workspace 8";
-        alt-9 = "workspace 9";
 
         alt-tab = "workspace-back-and-forth";
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
 
-        alt-shift-semicolon = "mode layout";
+        alt-shift-semicolon = "mode service";
       };
-      mode.layout.binding = {
+      mode.service.binding = {
         esc = [ "mode main" ];
-        e = "layout accordion horizontal vertical";
-        h = "move left";
-        j = "move down";
-        k = "move up";
-        l = "move right";
+        r = [ "flatten-workspace-tree" "mode main" ];
+        f = [ "layout floating tiling" "mode main" ];
+        backspace = [ "close-all-windows-but-current" "mode main" ];
+
         alt-h = "join-with left";
         alt-j = "join-with down";
         alt-k = "join-with up";
         alt-l = "join-with right";
-        f = "fullscreen";
-        "0" = [
-          "flatten-workspace-tree"
-          "mode main"
-        ];
-        g = [
-          "layout floating tiling"
-          "mode main"
-        ];
-        minus = "resize smart -100";
-        equal = "resize smart +100";
       };
     };
   };

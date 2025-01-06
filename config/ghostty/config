@@ -39,7 +39,7 @@ keybind = super+n=text:\x02\x22
 keybind = super+shift+n=text:\x02\x25 
 
 # <perfix>+n (next tmux tab)
-keybind = super+right_bracket=text:\x02\x6e 
+keybind = alt+right_bracket=text:\x02\x6e 
 
 # <perfix>+p (previous tmux tab)
-keybind = super+left_bracket=text:\x02\x70 
+keybind = alt+left_bracket=text:\x02\x70 
