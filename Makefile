@@ -6,7 +6,7 @@ install-nix:
 	curl -L https://nixos.org/nix/install | sh
 
 setup:
-	nix build .#darwinConfigurations.MacBookPro.system \
+	nix build .#darwinConfigurations.Bjarnes-MacBook-Pro.system \
 	   --extra-experimental-features 'nix-command flakes'
 	./result/sw/bin/darwin-rebuild switch --flake .
 

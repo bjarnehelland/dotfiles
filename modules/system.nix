@@ -23,7 +23,7 @@
     defaults = {
       menuExtraClock.Show24Hour = true;
       loginwindow.LoginwindowText = "Yo";
-      screencapture.location = "~/Pictures/screenshots";
+      # screencapture.target = "clipboard";
       screensaver.askForPasswordDelay = 10;
       finder = {
         AppleShowAllExtensions = true;
