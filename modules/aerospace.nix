@@ -10,7 +10,7 @@
       enable-normalization-flatten-containers = true;
       enable-normalization-opposite-orientation-for-nested-containers = true;
       #on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
-      on-focus-changed = [ "move-mouse window-lazy-center" ];
+      # on-focus-changed = [ "move-mouse window-lazy-center" ];
       after-startup-command = [
         "exec-and-forget sketchybar"
         "exec-and-forget borders"
@@ -92,8 +92,14 @@
       };
       mode.service.binding = {
         esc = [ "mode main" ];
-        r = [ "flatten-workspace-tree" "mode main" ];
-        f = [ "layout floating tiling" "mode main" ];
+        r = [
+          "flatten-workspace-tree"
+          "mode main"
+        ];
+        f = [
+          "layout floating tiling"
+          "mode main"
+        ];
         alt-h = "join-with left";
         alt-j = "join-with down";
         alt-k = "join-with up";
@@ -109,24 +115,24 @@
     active_color = "0xfff7768e";
     inactive_color = "0xff7aa2f7";
   };
-  services.sketchybar = {
-    enable = true;
-
-    config = ''
-      sketchybar --add event aerospace_workspace_change
-
-      for sid in $(aerospace list-workspaces --all); do
-          sketchybar --add item space.$sid left \
-              --subscribe space.$sid aerospace_workspace_change \
-              --set space.$sid \
-              background.color=0x44ffffff \
-              background.corner_radius=5 \
-              background.height=20 \
-              background.drawing=off \
-              label="$sid" \
-              click_script="aerospace workspace $sid" \
-              script="$CONFIG_DIR/plugins/aerospace.sh $sid"
-      done
-    '';
-  };
+  # services.sketchybar = {
+  #   enable = true;
+  #
+  #   config = ''
+  #     sketchybar --add event aerospace_workspace_change
+  #
+  #     for sid in $(aerospace list-workspaces --all); do
+  #         sketchybar --add item space.$sid left \
+  #             --subscribe space.$sid aerospace_workspace_change \
+  #             --set space.$sid \
+  #             background.color=0x44ffffff \
+  #             background.corner_radius=5 \
+  #             background.height=20 \
+  #             background.drawing=off \
+  #             label="$sid" \
+  #             click_script="aerospace workspace $sid" \
+  #             script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+  #     done
+  #   '';
+  # };
 }

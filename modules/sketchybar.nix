@@ -260,16 +260,13 @@ in
           padding_left=$padding_left \
           padding_right=$padding_right \
           background.drawing=on \
-          background.color=0x00000000 \
           background.border_width=${normalSpaceBorderWidth} \
           background.border_color=${normalSpaceBorderColor} \
-          background.height=20 \
-          background.corner_radius=10 \
           icon="$sid" \
           click_script="${aerospace} workspace $sid"
     done
 
-    ${sketchybar} --add bracket spaces '/space\..*/'
+    # ${sketchybar} --add bracket spaces '/space\..*/'
 
     ${sketchybar} --add item clock right \
            --set clock update_freq=10 icon=  script="${clockPlugin}" padding_right=-8 label.color=${normalSpaceLabelColor} label.font="${nerdfontFontName}:Bold:12.0" \
@@ -288,4 +285,3 @@ in
     ${sketchybar} --update
   '';
 }
-
