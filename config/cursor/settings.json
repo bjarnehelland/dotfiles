@@ -5,6 +5,15 @@
 
     "makefile.configureOnOpen": true,
     
+    "editor.formatOnSave": true,
     "editor.accessibilitySupport": "off",
-    "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace"
+    "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace",
+
+    "yaml.schemas": {
+        "https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
+        "https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
+        "https://schema.blocc.dev/v1beta1/template.json": "template.yaml",
+        "https://schema.blocc.dev/v1beta1/component.json": "component.yaml",
+        "https://schema.blocc.dev/v1beta1/environment.json": ["environments/*.yaml", "environment.yaml"]
+      }
 }

@@ -88,14 +88,12 @@
         alt-tab = "workspace-back-and-forth";
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
 
-        alt-shift-semicolon = "mode service";
+        alt-shift-semicolon = [ "mode service" ];
       };
       mode.service.binding = {
         esc = [ "mode main" ];
         r = [ "flatten-workspace-tree" "mode main" ];
         f = [ "layout floating tiling" "mode main" ];
-        backspace = [ "close-all-windows-but-current" "mode main" ];
-
         alt-h = "join-with left";
         alt-j = "join-with down";
         alt-k = "join-with up";
