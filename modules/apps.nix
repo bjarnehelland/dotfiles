@@ -69,6 +69,8 @@
       "pnpm"
       "yarn"
       "stern"
+      "gum"
+      "gettext"
     ];
 
     # `brew install --cask`
