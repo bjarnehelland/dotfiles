@@ -1,7 +1,7 @@
 { username, config, ... }:
 let
-	dotfilesPath = "/Users/${username}/Code/bjarnehelland/dotfiles";
-	symlink = config.lib.file.mkOutOfStoreSymlink;
+  dotfilesPath = "/Users/${username}/Code/bjarnehelland/dotfiles";
+  symlink = config.lib.file.mkOutOfStoreSymlink;
 in
 {
   # import sub modules
@@ -35,8 +35,11 @@ in
     file.".config/sesh".source = symlink "${dotfilesPath}/config/sesh";
     file.".config/wezterm".source = symlink "${dotfilesPath}/config/wezterm";
     file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
-    file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source = symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
-    file."Library/Application Support/Cursor/User/settings.json".source = symlink "${dotfilesPath}/config/cursor/settings.json";
+    file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source =
+      symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
+    file."Library/Application Support/Cursor/User/settings.json".source =
+      symlink "${dotfilesPath}/config/cursor/settings.json";
+    file.".simplebarrc".source = symlink "${dotfilesPath}/config/ubersicht/simplebarrc";
   };
 
   # Let Home Manager install and manage itself.

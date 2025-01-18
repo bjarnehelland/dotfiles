@@ -16,6 +16,16 @@
         "exec-and-forget borders"
       ];
 
+      on-focus-changed = [
+        "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'"
+      ];
+
+      exec-on-workspace-change = [
+        "/bin/zsh"
+        "-c"
+        "/usr/bin/osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'"
+      ];
+
       gaps = {
         outer.top = 48;
         outer.right = 24;
