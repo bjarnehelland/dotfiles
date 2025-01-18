@@ -34,6 +34,12 @@
         inner.horizontal = 24;
         inner.vertical = 24;
       };
+      workspace-to-monitor-force-assignment = {
+        "7" = "secondary";
+        "8" = "secondary";
+        "9" = "secondary";
+      };
+
       mode.main.binding = {
         # See: https://nikitabobko.github.io/AeroSpace/commands#layout
         alt-slash = "layout tiles horizontal vertical";
@@ -61,6 +67,7 @@
         alt-6 = "workspace 6";
         alt-7 = "workspace 7";
         alt-8 = "workspace 8";
+        alt-9 = "workspace 9";
 
         alt-shift-1 = [
           "move-node-to-workspace 1"
@@ -93,6 +100,10 @@
         alt-shift-8 = [
           "move-node-to-workspace 8"
           "workspace 8"
+        ];
+        alt-shift-9 = [
+          "move-node-to-workspace 9"
+          "workspace 9"
         ];
 
         alt-tab = "workspace-back-and-forth";
