@@ -1,19 +1,27 @@
 {
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.openRepositoryInParentFolders": "always",
 
-    "makefile.configureOnOpen": true,
-    
-    "editor.formatOnSave": true,
-    "editor.accessibilitySupport": "off",
-    "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace",
+  "makefile.configureOnOpen": true,
 
-    "yaml.schemas": {
-        "https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
-        "https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
-        "https://schema.blocc.dev/v1beta1/template.json": "template.yaml",
-        "https://schema.blocc.dev/v1beta1/component.json": "component.yaml",
-        "https://schema.blocc.dev/v1beta1/environment.json": ["environments/*.yaml", "environment.yaml"]
-      }
+  "editor.formatOnSave": true,
+  "editor.accessibilitySupport": "off",
+  "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace",
+
+  "yaml.schemas": {
+    "https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
+    "https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
+    "https://schema.blocc.dev/v1beta1/template.json": "template.yaml",
+    "https://schema.blocc.dev/v1beta1/component.json": "component.yaml",
+    "https://schema.blocc.dev/v1beta1/environment.json": [
+      "environments/*.yaml",
+      "environment.yaml"
+    ]
+  },
+
+  "[json]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
 }

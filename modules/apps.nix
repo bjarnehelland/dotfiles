@@ -70,7 +70,6 @@
       "yarn"
       "stern"
       "gum"
-      "gettext"
     ];
 
     # `brew install --cask`
@@ -96,6 +95,7 @@
       "spotify"
       "elgato-stream-deck"
       "pgadmin4"
+      "ubersicht"
       "font-sf-pro"
       "bettertouchtool"
       "docker"
