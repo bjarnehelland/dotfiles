@@ -209,6 +209,6 @@
     "userWidgetsList": {}
   },
   "customStyles": {
-    "styles": "/* your custom css styles here */"
+    "styles": ".simple-bar {\n  background-color: rgba(0, 0, 0, 0.5);\n}"
   }
 }
