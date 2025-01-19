@@ -23,11 +23,11 @@
       hostname.disabled = true;
       aws.disabled = true;
       docker_context.disabled = true;
-      git_branch.disabled = true;
-      git_commit.disabled = true;
-      git_state.disabled = true;
-      git_metrics.disabled = true;
-      git_status.disabled = true;
+      git_branch.disabled = false;
+      git_commit.disabled = false;
+      git_state.disabled = false;
+      git_metrics.disabled = false;
+      git_status.disabled = false;
       kubernetes = {
         disabled = false;
         contexts = [
