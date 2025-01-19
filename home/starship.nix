@@ -25,9 +25,14 @@
       docker_context.disabled = true;
       git_branch.disabled = false;
       git_commit.disabled = false;
-      git_state.disabled = false;
-      git_metrics.disabled = false;
-      git_status.disabled = false;
+      git_state.disabled = true;
+      git_metrics.disabled = true;
+      git_status = {
+        disabled = false;
+        ahead = "↑{$count}";
+        diverged = "↑{$ahead_count}↓{$behind_count}";
+        behind = "↓{$count}";
+      };
       kubernetes = {
         disabled = false;
         contexts = [
