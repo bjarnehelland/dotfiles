@@ -96,6 +96,7 @@
       "elgato-stream-deck"
       "pgadmin4"
       "ubersicht"
+      "camunda-modeler"
       "font-sf-pro"
       "bettertouchtool"
       "docker"
