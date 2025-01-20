@@ -131,7 +131,7 @@
     "showMic": true
   },
   "soundWidgetOptions": {
-    "refreshFrequency": 20000,
+    "refreshFrequency": 1000,
     "showOnDisplay": ""
   },
   "micWidgetOptions": {
