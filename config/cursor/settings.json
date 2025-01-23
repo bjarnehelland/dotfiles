@@ -3,13 +3,10 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "git.openRepositoryInParentFolders": "always",
-
   "makefile.configureOnOpen": true,
-
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace",
-
   "yaml.schemas": {
     "https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
     "https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
@@ -20,8 +17,10 @@
       "environment.yaml"
     ]
   },
-
   "[json]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[typescriptreact]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   }
 }
