@@ -29,9 +29,17 @@
       git_metrics.disabled = true;
       git_status = {
         disabled = false;
-        ahead = "↑$count";
-        diverged = "↑$ahead_count↓$behind_count";
-        behind = "↓$count";
+        conflicted = "🏳";
+        ahead = "🏎💨↑$count";
+        behind = "😰↓$count";
+        diverged = "😵↑$ahead_count↓$behind_count";
+        up_to_date = "✓";
+        untracked = "🤷";
+        stashed = "📦";
+        modified = "📝";
+        staged = "[++\($count\)](green)";
+        renamed = "👅";
+        deleted = "🗑";
       };
       kubernetes = {
         disabled = false;
