@@ -19,13 +19,13 @@
     "yabaiPath": "/opt/homebrew/bin/yabai",
     "aerospacePath": "/run/current-system/sw/bin/aerospace",
     "windowManager": "aerospace",
-    "shell": "bash",
+    "shell": "sh",
     "terminal": "Terminal",
     "slidingAnimationPace": 4,
-    "enableServer": true,
+    "enableServer": false,
     "serverSocketPort": 7777,
     "yabaiServerRefresh": false,
-    "aerospaceServerRefresh": true,
+    "aerospaceServerRefresh": false,
     "externalConfigFile": true
   },
   "themes": {
@@ -55,7 +55,7 @@
     "displayStickyWindowsSeparately": false,
     "hideCreateSpaceButton": false,
     "hideEmptySpaces": false,
-    "showOptionsOnHover": false,
+    "showOptionsOnHover": true,
     "switchSpacesWithoutYabai": false
   },
   "widgets": {
@@ -78,7 +78,7 @@
     "cryptoWidget": false,
     "stockWidget": false,
     "youtubeMusicWidget": false,
-    "musicWidget": false,
+    "musicWidget": true,
     "mpdWidget": false,
     "browserTrackWidget": false
   },
@@ -216,9 +216,9 @@
   "userWidgets": {
     "userWidgetsList": {
       "1": {
-        "title": "brew",
-        "icon": "Anki",
-        "backgroundColor": "--cyan",
+        "title": "Brew",
+        "icon": "Widget",
+        "backgroundColor": "--orange",
         "output": "/opt/homebrew/bin/brew outdated | wc -l | tr -d ' '",
         "onClickAction": "",
         "onRightClickAction": "",
@@ -231,6 +231,6 @@
     }
   },
   "customStyles": {
-    "styles": ".simple-bar {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n:root {\n  --main: #0d1116;\n  --main-alt: #314154;\n  --minor: #141b22;\n  --accent: var(--yellow);\n  --red: #f16c75;\n  --green: #37f499;\n  --yellow: #37f499;\n  --orange: #19dfcf;\n  --blue: #1682ef;\n  --magenta: #987afb;\n  --cyan: #04d1f9;\n  --black: #0d1116;\n  --white: #ebfafa;\n}"
+    "styles": ".simple-bar {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n:root {\n  --main: #0d1116;\n  --main-alt: #314154;\n  --minor: #141b22;\n  --accent: var(--yellow);\n  --red: #f16c75;\n  --green: #37f499;\n  --yellow: #37f499;\n  --orange: #19dfcf;\n  --blue: #1682ef;\n  --magenta: #987afb;\n  --cyan: #04d1f9;\n  --black: #0d1116;\n  --white: #ebfafa;\n}\n"
   }
 }

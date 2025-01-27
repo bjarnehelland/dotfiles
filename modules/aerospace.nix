@@ -27,7 +27,7 @@
       ];
 
       gaps = {
-        outer.top = 48;
+        outer.top = 24;
         outer.right = 24;
         outer.bottom = 24;
         outer.left = 24;
