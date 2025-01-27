@@ -11,6 +11,7 @@ zoxide add ~/Code/bjarnehelland/100ord
 git clone git@github.com:stacc/bolig-opf.git ~/Code/stacc/bolig-opf
 git clone git@github.com:stacc/bolig-lba.git ~/Code/stacc/bolig-lba
 git clone git@github.com:stacc/bolig-min-side.git ~/Code/stacc/bolig-min-side
+git clone git@github.com:stacc/mortgage-champion.git ~/Code/stacc/mortgage-champion
 git clone git@github.com:stacc/intrum.git ~/Code/stacc/intrum
 git clone git@github.com:stacc/services-integration-proxy.git ~/Code/stacc/services-integration-proxy
 git clone git@github.com:stacc/express-sbl.git ~/Code/stacc/express-sbl
@@ -22,6 +23,7 @@ git clone git@github.com:stacc/blocc.git ~/Code/stacc/blocc
 zoxide add ~/Code/stacc/bolig-opf
 zoxide add ~/Code/stacc/bolig-lba
 zoxide add ~/Code/stacc/bolig-min-side
+zoxide add ~/Code/stacc/mortgage-champion
 zoxide add ~/Code/stacc/intrum
 zoxide add ~/Code/stacc/services-integration-proxy
 zoxide add ~/Code/stacc/express-sbl
