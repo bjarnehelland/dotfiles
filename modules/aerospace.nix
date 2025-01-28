@@ -27,7 +27,11 @@
       ];
 
       gaps = {
-        outer.top = 24;
+        # offset of 32 on internal display, because of notch (16" MPB)
+        outer.top = [
+          { monitor.built-in = 20; }
+          48
+        ];
         outer.right = 24;
         outer.bottom = 24;
         outer.left = 24;
@@ -106,11 +110,14 @@
           "workspace 9"
         ];
 
+        alt-f = "fullscreen";
+
         alt-tab = "workspace-back-and-forth";
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
 
         alt-shift-semicolon = [ "mode service" ];
       };
+
       mode.service.binding = {
         esc = [ "mode main" ];
         r = [

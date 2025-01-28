@@ -70,6 +70,7 @@
       "yarn"
       "stern"
       "gum"
+      "lazydocker"
     ];
 
     # `brew install --cask`
@@ -87,6 +88,7 @@
       "raycast"
       "bruno"
       "postman"
+      "notchnook"
       "cursor"
       "visual-studio-code"
       "chatgpt"
@@ -110,6 +112,7 @@
 
     masApps = {
       "amphetamine" = 937984704;
+      "boop" = 1518425043;
     };
   };
 }
