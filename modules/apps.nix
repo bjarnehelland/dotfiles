@@ -71,6 +71,7 @@
       "stern"
       "gum"
       "lazydocker"
+      "gettext"
     ];
 
     # `brew install --cask`
