@@ -50,7 +50,7 @@ in
         '';
       }
       vim-tmux-navigator
-      better-mouse-mode
+      # better-mouse-mode
       yank
 
     ];
