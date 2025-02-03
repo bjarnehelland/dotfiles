@@ -15,6 +15,8 @@
     ll = "ls -l";
     s = "sesh connect $(sesh list -i | fzf)";
     k = "kubectl";
+    kc = "kubectx";
+    kn = "kubens";
     gs = "git status";
     gpp = "git pull --prune";
     gp = "git pull";
@@ -35,6 +37,6 @@
     take = "(){  mkdir -p $1 && cd $_; }";
 
     dive = "docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v \"$(pwd)\":\"$(pwd)\" -w \"$(pwd)\" -v \"$HOME/.dive.yaml\":\"$HOME/.dive.yaml\" wagoodman/dive:latest";
+
   };
 }
-
