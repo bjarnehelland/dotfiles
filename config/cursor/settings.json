@@ -27,5 +27,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "window.commandCenter": 1,
+  "explorer.confirmDragAndDrop": false,
 
 }
