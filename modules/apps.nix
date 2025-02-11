@@ -72,6 +72,8 @@
       "gum"
       "lazydocker"
       "gettext"
+      "kind"
+      "dnsmasq"
     ];
 
     # `brew install --cask`
@@ -103,8 +105,10 @@
       "ubersicht"
       "camunda-modeler"
       "font-sf-pro"
+      "blender"
       "bettertouchtool"
       "docker"
+      "orbstack"
       "microsoft-teams"
       "microsoft-outlook"
       "microsoft-word"
