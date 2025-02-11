@@ -62,6 +62,14 @@
         }
         {
           "if" = {
+            app-id = "com.spotify.client";
+          };
+          run = [
+            "move-node-to-workspace 9"
+          ];
+        }
+        {
+          "if" = {
             app-id = "com.microsoft.Outlook";
           };
           run = [
