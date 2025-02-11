@@ -17,7 +17,6 @@ az aks get-credentials -g scc-prod-opf-01-aks-rg -n scc-prod-opf-01-aks --subscr
 az aks get-credentials -g stacc-lba-link-dev-aks-rg -n stacc-lba-link-dev-aks --subscription 0cc7ab0d-ff46-40f1-9008-5da5f7f6c2f6 --file .kubeconfig
 az aks get-credentials -g lokalbank-stacc-prod-aks-rg -n lokalbank-stacc-prod-aks --subscription a1f1d2dc-46a0-4a8a-ba51-8f49adfee490 --file .kubeconfig
 
+az aks get-credentials -g link-express-prod-aks-rg -n link-express-prod-aks --subscription a2cb9eee-541f-410e-b8d2-dff6a2af229a --file .kubeconfig
 # Create .envrc file
-echo "export KUBECONFIG=\$PWD/.kubeconfig" > .envrc
-
-
+echo "export KUBECONFIG=\$PWD/.kubeconfig" >.envrc

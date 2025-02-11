@@ -28,5 +28,6 @@
   },
   "window.commandCenter": 1,
   "explorer.confirmDragAndDrop": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
 
 }
