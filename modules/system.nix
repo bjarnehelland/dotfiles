@@ -36,6 +36,7 @@
         persistent-apps = [
           "/System/Applications/Launchpad.app"
           "/Applications/Arc.app"
+          "/System/Cryptexes/App/System/Applications/Safari.app"
           "/Applications/Bruno.app"
           "/Applications/Ghostty.app"
           "/Applications/Warp.app"
