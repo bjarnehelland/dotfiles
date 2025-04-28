@@ -15,3 +15,6 @@ sync:
 
 sync-debug:
 	darwin-rebuild switch --flake . --show-trace
+
+update:
+	nix flake update

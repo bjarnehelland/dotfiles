@@ -66,9 +66,9 @@
       remapCapsLockToControl = true;
     };
   };
-
+  security.pam.services.sudo_local.touchIdAuth = true;
   # Add ability to used TouchID for sudo authentication
-  security.pam.enableSudoTouchIdAuth = true;
+  # security.pam.enableSudoTouchIdAuth = true;
   # Hack to make pam-reattach work
   environment.etc."pam.d/sudo_local".text = ''
     # Written by nix-darwin

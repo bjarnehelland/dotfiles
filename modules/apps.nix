@@ -108,7 +108,6 @@
       "blender"
       "bettertouchtool"
       "docker"
-      "orbstack"
       "microsoft-teams"
       "microsoft-outlook"
       "microsoft-word"

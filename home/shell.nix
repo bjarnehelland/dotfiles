@@ -19,6 +19,7 @@
     kn = "kubens";
     gs = "git status";
     gpp = "git pull --prune";
+    gpa = "git pull --rebase --autostash";
     gp = "git pull";
     gpush = "git push";
 
