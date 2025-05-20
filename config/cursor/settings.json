@@ -16,6 +16,8 @@
       "environments/*.yaml",
       "environment.yaml"
     ]
+
+    
   },
   "window.commandCenter": 1,
   "explorer.confirmDragAndDrop": false,
@@ -24,5 +26,12 @@
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
