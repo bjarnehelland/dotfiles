@@ -11,10 +11,10 @@ setup:
 	./result/sw/bin/darwin-rebuild switch --flake .
 
 sync:
-	darwin-rebuild switch --flake .
+	sudo darwin-rebuild switch --flake .
 
 sync-debug:
-	darwin-rebuild switch --flake . --show-trace
+	sudo darwin-rebuild switch --flake . --show-trace
 
 update:
 	nix flake update

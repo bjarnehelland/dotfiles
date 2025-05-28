@@ -48,7 +48,6 @@
     };
 
     taps = [
-      "homebrew/services"
       "oven-sh/bun"
       "stacc/tap"
       "joshmedeski/sesh"
