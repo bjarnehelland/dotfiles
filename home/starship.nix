@@ -65,6 +65,7 @@
         command = "blocc config show >/dev/null 2>&1 && (blocc config show | grep -A3 'deploy:' | grep -E '(context|environment):' | awk '{print $2}' | xargs) || echo '🚫'";
         detect_files = [ "solution.yaml" ];
         format = " blocc [$output]($style) ";
+        command_timeout = 2000;
       };
     };
   };
