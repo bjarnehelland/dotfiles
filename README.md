@@ -16,8 +16,6 @@ make setup
 Random commands:
 ```sh
 chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
-git submodule update --init --recursive
-cp ~/Code/bjarnehelland/dotfiles/config/ubersicht/simplebarrc ~/.simplebarrc
 ```
 
 ## Software
