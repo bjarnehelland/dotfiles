@@ -38,7 +38,6 @@ in
       symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
     file."Library/Application Support/Cursor/User/settings.json".source =
       symlink "${dotfilesPath}/config/cursor/settings.json";
-    # file.".simplebarrc".source = symlink "${dotfilesPath}/config/ubersicht/simplebarrc";
   };
 
   # Let Home Manager install and manage itself.
