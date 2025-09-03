@@ -29,15 +29,16 @@ disabled = true
 ahead = "🏎💨↑$count"
 behind = "😰↓$count"
 conflicted = "🏳"
-deleted = "🗑"
+deleted = "💩"
 disabled = false
 diverged = "😵↑$ahead_count↓$behind_count"
-modified = "📝"
-renamed = "👅"
-staged = "[++($count)](green)"
-stashed = "📦"
-untracked = "🤷"
-up_to_date = "✓"
+format = "$all_status$ahead_behind"
+modified = "💩"
+renamed = "💩"
+staged = "💩"
+stashed = ""
+untracked = "💩"
+up_to_date = "✅"
 
 [hostname]
 disabled = true
