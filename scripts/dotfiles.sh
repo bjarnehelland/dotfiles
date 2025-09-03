@@ -2,8 +2,8 @@
 
 set -o errexit
 
-REPO_URL=https://github.com/protiumx/.dotfiles.git
-REPO_PATH="$HOME/.dotfiles"
+REPO_URL=https://github.com/bjarnehelland/dotfiles.git
+REPO_PATH="$HOME/Code/bjarnehelland/dotfiles"
 
 reset_color=$(tput sgr 0)
 
@@ -53,13 +53,14 @@ info "Bootstraping..."
 install_xcode
 install_homebrew
 
+
 info "Installing Git"
 brew install git
 
-info "Cloning .dotfiles repo from $REPO_URL into $REPO_PATH"
-git clone "$REPO_URL" "$REPO_PATH"
+# info "Cloning .dotfiles repo from $REPO_URL into $REPO_PATH"
+# git clone "$REPO_URL" "$REPO_PATH"
 
-info "Change path to $REPO_PATH"
-cd "$REPO_PATH" >/dev/null
+# info "Change path to $REPO_PATH"
+# cd "$REPO_PATH" >/dev/null
 
-/bin/bash ./install.sh
+# /bin/bash ./install.sh

@@ -33,10 +33,15 @@ alias -- s='cd "$(zoxide query --list | sed "s|$HOME|~|g" | fzf | sed "s|~|$HOME
 alias -- sz='source ~/.zshrc'
 alias -- take='(){  mkdir -p $1 && cd $_; }'
 alias -- vimdiff='nvim -d'
-alias -- paths="echo $PATH | tr ':' '\n'"
+alias -- paths="echo $PATH | tr ':' '\n' | nl"
 
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.config/bin:$PATH"
+export FZF_DEFAULT_OPTS='--ansi --border rounded --color="16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic" --marker=" " --no-info --no-separator --pointer="👉" --reverse'
+
+source <(fzf --zsh)
+
 
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
+eval "$(~/.local/bin/mise activate zsh)"
