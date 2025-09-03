@@ -1,0 +1,10 @@
+#!/bin/sh
+
+gum spin --spinner globe --title "Logging into blocc registry" -- az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1
+echo "✅ Logged into blocc registry"
+
+gum spin --spinner globe --title "Logging into bloccephe registry" -- az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1
+echo "✅ Logged into bloccephe registry"
+
+gum spin --spinner globe --title "Logging into bloccdev registry" -- az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1
+echo "✅ Logged into bloccdev registry"

@@ -6,7 +6,7 @@
     yq-go # yaml processer https://github.com/mikefarah/yq
     nmap # A utility for network discovery and security auditing
     glow # markdown previewer in terminal
-    azure-cli
+    # azure-cli
   ];
 
   programs = {

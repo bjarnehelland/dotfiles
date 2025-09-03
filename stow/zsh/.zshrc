@@ -2,13 +2,6 @@ alias -- ..='cd ..'
 alias -- ...='cd ../..'
 alias -- ....='cd ../../..'
 alias -- .....='cd ../../../..'
-alias -- bl='echo "Logging into blocc registry..." && \
-az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1 && \
-echo "Logging into bloccephe registry..." && \
-az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1 && \
-echo "Logging into bloccdev registry..." && \
-az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1
-'
 alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
 alias -- dive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":"$(pwd)" -w "$(pwd)" -v "$HOME/.dive.yaml":"$HOME/.dive.yaml" wagoodman/dive:latest'
 alias -- eza='eza --icons auto --git'
