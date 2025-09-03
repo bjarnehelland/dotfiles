@@ -6,10 +6,8 @@ in
 {
   # import sub modules
   imports = [
-    ./shell.nix
     ./core.nix
     ./git.nix
-    ./starship.nix
     ./tmux.nix
   ];
 
@@ -30,14 +28,14 @@ in
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     stateVersion = "24.11";
 
-    file.".local/bin".source = symlink "${dotfilesPath}/config/bin";
-    file.".config/nvim".source = symlink "${dotfilesPath}/config/nvim";
-    file.".config/sesh".source = symlink "${dotfilesPath}/config/sesh";
-    file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
-    file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source =
-      symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
-    file."Library/Application Support/Cursor/User/settings.json".source =
-      symlink "${dotfilesPath}/config/cursor/settings.json";
+    # file.".local/bin".source = symlink "${dotfilesPath}/config/bin";
+    # file.".config/nvim".source = symlink "${dotfilesPath}/config/nvim";
+    # file.".config/sesh".source = symlink "${dotfilesPath}/config/sesh";
+    # file.".config/ghostty/config".source = symlink "${dotfilesPath}/config/ghostty/config";
+    # file."Library/Application Support/com.elgato.StreamDeck/ProfilesV2".source =
+    #   symlink "${dotfilesPath}/config/streamdeck/ProfilesV2";
+    # file."Library/Application Support/Cursor/User/settings.json".source =
+    #   symlink "${dotfilesPath}/config/cursor/settings.json";
   };
 
   # Let Home Manager install and manage itself.

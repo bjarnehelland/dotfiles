@@ -1,0 +1,67 @@
+[aws]
+disabled = true
+
+[custom.blocc]
+command = "blocc config show >/dev/null 2>&1 && (blocc config show | grep -A3 'deploy:' | grep -E '(context|environment):' | awk '{print $2}' | xargs) || echo '🚫'"
+detect_files = ["solution.yaml"]
+format = " blocc [$output]($style) "
+ignore_timeout = true
+
+[directory]
+style = "blue bold"
+
+[docker_context]
+disabled = true
+
+[git_branch]
+disabled = false
+
+[git_commit]
+disabled = true
+
+[git_metrics]
+disabled = true
+
+[git_state]
+disabled = true
+
+[git_status]
+ahead = "🏎💨↑$count"
+behind = "😰↓$count"
+conflicted = "🏳"
+deleted = "🗑"
+disabled = false
+diverged = "😵↑$ahead_count↓$behind_count"
+modified = "📝"
+renamed = "👅"
+staged = "[++($count)](green)"
+stashed = "📦"
+untracked = "🤷"
+up_to_date = "✓"
+
+[hostname]
+disabled = true
+
+[kubernetes]
+disabled = false
+
+[[kubernetes.contexts]]
+context_alias = "LBA"
+context_pattern = "k8s-login-lba-link-stacc-dev-context"
+style = "bold green"
+
+[[kubernetes.contexts]]
+context_alias = "OPF"
+context_pattern = "k8s-flow-login-test-1-opf-stacc-dev-context"
+style = "bold green"
+
+[[kubernetes.contexts]]
+context_alias = "OPF"
+context_pattern = "scc-prod-opf-01-aks-admin"
+style = "bold red"
+
+[package]
+disabled = true
+
+[username]
+disabled = true

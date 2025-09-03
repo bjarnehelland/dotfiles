@@ -1,0 +1,13 @@
+k9s:
+  cluster: intrum-stacc-dev-aks
+  namespace:
+    active: intrum-dev-1
+    lockFavorites: false
+    favorites:
+      - intrum-dev-1
+      - default
+  view:
+    active: po
+  featureGates:
+    nodeShell: false
+  proxy: null

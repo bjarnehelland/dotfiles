@@ -63,17 +63,6 @@
         };
       };
     };
-    zoxide = {
-      enable = true;
-    };
-    direnv = {
-      enable = true;
-      config = {
-        whitelist = {
-          prefix = [ "~/Code/stacc" ];
-        };
-      };
-    };
     fzf = {
       enable = true;
       defaultOptions = [

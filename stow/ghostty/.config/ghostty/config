@@ -1,0 +1,14 @@
+theme = catppuccin-mocha
+
+confirm-close-surface = false
+
+window-padding-x = 4,2
+window-padding-y = 6,0
+background-blur-radius = 20
+background-opacity = 0.85
+
+mouse-hide-while-typing = true
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 15
+

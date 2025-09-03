@@ -18,3 +18,4 @@ sync-debug:
 
 update:
 	nix flake update
+
