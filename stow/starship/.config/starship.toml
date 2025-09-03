@@ -47,11 +47,6 @@ disabled = true
 disabled = false
 
 [[kubernetes.contexts]]
-context_alias = "LBA"
-context_pattern = "k8s-login-lba-link-stacc-dev-context"
-style = "bold green"
-
-[[kubernetes.contexts]]
 context_alias = "OPF"
 context_pattern = "k8s-flow-login-test-1-opf-stacc-dev-context"
 style = "bold green"
@@ -60,6 +55,16 @@ style = "bold green"
 context_alias = "OPF"
 context_pattern = "scc-prod-opf-01-aks-admin"
 style = "bold red"
+
+[[kubernetes.contexts]]
+context_alias = "LBA"
+context_pattern = "k8s-login-lba-link-stacc-dev-context"
+style = "bold green"
+
+[[kubernetes.contexts]]
+context_alias = "Intrum"
+context_pattern = "intrum-stacc-dev-aks"
+style = "bold green"
 
 [package]
 disabled = true
