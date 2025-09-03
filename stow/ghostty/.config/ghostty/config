@@ -12,3 +12,4 @@ mouse-hide-while-typing = true
 font-family = "JetBrainsMono Nerd Font"
 font-size = 15
 
+keybind = super+g=text:lazygit\r

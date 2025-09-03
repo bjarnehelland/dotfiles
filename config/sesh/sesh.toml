@@ -1,7 +1,0 @@
-# [default_session]
-# startup_command = "nvim +GoToFile"
-
-[[session]]
-name = "dotfiles"
-path = "~/Code/bjarnehelland/dotfiles"
-startup_command = "nvim ."
