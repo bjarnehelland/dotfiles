@@ -25,10 +25,17 @@ alias -- ll='ls -l'
 alias -- lla='eza -la'
 alias -- ls='eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions'
 alias -- lt='eza --tree'
-alias -- s='sesh connect $(sesh list -i | fzf)'
+alias -- lt2='eza --tree --level=2'
+alias -- lt3='eza --tree --level=3'
+alias -- lt4='eza --tree --level=4'
+alias -- lt5='eza --tree --level=5'
+alias -- s='cd "$(zoxide query --list | sed "s|$HOME|~|g" | fzf | sed "s|~|$HOME|g")"'
 alias -- sz='source ~/.zshrc'
 alias -- take='(){  mkdir -p $1 && cd $_; }'
 alias -- vimdiff='nvim -d'
+alias -- paths="echo $PATH | tr ':' '\n'"
+
+export PATH="$HOME/.local/bin:$PATH"
 
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
