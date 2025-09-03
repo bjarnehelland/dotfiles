@@ -25,8 +25,14 @@
 
     sz = "source ~/.zshrc";
 
-    bl = "az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1 && az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1";
-    bl-dev = "az acr login --name bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1";
+    bl = ''
+      echo "Logging into blocc registry..." && \
+      az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1 && \
+      echo "Logging into bloccephe registry..." && \
+      az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1 && \
+      echo "Logging into bloccdev registry..." && \
+      az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1
+    '';
 
     ls = "eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --group-directories-first --all --no-permissions";
     brewod = "brew outdated | fzf --multi | xargs brew upgrade";

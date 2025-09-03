@@ -8,22 +8,22 @@
 	"editor.accessibilitySupport": "off",
 	"editor.fontFamily": "JetBrainsMono Nerd Font, SF Pro, monospace",
 	"yaml.schemas": {
-		// "https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
-		// "https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
-		// "https://schema.blocc.dev/v1beta1/template.json": "template.yaml",
-		// "https://schema.blocc.dev/v1beta1/component.json": "component.yaml",
-		// "https://schema.blocc.dev/v1beta1/environment.json": [
-		//   "environments/*.yaml",
-		//   "environment.yaml"
-		// ],
-		"/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/solution.json": "solution.yaml",
-		"/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/module.json": "module.yaml",
-		"/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/template.json": "template.yaml",
-		"/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/component.json": "component.yaml",
-		"/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/environment.json": [
+		"https://schema.blocc.dev/v1beta1/solution.json": "solution.yaml",
+		"https://schema.blocc.dev/v1beta1/module.json": "module.yaml",
+		"https://schema.blocc.dev/v1beta1/template.json": "template.yaml",
+		"https://schema.blocc.dev/v1beta1/component.json": "component.yaml",
+		"https://schema.blocc.dev/v1beta1/environment.json": [
 			"environments/*.yaml",
 			"environment.yaml"
 		]
+		// "/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/solution.json": "solution.yaml",
+		// "/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/module.json": "module.yaml",
+		// "/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/template.json": "template.yaml",
+		// "/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/component.json": "component.yaml",
+		// "/Users/bjarnehelland/Code/stacc/blocc/tools/blocc-schema/schema/v1beta1/environment.json": [
+		// 	"environments/*.yaml",
+		// 	"environment.yaml"
+		// ]
 	},
 	"window.commandCenter": 1,
 	"explorer.confirmDragAndDrop": false,
@@ -39,5 +39,10 @@
 	},
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"docker.extension.enableComposeLanguageServer": false,
+	"go.toolsManagement.autoUpdate": true,
+	"[go]": {
+		"editor.defaultFormatter": "golang.go"
 	}
 }
