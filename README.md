@@ -37,6 +37,7 @@ chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
 
 - [HHKB hybrid type-s](https://www.hhkeyboard.com/uk/products/hybrid-type-s) (daily driver)
 
+
 ## Notes
 
 - [NixOS](https://nixos.org)
