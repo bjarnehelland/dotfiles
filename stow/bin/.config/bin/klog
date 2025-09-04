@@ -299,7 +299,7 @@ view_logs() {
             --border \
             --header="Pod: $pod | Namespace: $namespace | Ctrl-R: refresh | Ctrl-/: toggle preview | Enter: copy line" \
             --prompt="Search logs: " \
-            --preview="echo {} | sed 's/^[^ ]* //' | jq -R 'try fromjson catch .' 2>/dev/null || echo {} | sed 's/^[^ ]* //'" \
+            --preview="line=\$(echo {} | sed 's/^[^ ]* //'); if echo \"\$line\" | jq . >/dev/null 2>&1; then echo \"\$line\" | jq .; else echo \"\$line\"; fi" \
             --preview-window=bottom:50%:wrap \
             --bind="ctrl-/:toggle-preview" \
             --bind="ctrl-r:reload(kubectl logs $pod -n $namespace $container --tail=$DEFAULT_LOG_LINES | awk '{line=\$0; icon=\"📄\"; level=\"unknown\"; if(match(line, /\"level\"[ ]*:[ ]*\"([^\"]+)\"/)) {start=RSTART; len=RLENGTH; substr_match=substr(line,start,len); gsub(/\"level\"[ ]*:[ ]*\"/, \"\", substr_match); gsub(/\"/, \"\", substr_match); level=tolower(substr_match)} else if(match(line, /level=([A-Za-z]+)/)) {start=RSTART+6; len=RLENGTH-6; level=tolower(substr(line,start,len))} else if(match(line, /\\[[A-Z]+\\]/)) {start=RSTART+1; len=RLENGTH-2; level=tolower(substr(line,start,len))} else if(match(line, /ERROR|FATAL|PANIC/)) level=\"error\"; else if(match(line, /WARN|WARNING/)) level=\"warn\"; else if(match(line, /INFO|INFORMATION/)) level=\"info\"; else if(match(line, /DEBUG|TRACE/)) level=\"debug\"; if(level==\"error\"||level==\"fatal\"||level==\"panic\") icon=\"🚫\"; else if(level==\"warn\"||level==\"warning\") icon=\"⚠️\"; else if(level==\"info\"||level==\"information\") icon=\"ℹ️\"; else if(level==\"debug\"||level==\"trace\") icon=\"🐛\"; print icon \" \" line}')" \
