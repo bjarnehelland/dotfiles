@@ -1,12 +1,13 @@
 k9s:
   cluster: intrum-stacc-dev-aks
   namespace:
-    active: intrum-dev-1
+    active: all
     lockFavorites: false
     favorites:
+      - all
       - intrum-dev-1
   view:
-    active: v1/pods
+    active: pods all
   featureGates:
     nodeShell: false
   proxy: null

@@ -28,6 +28,30 @@ alias -- take='(){  mkdir -p $1 && cd $_; }'
 alias -- vimdiff='nvim -d'
 alias -- paths="echo $PATH | tr ':' '\n' | nl"
 
+klog() {
+    local namespace=${1:-$(kubectl config view --minify -o jsonpath='{..namespace}')}
+    namespace=${namespace:-default}
+    
+    local pod=$(kubectl get pods -n "$namespace" --no-headers | \
+        fzf --height 100% \
+            --border \
+            --header="Namespace: $namespace | Ctrl-R: refresh | Alt-↑/↓: scroll preview" \
+            --prompt="Select pod: " \
+            --preview="kubectl describe pod -n $namespace {1}" \
+            --preview-window=right:50%:wrap \
+            --bind="ctrl-r:reload(kubectl get pods -n $namespace --no-headers)" \
+            --bind="alt-up:preview-up" \
+            --bind="alt-down:preview-down" \
+            --bind="ctrl-/:toggle-preview" | \
+        awk '{print $1}')
+    
+    if [ -n "$pod" ]; then
+        echo "Tailing logs for pod: $pod in namespace: $namespace"
+        stern "$pod" -n "$namespace"
+    fi
+}
+
+
 export PATH="$HOME/.config/bin:$PATH"
 export FZF_DEFAULT_OPTS='--ansi --border rounded --color="16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic" --marker=" " --no-info --no-separator --pointer="👉" --reverse'
 
