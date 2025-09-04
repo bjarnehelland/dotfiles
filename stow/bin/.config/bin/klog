@@ -238,15 +238,72 @@ view_logs() {
     print_info "Loading logs for pod: $pod in namespace: $namespace..."
     
     kubectl logs "$pod" -n "$namespace" $container --tail="$DEFAULT_LOG_LINES" 2>/dev/null | \
+        awk '
+        {
+            line = $0
+            icon = "📄"
+            level = "unknown"
+            
+            # Check JSON logs first - look for "level":"error"
+            if (match(line, /"level"[ ]*:[ ]*"([^"]+)"/)) {
+                start = RSTART
+                len = RLENGTH
+                substr_match = substr(line, start, len)
+                gsub(/"level"[ ]*:[ ]*"/, "", substr_match)
+                gsub(/"/, "", substr_match)
+                level = tolower(substr_match)
+            }
+            # Check for structured logs like level=ERROR
+            else if (match(line, /level=([A-Za-z]+)/)) {
+                start = RSTART + 6  # Skip "level="
+                len = RLENGTH - 6
+                level = tolower(substr(line, start, len))
+            }
+            # Check for log4j style [LEVEL]
+            else if (match(line, /\[[A-Z]+\]/)) {
+                start = RSTART + 1  # Skip "["
+                len = RLENGTH - 2   # Skip "[" and "]"
+                level = tolower(substr(line, start, len))
+            }
+            # Fall back to simple word matching
+            else if (match(line, /ERROR|FATAL|PANIC/)) {
+                level = "error"
+            }
+            else if (match(line, /WARN|WARNING/)) {
+                level = "warn"
+            }
+            else if (match(line, /INFO|INFORMATION/)) {
+                level = "info"
+            }
+            else if (match(line, /DEBUG|TRACE/)) {
+                level = "debug"
+            }
+            
+            # Set icon based on level
+            if (level == "error" || level == "fatal" || level == "panic") {
+                icon = "🚫"
+            }
+            else if (level == "warn" || level == "warning") {
+                icon = "⚠️"
+            }
+            else if (level == "info" || level == "information") {
+                icon = "ℹ️"
+            }
+            else if (level == "debug" || level == "trace") {
+                icon = "🐛"
+            }
+            
+            print icon " " line
+        }' | \
         fzf --height "$FZF_DEFAULT_HEIGHT" \
             --border \
             --header="Pod: $pod | Namespace: $namespace | Ctrl-R: refresh | Ctrl-/: toggle preview | Enter: copy line" \
             --prompt="Search logs: " \
-            --preview="echo {} | jq -R 'try fromjson catch .' 2>/dev/null || echo {}" \
+            --preview="echo {} | sed 's/^[^ ]* //' | jq -R 'try fromjson catch .' 2>/dev/null || echo {} | sed 's/^[^ ]* //'" \
             --preview-window=bottom:50%:wrap \
             --bind="ctrl-/:toggle-preview" \
-            --bind="ctrl-r:reload(kubectl logs $pod -n $namespace $container --tail=$DEFAULT_LOG_LINES)" \
-            --bind="enter:execute-silent(echo {} | pbcopy)+abort" \
+            --bind="ctrl-r:reload(kubectl logs $pod -n $namespace $container --tail=$DEFAULT_LOG_LINES | awk '{line=\$0; icon=\"📄\"; level=\"unknown\"; if(match(line, /\"level\"[ ]*:[ ]*\"([^\"]+)\"/)) {start=RSTART; len=RLENGTH; substr_match=substr(line,start,len); gsub(/\"level\"[ ]*:[ ]*\"/, \"\", substr_match); gsub(/\"/, \"\", substr_match); level=tolower(substr_match)} else if(match(line, /level=([A-Za-z]+)/)) {start=RSTART+6; len=RLENGTH-6; level=tolower(substr(line,start,len))} else if(match(line, /\\[[A-Z]+\\]/)) {start=RSTART+1; len=RLENGTH-2; level=tolower(substr(line,start,len))} else if(match(line, /ERROR|FATAL|PANIC/)) level=\"error\"; else if(match(line, /WARN|WARNING/)) level=\"warn\"; else if(match(line, /INFO|INFORMATION/)) level=\"info\"; else if(match(line, /DEBUG|TRACE/)) level=\"debug\"; if(level==\"error\"||level==\"fatal\"||level==\"panic\") icon=\"🚫\"; else if(level==\"warn\"||level==\"warning\") icon=\"⚠️\"; else if(level==\"info\"||level==\"information\") icon=\"ℹ️\"; else if(level==\"debug\"||level==\"trace\") icon=\"🐛\"; print icon \" \" line}')" \
+            --bind="enter:execute-silent(echo {} | sed 's/^[^ ]* //' | pbcopy)+abort" \
             --tac \
             --no-sort
 }
