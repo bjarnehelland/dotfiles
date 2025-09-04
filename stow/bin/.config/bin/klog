@@ -1,0 +1,356 @@
+#!/usr/bin/env bash
+
+# klog - Interactive Kubernetes log viewer with fzf
+# 
+# Usage:
+#   klog [namespace]
+#
+# Requirements:
+#   - kubectl
+#   - fzf
+#
+# Author: Your Name
+# Version: 1.0.0
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Configuration
+DEFAULT_LOG_LINES=1000
+FZF_DEFAULT_HEIGHT="100%"
+
+# Helper functions
+print_error() {
+    echo -e "${RED}❌ $1${NC}" >&2
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}" >&2
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+check_requirements() {
+    local missing_tools=()
+    
+    if ! command -v kubectl &> /dev/null; then
+        missing_tools+=("kubectl")
+    fi
+    
+    if ! command -v fzf &> /dev/null; then
+        missing_tools+=("fzf")
+    fi
+    
+    if [ ${#missing_tools[@]} -gt 0 ]; then
+        print_error "Missing required tools: ${missing_tools[*]}"
+        echo ""
+        echo "Installation instructions:"
+        for tool in "${missing_tools[@]}"; do
+            case "$tool" in
+                kubectl)
+                    echo "  kubectl: brew install kubectl"
+                    ;;
+                fzf)
+                    echo "  fzf: brew install fzf"
+                    ;;
+            esac
+        done
+        exit 1
+    fi
+}
+
+check_kubernetes_context() {
+    local current_context
+    current_context=$(kubectl config current-context 2>/dev/null || true)
+    
+    if [ -z "$current_context" ]; then
+        print_error "No Kubernetes context configured"
+        echo ""
+        echo "Available contexts:"
+        kubectl config get-contexts 2>/dev/null || echo "  None found"
+        echo ""
+        echo "To set a context, run:"
+        echo "  kubectl config use-context <context-name>"
+        exit 1
+    fi
+    
+    if ! kubectl cluster-info &> /dev/null; then
+        print_warning "Current context: $current_context"
+        print_error "Cannot connect to Kubernetes cluster"
+        echo ""
+        echo "Please check:"
+        echo "  • Your cluster is running"
+        echo "  • Your credentials are valid"
+        echo "  • Your network connection"
+        exit 1
+    fi
+    
+    echo "$current_context"
+}
+
+get_namespace() {
+    local provided_namespace="$1"
+    local namespace
+    
+    if [ "$provided_namespace" = "ns" ]; then
+        # Show interactive namespace selection
+        namespace=$(kubectl get namespaces -o custom-columns=NAME:.metadata.name --no-headers | \
+            fzf --height 40% \
+                --border \
+                --header="Select namespace" \
+                --prompt="Namespace: " \
+                --preview="kubectl get pods -n {} --no-headers 2>/dev/null | wc -l | xargs -I {} echo 'Pods: {}'" \
+                --preview-window=right:30%)
+        
+        if [ -z "$namespace" ]; then
+            print_info "No namespace selected"
+            exit 0
+        fi
+    elif [ -n "$provided_namespace" ]; then
+        namespace="$provided_namespace"
+        
+        # Validate namespace exists
+        if ! kubectl get namespace "$namespace" &> /dev/null; then
+            print_error "Namespace '$namespace' does not exist"
+            echo ""
+            echo "Available namespaces:"
+            kubectl get namespaces -o custom-columns=NAME:.metadata.name --no-headers | head -20
+            exit 1
+        fi
+    else
+        namespace=$(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null || true)
+        namespace=${namespace:-default}
+        
+        # Validate namespace exists
+        if ! kubectl get namespace "$namespace" &> /dev/null; then
+            print_error "Namespace '$namespace' does not exist"
+            echo ""
+            echo "Available namespaces:"
+            kubectl get namespaces -o custom-columns=NAME:.metadata.name --no-headers | head -20
+            exit 1
+        fi
+    fi
+    
+    echo "$namespace"
+}
+
+check_pods_exist() {
+    local namespace="$1"
+    local pod_count
+    
+    pod_count=$(kubectl get pods -n "$namespace" --no-headers 2>/dev/null | wc -l)
+    
+    if [ "$pod_count" -eq 0 ]; then
+        print_error "No pods found in namespace: $namespace"
+        echo ""
+        echo "Try another namespace:"
+        kubectl get namespaces -o custom-columns=NAME:.metadata.name --no-headers | head -10
+        exit 1
+    fi
+    
+    echo "$pod_count"
+}
+
+select_pod() {
+    local namespace="$1"
+    local pod_count="$2"
+    local pod_filter="$3"
+    local pod
+    local pods_output
+    
+    if [ -n "$pod_filter" ]; then
+        # Filter pods by the provided filter string
+        pods_output=$(kubectl get pods -n "$namespace" --no-headers | grep "$pod_filter")
+        local filtered_count=$(echo "$pods_output" | grep -c .)
+        
+        if [ "$filtered_count" -eq 0 ]; then
+            print_error "No pods found matching filter: $pod_filter"
+            echo ""
+            echo "Available pods:"
+            kubectl get pods -n "$namespace" --no-headers | head -10
+            exit 1
+        elif [ "$filtered_count" -eq 1 ]; then
+            pod=$(echo "$pods_output" | awk '{print $1}')
+            print_info "Auto-selecting filtered pod: $pod" >&2
+        else
+            pod=$(echo "$pods_output" | \
+                fzf --height "$FZF_DEFAULT_HEIGHT" \
+                    --border \
+                    --header="Namespace: $namespace | Filter: $pod_filter | Ctrl-R: refresh | Alt-↑/↓: scroll preview | Ctrl-/: toggle preview" \
+                    --prompt="Select pod: " \
+                    --preview="kubectl describe pod -n $namespace {1}" \
+                    --preview-window=right:50%:wrap \
+                    --bind="ctrl-r:reload(kubectl get pods -n $namespace --no-headers | grep '$pod_filter')" \
+                    --bind="alt-up:preview-up" \
+                    --bind="alt-down:preview-down" \
+                    --bind="ctrl-/:toggle-preview" | \
+                awk '{print $1}')
+        fi
+    else
+        if [ "$pod_count" -eq 1 ]; then
+            pod=$(kubectl get pods -n "$namespace" --no-headers | awk '{print $1}')
+            print_info "Auto-selecting only pod: $pod" >&2
+        else
+            pod=$(kubectl get pods -n "$namespace" --no-headers | \
+                fzf --height "$FZF_DEFAULT_HEIGHT" \
+                    --border \
+                    --header="Namespace: $namespace | Ctrl-R: refresh | Alt-↑/↓: scroll preview | Ctrl-/: toggle preview" \
+                    --prompt="Select pod: " \
+                    --preview="kubectl describe pod -n $namespace {1}" \
+                    --preview-window=right:50%:wrap \
+                    --bind="ctrl-r:reload(kubectl get pods -n $namespace --no-headers)" \
+                    --bind="alt-up:preview-up" \
+                    --bind="alt-down:preview-down" \
+                    --bind="ctrl-/:toggle-preview" | \
+                awk '{print $1}')
+        fi
+    fi
+    
+    echo "$pod"
+}
+
+view_logs() {
+    local namespace="$1"
+    local pod="$2"
+    local container=""
+    
+    # Check if pod has multiple containers
+    local container_count
+    container_count=$(kubectl get pod "$pod" -n "$namespace" -o jsonpath='{.spec.containers[*].name}' | wc -w)
+    
+    if [ "$container_count" -gt 1 ]; then
+        print_info "Pod has multiple containers. Fetching all containers..."
+        container="--all-containers=true"
+    fi
+    
+    print_info "Loading logs for pod: $pod in namespace: $namespace..."
+    
+    kubectl logs "$pod" -n "$namespace" $container --tail="$DEFAULT_LOG_LINES" 2>/dev/null | \
+        fzf --height "$FZF_DEFAULT_HEIGHT" \
+            --border \
+            --header="Pod: $pod | Namespace: $namespace | Ctrl-R: refresh | Ctrl-/: toggle preview | Enter: copy line" \
+            --prompt="Search logs: " \
+            --preview="echo {} | jq -R 'try fromjson catch .' 2>/dev/null || echo {}" \
+            --preview-window=bottom:50%:wrap \
+            --bind="ctrl-/:toggle-preview" \
+            --bind="ctrl-r:reload(kubectl logs $pod -n $namespace $container --tail=$DEFAULT_LOG_LINES)" \
+            --bind="enter:execute-silent(echo {} | pbcopy)+abort" \
+            --tac \
+            --no-sort
+}
+
+show_help() {
+    cat << EOF
+klog - Interactive Kubernetes log viewer with fzf
+
+USAGE:
+    klog [OPTIONS] [NAMESPACE]
+
+OPTIONS:
+    -h, --help      Show this help message
+    -v, --version   Show version information
+    -l, --lines     Number of log lines to fetch (default: $DEFAULT_LOG_LINES)
+
+EXAMPLES:
+    klog                        # Use current/default namespace
+    klog ns                     # Interactive namespace selection
+    klog production            # Use specific namespace
+    klog production flow       # Use specific namespace and filter pods by 'flow'
+    klog -l 5000 staging       # Fetch 5000 lines from staging namespace
+
+KEYBOARD SHORTCUTS:
+    While selecting pod:
+        Ctrl-R          Refresh pod list
+        Alt-↑/↓         Scroll preview
+        Ctrl-/          Toggle preview
+        ESC             Cancel selection
+    
+    While viewing logs:
+        /               Start searching
+        Ctrl-R          Refresh logs
+        Ctrl-/          Toggle preview
+        Enter           Copy selected log line to clipboard and exit
+        ESC             Exit log viewer
+
+EOF
+}
+
+# Main function
+main() {
+    local namespace=""
+    local pod_filter=""
+    
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -v|--version)
+                echo "klog version 1.0.0"
+                exit 0
+                ;;
+            -l|--lines)
+                DEFAULT_LOG_LINES="$2"
+                shift 2
+                ;;
+            *)
+                if [ -z "$namespace" ]; then
+                    namespace="$1"
+                elif [ -z "$pod_filter" ]; then
+                    pod_filter="$1"
+                fi
+                shift
+                ;;
+        esac
+    done
+    
+    # Run checks
+    check_requirements
+    
+    local context
+    context=$(check_kubernetes_context)
+    
+    namespace=$(get_namespace "$namespace")
+    local pod_count
+    pod_count=$(check_pods_exist "$namespace")
+    
+    print_success "Context: $context | Namespace: $namespace"
+    echo ""
+    
+    # Select and view logs
+    local selected_pod
+    selected_pod=$(select_pod "$namespace" "$pod_count" "$pod_filter")
+    
+    if [ -n "$selected_pod" ]; then
+        # Add klog command to shell history for future direct access
+        local klog_command="klog $namespace"
+        # Extract the pod name prefix (everything before the hash/random suffix)
+        local pod_prefix=$(echo "$selected_pod" | sed -E 's/-[a-z0-9]+-[a-z0-9]+$//' | sed -E 's/-[0-9a-f]{8,10}-[a-z0-9]{5}$//')
+        if [ "$pod_prefix" != "$selected_pod" ]; then
+            klog_command="$klog_command $pod_prefix"
+        fi
+        echo "$klog_command" >> ~/.zsh_history
+        print_info "Command added to history: $klog_command" >&2
+        
+        view_logs "$namespace" "$selected_pod"
+    else
+        print_info "No pod selected"
+    fi
+}
+
+# Run main function
+main "$@"
