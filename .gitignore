@@ -3,3 +3,4 @@ node_modules
 .DS_Store
 nix-darwin/result
 k9s.log
+stow/k9s/Library/Application Support/k9s/clusters/intrum-stacc-dev-aks/intrum-stacc-dev-aks/config.yaml
