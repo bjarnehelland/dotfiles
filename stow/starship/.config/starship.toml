@@ -2,9 +2,9 @@
 disabled = true
 
 [custom.blocc]
-command = "blocc config show >/dev/null 2>&1 && (blocc config show | grep -A3 'deploy:' | grep -E '(context|environment):' | awk '{print $2}' | xargs) || echo '🚫'"
+command = "blocc-env"
 detect_files = ["solution.yaml"]
-format = " blocc [$output]($style) "
+format = "🧱[$output]($style) "
 ignore_timeout = true
 
 [directory]
@@ -32,7 +32,7 @@ conflicted = "🏳"
 deleted = "💩"
 disabled = false
 diverged = "😵↑$ahead_count↓$behind_count"
-format = "$all_status$ahead_behind"
+format = "$all_status$ahead_behind "
 modified = "💩"
 renamed = "💩"
 staged = "💩"

@@ -1,76 +1,284 @@
-#!/bin/sh
+#!/bin/bash
 
 # Get argument for script key/name, default to dev
 DEV_SCRIPT="${1:-dev}"
 
+# Function to check if dev server is already running in a directory
+is_dev_server_running() {
+    local dir="$1"
+    local full_path=$(cd "$dir" && pwd)
+    
+    # Check for node processes running in this directory
+    if ps aux | grep node | grep -v grep | grep -q "$full_path"; then
+        return 0  # Running
+    fi
+    
+    # Also check for other common dev server processes
+    if ps aux | grep -E "(yarn|pnpm|bun|deno)" | grep -v grep | grep -q "$full_path"; then
+        return 0  # Running
+    fi
+    
+    return 1  # Not running
+}
+
+# Function to kill dev server processes in a directory
+kill_dev_server() {
+    local dir="$1"
+    local full_path=$(cd "$dir" && pwd)
+    
+    # Find and kill processes running in this directory
+    local pids=$(ps aux | grep -E "(node|yarn|pnpm|bun|deno)" | grep -v grep | grep "$full_path" | awk '{print $2}')
+    
+    if [ -n "$pids" ]; then
+        gum style --foreground "#FF6B6B" "🔫 Killing existing processes in $dir"
+        for pid in $pids; do
+            kill -TERM "$pid" 2>/dev/null
+        done
+        sleep 2
+        # Force kill if still running
+        for pid in $pids; do
+            if kill -0 "$pid" 2>/dev/null; then
+                kill -KILL "$pid" 2>/dev/null
+            fi
+        done
+        return 0
+    fi
+    return 1
+}
+
+# Function to run dev command 
+run_dev_command() {
+    local dir="$1"
+    local script="$2"
+    
+    cd "$dir" || exit 1
+    
+    if [ -f "d" ]; then
+        ./d "$@"
+        return $?
+    fi
+
+    if [ -f package-lock.json ]; then
+        gum style --foreground "#FFD700" "📦 npm run $script"
+        npm run "$script"
+    elif [ -f yarn.lock ]; then
+        gum style --foreground "#2C8EBB" "🧶 yarn $script"
+        yarn "$script"
+    elif [ -f pnpm-lock.yaml ]; then
+        gum style --foreground "#F69220" "⚡ pnpm run $script"
+        pnpm run "$script"
+    elif [ -f bun.lockb ]; then
+        gum style --foreground "#FBF0DF" --background "#000" "🥟 bun run $script"
+        bun run "$script"
+    elif [ -f deno.json ]; then
+        gum style --foreground "#000" --background "#FFF" "🦕 deno task start"
+        deno task start
+    fi
+}
+
+run_dev_server() {
+    local dir="$1"
+    local script="$2"
+    
+    gum style --foreground "#00FF00" --bold "🚀 Starting dev server in: $dir"
+    run_dev_command "$dir" "$script"
+}
+
 # First, check if the jq command is available
 # AND there is a package.json file in the current directory
 if command -v jq &>/dev/null && [[ -f "package.json" ]]; then
-  # if we have jq,
-  # then use it to extract the first occurence of a key in package.json's scripts object
-  # that starts with the argument passed in (or dev)
-  DEV_SCRIPT="$(jq \
-    -r \
-    --arg ds "$DEV_SCRIPT" \
-    'first(.scripts | keys[] | select(. | test("^\($ds)[^\"]*")))' \
-    package.json)"
-  # if this didn't match anything, fallback to dev
-  DEV_SCRIPT="${DEV_SCRIPT:-start}"
+  # Check if package.json has dev script
+  has_dev_script=$(jq -r '.scripts | has("dev")' "package.json" 2>/dev/null)
+  if [ "$has_dev_script" = "true" ]; then
+    # if we have jq,
+    # then use it to extract the first occurence of a key in package.json's scripts object
+    # that starts with the argument passed in (or dev)
+    DEV_SCRIPT="$(jq \
+      -r \
+      --arg ds "$DEV_SCRIPT" \
+      'first(.scripts | keys[] | select(. | test("^\($ds)[^\"]*")))' \
+      package.json)"
+    # if this didn't match anything, fallback to dev
+    DEV_SCRIPT="${DEV_SCRIPT:-start}"
+    
+    # Run in current directory
+    run_dev_server "$(pwd)" "$DEV_SCRIPT"
+  fi
 fi
-							
-if [ -f "d" ]; then
-	./d "$@"
-	exit 0
+# If no package.json in current directory, search nested directories
+gum style --foreground "#FFA500" "🔍 No package.json found in current directory. Searching nested directories..."
+
+# Find all package.json files in nested directories
+# Exclude node_modules, .git, and other common build/cache directories
+package_dirs=()
+package_names=()
+find_output=$(find . -name "package.json" \
+    -not -path "*/node_modules/*" \
+    -not -path "*/.git/*" \
+    -not -path "*/.next/*" \
+    -not -path "*/dist/*" \
+    -not -path "*/build/*" \
+    -not -path "*/.nuxt/*" \
+    -not -path "*/.svelte-kit/*" \
+    -not -path "*/target/*" \
+    2>/dev/null | head -20)
+
+# Temporary arrays for sorting
+temp_dirs=()
+temp_names=()
+
+for file in $find_output; do
+    if [ -f "$file" ]; then
+        # Check if package.json has dev script
+        if command -v jq &>/dev/null; then
+            has_scripts=$(jq -r '.scripts | has("dev")' "$file" 2>/dev/null)
+            if [ "$has_scripts" != "true" ]; then
+                continue
+            fi
+            
+            # Get package name
+            package_name=$(jq -r '.name // "unnamed"' "$file" 2>/dev/null)
+        else
+            package_name="unnamed"
+        fi
+        
+        dir=$(dirname "$file")
+        # Remove leading ./ if present
+        dir=${dir#./}
+        # Add trailing slash for consistency if not root
+        if [ "$dir" != "." ]; then
+            dir="$dir/"
+        else
+            dir=""
+        fi
+        temp_dirs+=("$dir")
+        temp_names+=("$package_name")
+    fi
+done
+
+# Sort by package name
+if [ ${#temp_dirs[@]} -gt 0 ]; then
+    # Create combined array for sorting (name first for sorting)
+    combined=()
+    for i in "${!temp_dirs[@]}"; do
+        combined+=("${temp_names[i]}|${temp_dirs[i]}")
+    done
+    
+    # Sort the combined array by package name
+    IFS=$'\n' sorted=($(sort <<<"${combined[*]}"))
+    unset IFS
+    
+    # Split back into separate arrays
+    for item in "${sorted[@]}"; do
+        package_names+=("${item%|*}")
+        package_dirs+=("${item#*|}")
+    done
 fi
 
-if [ -f package-lock.json ]; then
-	echo "npm run $DEV_SCRIPT"
-	npm run "$DEV_SCRIPT"
-	exit 0
+if [ ${#package_dirs[@]} -eq 0 ]; then
+    gum style --foreground "#FF4444" "❌ No package.json with dev scripts found"
+    exit 1
+elif [ ${#package_dirs[@]} -eq 1 ]; then
+    # Only one package.json found, start it automatically
+    dir="${package_dirs[0]}"
+    gum style --foreground "#00FF00" "✅ Found package.json in: $dir"
+    
+    # Determine DEV_SCRIPT for the found directory
+    local_dev_script="$DEV_SCRIPT"
+    if command -v jq &>/dev/null && [[ -f "${dir}package.json" ]]; then
+        local_dev_script="$(jq \
+            -r \
+            --arg ds "$DEV_SCRIPT" \
+            'first(.scripts | keys[] | select(. | test("^\($ds)[^\"]*")))' \
+            "${dir}package.json")"
+        local_dev_script="${local_dev_script:-start}"
+    fi
+    
+    run_dev_server "$dir" "$local_dev_script"
+else
+    # Multiple package.json files found, let user select
+    gum style --foreground "#00BFFF" --bold "📂 Multiple projects found:"
+    # Create display options with both name and directory
+    display_options=()
+    for i in "${!package_dirs[@]}"; do
+        display_options+=("${package_names[i]} (${package_dirs[i]})")
+    done
+    
+    # Multi-select mode - always allow multiple selection
+    selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select projects to start (space to select, enter to confirm):")
+    if [ -z "$selected_options" ]; then
+        gum style --foreground "#FF4444" "❌ No selection made"
+        exit 1
+    fi
+    
+    # Convert selected options to array
+    IFS=$'\n' selected_array=($selected_options)
+    unset IFS
+    
+    if [ ${#selected_array[@]} -eq 1 ]; then
+        gum style --foreground "#00FF00" "✅ Starting 1 project:"
+    else
+        gum style --foreground "#00FF00" "✅ Starting ${#selected_array[@]} projects:"
+    fi
+    
+    # Start each selected project
+    for selected_option in "${selected_array[@]}"; do
+        # Extract directory from selection
+        for i in "${!display_options[@]}"; do
+            if [ "${display_options[i]}" = "$selected_option" ]; then
+                dir="${package_dirs[i]}"
+                
+                # Determine DEV_SCRIPT for the selected directory
+                local_dev_script="$DEV_SCRIPT"
+                if command -v jq &>/dev/null && [[ -f "${dir}package.json" ]]; then
+                    local_dev_script="$(jq \
+                        -r \
+                        --arg ds "$DEV_SCRIPT" \
+                        'first(.scripts | keys[] | select(. | test("^\($ds)[^\"]*")))' \
+                        "${dir}package.json")"
+                    local_dev_script="${local_dev_script:-start}"
+                fi
+                
+                # Check if already running
+                if is_dev_server_running "$dir"; then
+                    gum style --foreground "#FFA500" "⚠️  Dev server already running in: $dir"
+                    choice=$(gum choose --header="What would you like to do?" "Kill and restart" "Skip this one")
+                    
+                    if [ "$choice" = "Kill and restart" ]; then
+                        kill_dev_server "$dir"
+                        sleep 1
+                        
+                        # Start the server after killing
+                        last_index=$((${#selected_array[@]} - 1))
+                        if [ "$selected_option" = "${selected_array[$last_index]}" ]; then
+                            # Last project runs in foreground
+                            run_dev_server "$dir" "$local_dev_script"
+                        else
+                            # Other projects run in background
+                            gum style --foreground "#00FF00" --bold "🚀 Starting dev server in background: $dir"
+                            (
+                                run_dev_command "$dir" "$local_dev_script"
+                            ) &
+                        fi
+                    else
+                        gum style --foreground "#666666" "⏭️  Skipping $dir"
+                    fi
+                else
+                    # Start in background except for the last one (or if only one selected)
+                    last_index=$((${#selected_array[@]} - 1))
+                    if [ "$selected_option" = "${selected_array[$last_index]}" ]; then
+                        # Last project runs in foreground
+                        run_dev_server "$dir" "$local_dev_script"
+                    else
+                        # Other projects run in background
+                        gum style --foreground "#00FF00" --bold "🚀 Starting dev server in background: $dir"
+                        (
+                            run_dev_command "$dir" "$local_dev_script"
+                        ) &
+                    fi
+                fi
+                break
+            fi
+        done
+    done
 fi
-
-if [ -f yarn.lock ]; then
-	echo "yarn $DEV_SCRIPT"
-	yarn "$DEV_SCRIPT"
-	exit 0
-fi
-
-if [ -f pnpm-lock.yaml ]; then
-	echo "pnpm run $DEV_SCRIPT"
-	pnpm run "$DEV_SCRIPT"
-	exit 0
-fi
-
-if [ -f bun.lockb ]; then
-	echo "bun run $DEV_SCRIPT"
-	bun run "$DEV_SCRIPT"
-	exit 0
-fi
-
-if [ -f deno.json ]; then
-	echo "deno task start"
-	deno task start 
-	exit 0
-fi
-
-BASE_NAME="$(basename "$(pwd)")"
-
-cd ..
-if [ -f pnpm-lock.yaml ]; then
-	cd "$BASE_NAME" || exit
-	pnpm run "$DEV_SCRIPT"
-	exit 0
-fi
-
-PARENT_BASE_NAME="$(basename "$(pwd)")"
-
-cd ..
-if [ -f pnpm-lock.yaml ]; then
-	cd "$PARENT_BASE_NAME" || exit
-	cd "$BASE_NAME" || exit
-	pnpm run "$DEV_SCRIPT"
-	exit 0
-fi
-
-echo " Node package not detected"
-exit 1

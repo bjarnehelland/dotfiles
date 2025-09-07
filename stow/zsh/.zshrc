@@ -6,6 +6,7 @@ alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
 alias -- c='clear'
 alias -- dive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":"$(pwd)" -w "$(pwd)" -v "$HOME/.dive.yaml":"$HOME/.dive.yaml" wagoodman/dive:latest'
 alias -- eza='eza --icons auto --git'
+alias -- g='lazygit'
 alias -- gp='git pull'
 alias -- gpa='git pull --rebase --autostash  --prune'
 alias -- gpp='git pull --prune'
@@ -40,3 +41,5 @@ eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 eval "$(~/.local/bin/mise activate zsh)"
+
+alias claude="/Users/bjarnehelland/.claude/local/claude"

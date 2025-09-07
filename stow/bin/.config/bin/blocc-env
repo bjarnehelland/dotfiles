@@ -1,0 +1,8 @@
+#!/bin/bash
+
+env=$(blocc config show 2>&1 | grep 'environment:' | awk '{print $2}')
+if [ -z "$env" ]; then
+    echo "🚫"
+else
+    echo "$env"
+fi
