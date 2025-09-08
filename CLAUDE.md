@@ -47,27 +47,29 @@ nix build .#darwinConfigurations.Bjarnes-MacBook-Pro.system --extra-experimental
   - `core.nix`: Core packages for the user
 
 ### Configuration Files
-The actual dotfiles are stored in `config/` and symlinked to their proper locations:
-- `config/nvim/`: Neovim configuration (LazyVim-based)
-- `config/ghostty/`: Ghostty terminal configuration
-- `config/sesh/`: Sesh (tmux session manager) configuration
-- `config/cursor/`: Cursor editor settings
-- `config/streamdeck/`: Stream Deck profiles
-- `config/bin/`: Custom scripts
+The actual dotfiles are stored in `stow/` and managed by GNU Stow symlinks:
+- `stow/nvim/.config/nvim/`: Neovim configuration (LazyVim-based)
+- `stow/ghostty/.config/ghostty/`: Ghostty terminal configuration
+
+### Custom CLI Tools
+Located in `stow/bin/.config/bin/`:
+- `d`: Development server launcher that finds `package.json` files and runs dev scripts (npm/yarn/pnpm/bun)
+- `bs`: Blocc solution sync tool that finds `solution.yaml` files and runs `blocc sync`
+
 
 ### Key Technologies
 - **Nix Darwin**: macOS system configuration
 - **Home Manager**: User environment management
+- **GNU Stow**: Dotfile symlink management
 - **Homebrew**: GUI apps and packages not available in nixpkgs
 - **Shell**: Zsh with custom aliases
 - **Editor**: Neovim with LazyVim configuration
 - **Terminal**: Ghostty
-- **Multiplexer**: Tmux with sesh session manager
 
 ## Important Notes
 
 - The hostname is hardcoded as "Bjarnes-MacBook-Pro" in flake.nix and must match your system
 - Homebrew must be installed manually before running `make setup`
 - The repository assumes an Apple Silicon Mac (aarch64-darwin)
-- Symlinks are created from the repository to system locations, so the repository path matters
+- GNU Stow manages symlinks from `stow/` directories to their target locations
 - Changes to Nix configuration require running `make sync` to apply

@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Check if required tools are installed
+if ! command -v gum &>/dev/null; then
+    echo "❌ gum is required but not installed. Install with: brew install gum"
+    exit 1
+fi
+
+if ! command -v fd &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ fd is required but not installed. Install with: brew install fd"
+    exit 1
+fi
+
+if ! command -v jq &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ jq is required but not installed. Install with: brew install jq"
+    exit 1
+fi
+
 # Get argument for script key/name, default to dev
 DEV_SCRIPT="${1:-dev}"
 
@@ -108,20 +124,10 @@ fi
 # If no package.json in current directory, search nested directories
 gum style --foreground "#FFA500" "🔍 No package.json found in current directory. Searching nested directories..."
 
-# Find all package.json files in nested directories
-# Exclude node_modules, .git, and other common build/cache directories
+# Find all package.json files in nested directories using fd
 package_dirs=()
 package_names=()
-find_output=$(find . -name "package.json" \
-    -not -path "*/node_modules/*" \
-    -not -path "*/.git/*" \
-    -not -path "*/.next/*" \
-    -not -path "*/dist/*" \
-    -not -path "*/build/*" \
-    -not -path "*/.nuxt/*" \
-    -not -path "*/.svelte-kit/*" \
-    -not -path "*/target/*" \
-    2>/dev/null | head -20)
+find_output=$(fd -t f -d 10 "package.json" . 2>/dev/null | head -20)
 
 # Temporary arrays for sorting
 temp_dirs=()

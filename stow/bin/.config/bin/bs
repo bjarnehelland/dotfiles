@@ -1,0 +1,142 @@
+#!/bin/bash
+
+# Check if required tools are installed
+if ! command -v gum &>/dev/null; then
+    echo "❌ gum is required but not installed. Install with: brew install gum"
+    exit 1
+fi
+
+if ! command -v yq &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ yq is required but not installed. Install with: brew install yq"
+    exit 1
+fi
+
+if ! command -v fd &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ fd is required but not installed. Install with: brew install fd"
+    exit 1
+fi
+
+if ! command -v blocc &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ blocc is required but not installed. Install with: brew install stacc/tap/blocc"
+    exit 1
+fi
+
+# Function to run blocc sync command 
+run_blocc_sync() {
+    local dir="$1"
+    
+    cd "$dir" || exit 1
+    
+    if [ -f "bs" ]; then
+        ./bs "$@"
+        return $?
+    fi
+
+    gum style --foreground "#00FF00" --bold "🏗️ blocc sync in: $dir"
+    blocc sync
+}
+
+# First, check if there is a solution.yaml file in the current directory
+if [[ -f "solution.yaml" ]]; then
+    # Run in current directory
+    run_blocc_sync "$(pwd)"
+    exit 0
+fi
+
+# If no solution.yaml in current directory, search nested directories
+gum style --foreground "#FFA500" "🔍 No solution.yaml found in current directory. Searching nested directories..."
+
+# Find all solution.yaml files in nested directories using fd
+solution_dirs=()
+solution_names=()
+find_output=$(fd -t f -d 3 "solution.yaml" . 2>/dev/null | head -20)
+
+# Temporary arrays for sorting
+temp_dirs=()
+temp_names=()
+
+for file in $find_output; do
+    if [ -f "$file" ]; then
+        # Get solution name from YAML file (under metadata.name)
+        solution_name=$(yq -r '.metadata.name // "unnamed"' "$file" 2>/dev/null)
+        
+        dir=$(dirname "$file")
+        # Remove leading ./ if present
+        dir=${dir#./}
+        # Add trailing slash for consistency if not root
+        if [ "$dir" != "." ]; then
+            dir="$dir/"
+        else
+            dir=""
+        fi
+        temp_dirs+=("$dir")
+        temp_names+=("$solution_name")
+    fi
+done
+
+# Sort by solution name
+if [ ${#temp_dirs[@]} -gt 0 ]; then
+    # Create combined array for sorting (name first for sorting)
+    combined=()
+    for i in "${!temp_dirs[@]}"; do
+        combined+=("${temp_names[i]}|${temp_dirs[i]}")
+    done
+    
+    # Sort the combined array by solution name
+    IFS=$'\n' sorted=($(sort <<<"${combined[*]}"))
+    unset IFS
+    
+    # Split back into separate arrays
+    for item in "${sorted[@]}"; do
+        solution_names+=("${item%|*}")
+        solution_dirs+=("${item#*|}")
+    done
+fi
+
+if [ ${#solution_dirs[@]} -eq 0 ]; then
+    gum style --foreground "#FF4444" "❌ No solution.yaml found"
+    exit 1
+elif [ ${#solution_dirs[@]} -eq 1 ]; then
+    # Only one solution.yaml found, start it automatically
+    dir="${solution_dirs[0]}"
+    gum style --foreground "#00FF00" "✅ Found solution.yaml in: $dir"
+    
+    run_blocc_sync "$dir"
+else
+    # Multiple solution.yaml files found, let user select
+    gum style --foreground "#00BFFF" --bold "📂 Multiple blocc solutions found:"
+    # Create display options with both name and directory
+    display_options=()
+    for i in "${!solution_dirs[@]}"; do
+        display_options+=("${solution_names[i]} (${solution_dirs[i]})")
+    done
+    
+    # Multi-select mode - always allow multiple selection
+    selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select solutions to sync (space to select, enter to confirm):")
+    if [ -z "$selected_options" ]; then
+        gum style --foreground "#FF4444" "❌ No selection made"
+        exit 1
+    fi
+    
+    # Convert selected options to array
+    IFS=$'\n' selected_array=($selected_options)
+    unset IFS
+    
+    if [ ${#selected_array[@]} -eq 1 ]; then
+        gum style --foreground "#00FF00" "✅ Running blocc sync for 1 solution:"
+    else
+        gum style --foreground "#00FF00" "✅ Running blocc sync for ${#selected_array[@]} solutions:"
+    fi
+    
+    # Run blocc sync for each selected solution
+    for selected_option in "${selected_array[@]}"; do
+        # Extract directory from selection
+        for i in "${!display_options[@]}"; do
+            if [ "${display_options[i]}" = "$selected_option" ]; then
+                dir="${solution_dirs[i]}"
+                run_blocc_sync "$dir"
+                break
+            fi
+        done
+    done
+fi
