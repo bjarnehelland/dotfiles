@@ -3,6 +3,7 @@ alias -- ...='cd ../..'
 alias -- ....='cd ../../..'
 alias -- .....='cd ../../../..'
 alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
+alias -- bsl='bs -l'
 alias -- c='clear'
 alias -- dive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":"$(pwd)" -w "$(pwd)" -v "$HOME/.dive.yaml":"$HOME/.dive.yaml" wagoodman/dive:latest'
 alias -- eza='eza --icons auto --git'
@@ -33,7 +34,7 @@ alias -- paths="echo $PATH | tr ':' '\n' | nl"
 
 export PATH="$HOME/.config/bin:$PATH"
 export FZF_DEFAULT_OPTS='--ansi --border rounded --color="16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic" --marker=" " --no-info --no-separator --pointer="👉" --reverse'
-
+export EDITOR=nvim
 source <(fzf --zsh)
 
 

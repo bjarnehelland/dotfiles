@@ -1,5 +1,75 @@
 #!/bin/bash
 
+# Parse command line arguments
+MULTI_SELECT=false
+BUILD_LOCALLY=false
+FORCE=false
+SOLUTION_FILTER=""
+
+# Function to handle combined short options
+parse_combined_flags() {
+    local flags="$1"
+    flags="${flags#-}"  # Remove leading dash
+    for (( i=0; i<${#flags}; i++ )); do
+        flag="${flags:$i:1}"
+        case "$flag" in
+            m)
+                MULTI_SELECT=true
+                ;;
+            l)
+                BUILD_LOCALLY=true
+                ;;
+            f)
+                FORCE=true
+                ;;
+            *)
+                echo "Unknown option: -$flag"
+                echo "Usage: bs [-m|--multi] [-l|--build-locally] [-f|--force] [solution-name]"
+                echo "  -m, --multi          Allow multiple solution selection"
+                echo "  -l, --build-locally  Build component(s) locally with docker"
+                echo "  -f, --force          Skip confirmation prompt"
+                echo "  solution-name        Fuzzy match solution names (optional)"
+                exit 1
+                ;;
+        esac
+    done
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -m|--multi)
+            MULTI_SELECT=true
+            shift
+            ;;
+        -l|--build-locally)
+            BUILD_LOCALLY=true
+            shift
+            ;;
+        -f|--force)
+            FORCE=true
+            shift
+            ;;
+        -[mlf]*)
+            parse_combined_flags "$1"
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            echo "Usage: bs [-m|--multi] [-l|--build-locally] [-f|--force] [solution-name]"
+            echo "  -m, --multi          Allow multiple solution selection"
+            echo "  -l, --build-locally  Build component(s) locally with docker"
+            echo "  -f, --force          Skip confirmation prompt"
+            echo "  solution-name        Fuzzy match solution names (optional)"
+            exit 1
+            ;;
+        *)
+            # Non-option argument is treated as solution filter
+            SOLUTION_FILTER="$1"
+            shift
+            ;;
+    esac
+done
+
 # Check if required tools are installed
 if ! command -v gum &>/dev/null; then
     echo "❌ gum is required but not installed. Install with: brew install gum"
@@ -21,25 +91,239 @@ if ! command -v blocc &>/dev/null; then
     exit 1
 fi
 
+# Function to show blocc config for each solution directory
+show_solution_contexts() {
+    local selected_dirs=("$@")
+    
+    # First pass: check configs and setup if needed
+    local needs_summary=false
+    local needs_setup=false
+    local setup_dirs=()
+    
+    # Check which directories need config setup
+    for dir in "${selected_dirs[@]}"; do
+        if [ -d "$dir" ]; then
+            local context_output=$(cd "$dir" && blocc config show 2>&1)
+            local context_exit_code=$?
+            
+            if [ $context_exit_code -eq 0 ] && ! echo "$context_output" | grep -q "Blocc config error"; then
+                needs_summary=true
+            else
+                needs_setup=true
+                setup_dirs+=("$dir")
+                needs_summary=true
+            fi
+        fi
+    done
+    
+    # Only show "Checking" header if setup is needed
+    if [ "$needs_setup" = true ]; then
+        gum style --foreground "#00BFFF" "📋 Checking blocc config for selected solutions:"
+        
+        # Setup configs for directories that need it
+        for dir in "${setup_dirs[@]}"; do
+            gum style --foreground "#FFA500" "📂 $dir:"
+            gum style --foreground "#FFA500" "  ⚙️  No config set. Running blocc config set..."
+            echo
+            if ! (cd "$dir" && blocc config set); then
+                gum style --foreground "#FF6B6B" "❌ Failed to set blocc config in: $dir"
+                exit 1
+            fi
+            
+            # Verify config was set
+            local new_context_output=$(cd "$dir" && blocc config show 2>&1)
+            local new_context_exit_code=$?
+            
+            if [ $new_context_exit_code -eq 0 ]; then
+                gum style --foreground "#00FF00" "  ✅ Config set successfully"
+            else
+                gum style --foreground "#FF6B6B" "  ❌ Failed to set config: $new_context_output"
+                exit 1
+            fi
+            echo
+        done
+    fi
+    
+    # Second pass: show summary of all configs
+    if [ "$needs_summary" = true ]; then
+        gum style --foreground "#00BFFF" "📋 blocc config for all solutions:"
+        for dir in "${selected_dirs[@]}"; do
+            if [ -d "$dir" ]; then
+                local context_output=$(cd "$dir" && blocc config show 2>&1)
+                local context_exit_code=$?
+                
+                if [ $context_exit_code -eq 0 ]; then
+                    # Extract context and environment from the output
+                    local context=$(echo "$context_output" | grep -A 10 "deploy:" | grep "context:" | awk '{print $2}')
+                    local environment=$(echo "$context_output" | grep -A 10 "deploy:" | grep "environment:" | awk '{print $2}')
+                    
+                    if [ -n "$environment" ]; then
+                        printf "%s%s\n" "$(gum style --foreground "#FFA500" "📂 $dir: ")" "$(gum style --foreground "#90EE90" "$environment")"
+                    else
+                        gum style --foreground "#FFA500" "📂 $dir:"
+                        echo "$context_output" | sed 's/^/  /'
+                    fi
+                else
+                    gum style --foreground "#FF6B6B" "📂 $dir: ❌ No config set"
+                fi
+            fi
+        done
+        echo
+    fi
+}
+
+# Global arrays to collect namespace info
+declare -a synced_namespaces
+declare -a failed_namespaces
+
+# Function to display namespace summary
+show_namespace_summary() {
+    if [ ${#synced_namespaces[@]} -gt 0 ] || [ ${#failed_namespaces[@]} -gt 0 ]; then
+        echo
+        gum style --foreground "#00BFFF" --bold "📦 Kubernetes Namespaces:"
+        
+        # Show successful syncs
+        if [ ${#synced_namespaces[@]} -gt 0 ]; then
+            for namespace in "${synced_namespaces[@]}"; do
+                gum style --foreground "#00FF00" "✅ $namespace"
+            done
+        fi
+        
+        # Show failed syncs
+        if [ ${#failed_namespaces[@]} -gt 0 ]; then
+            for namespace in "${failed_namespaces[@]}"; do
+                gum style --foreground "#FF4444" "❌ $namespace"
+            done
+        fi
+    fi
+}
+
 # Function to run blocc sync command 
 run_blocc_sync() {
     local dir="$1"
+    local original_dir=$(pwd)
+    
+    if [ ! -d "$dir" ]; then
+        gum style --foreground "#FF6B6B" "❌ Directory does not exist: $dir"
+        return 1
+    fi
     
     cd "$dir" || exit 1
     
     if [ -f "bs" ]; then
         ./bs "$@"
-        return $?
+        local result=$?
+        cd "$original_dir"
+        return $result
     fi
 
-    gum style --foreground "#00FF00" --bold "🏗️ blocc sync in: $dir"
-    blocc sync
+    # Add spacing before sync
+    echo
+    
+    # Build sync command with flags
+    local sync_cmd="blocc sync"
+    local spinner_title="🏗️ blocc sync in: $dir"
+    if [ "$BUILD_LOCALLY" = true ]; then
+        sync_cmd="$sync_cmd --build-locally"
+        spinner_title="🏗️ blocc sync --build-locally in: $dir"
+    fi
+    
+    # Show title and run command with live output
+    gum style --foreground "#00FF00" --bold "$spinner_title"
+    
+    # Count lines of output to know how much to clear later
+    local start_line=$(tput lines)
+    local output_lines=0
+    
+    # Run command and count output lines
+    $sync_cmd 2>&1 | while IFS= read -r line; do
+        echo "$line"
+        ((output_lines++))
+    done
+    local result=${PIPESTATUS[0]}
+    
+    # Get solution name and environment for namespace info
+    local solution_name=""
+    local environment=""
+    
+    # Use absolute path for solution.yaml
+    local solution_file
+    if [[ "$dir" == /* ]]; then
+        solution_file="$dir/solution.yaml"
+    else
+        solution_file="$original_dir/$dir/solution.yaml"
+    fi
+    
+    if [ -f "$solution_file" ]; then
+        solution_name=$(yq -r '.metadata.name // "unknown"' "$solution_file" 2>/dev/null)
+    fi
+    
+    # Get blocc config from the correct directory
+    local context_output
+    if [[ "$dir" == /* ]]; then
+        context_output=$(cd "$dir" && blocc config show 2>&1)
+    else
+        context_output=$(cd "$original_dir/$dir" && blocc config show 2>&1)
+    fi
+    
+    if [ $? -eq 0 ]; then
+        environment=$(echo "$context_output" | grep -A 10 "deploy:" | grep "environment:" | awk '{print $2}')
+    fi
+    
+    
+    # Collect namespace info for later display
+    if [ -n "$solution_name" ] && [ -n "$environment" ]; then
+        local namespace="$solution_name-$environment"
+        if [ $result -eq 0 ]; then
+            synced_namespaces+=("$namespace")
+        else
+            failed_namespaces+=("$namespace")
+        fi
+    fi
+    
+    # If successful, clear the output and show clean success message
+    if [ $result -eq 0 ]; then
+        # Move cursor up to beginning of output and clear
+        local current_line=$(tput lines)
+        local lines_to_clear=$((current_line - start_line + 1))
+        if [ $lines_to_clear -gt 0 ]; then
+            tput cuu $lines_to_clear
+            tput ed
+        fi
+        gum style --foreground "#00FF00" --bold "✅ blocc sync completed successfully in: $dir"
+    else
+        gum style --foreground "#FF4444" --bold "❌ blocc sync failed in: $dir (exit code: $result)"
+    fi
+    
+    # Add spacing after sync
+    echo
+    
+    # Return to original directory
+    cd "$original_dir"
+    return $result
 }
 
 # First, check if there is a solution.yaml file in the current directory
 if [[ -f "solution.yaml" ]]; then
+    # Show blocc config for current directory
+    show_solution_contexts "$(pwd)"
+    
+    # Confirm before proceeding with sync
+    sync_message="Proceed with blocc sync"
+    if [ "$BUILD_LOCALLY" = true ]; then
+        sync_message="$sync_message (with local builds)"
+    fi
+    
+    confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
+    
+    if [ "$confirmation" != "Yes" ]; then
+        gum style --foreground "#FFA500" "🛑 Sync cancelled"
+        exit 0
+    fi
+    
     # Run in current directory
     run_blocc_sync "$(pwd)"
+    show_namespace_summary
     exit 0
 fi
 
@@ -69,6 +353,14 @@ for file in $find_output; do
         else
             dir=""
         fi
+        
+        # Apply fuzzy filter if provided
+        if [ -n "$SOLUTION_FILTER" ]; then
+            # Check if solution name OR directory path contains the filter (case insensitive)
+            if ! echo "$solution_name" | grep -qi "$SOLUTION_FILTER" && ! echo "$dir" | grep -qi "$SOLUTION_FILTER"; then
+                continue
+            fi
+        fi
         temp_dirs+=("$dir")
         temp_names+=("$solution_name")
     fi
@@ -94,14 +386,41 @@ if [ ${#temp_dirs[@]} -gt 0 ]; then
 fi
 
 if [ ${#solution_dirs[@]} -eq 0 ]; then
-    gum style --foreground "#FF4444" "❌ No solution.yaml found"
+    if [ -n "$SOLUTION_FILTER" ]; then
+        gum style --foreground "#FF4444" "❌ No solutions found matching '$SOLUTION_FILTER'"
+    else
+        gum style --foreground "#FF4444" "❌ No solution.yaml found"
+    fi
     exit 1
 elif [ ${#solution_dirs[@]} -eq 1 ]; then
-    # Only one solution.yaml found, start it automatically
+    # Only one solution found
     dir="${solution_dirs[0]}"
-    gum style --foreground "#00FF00" "✅ Found solution.yaml in: $dir"
+    if [ -n "$SOLUTION_FILTER" ]; then
+        gum style --foreground "#00FF00" "✅ Found matching solution in: $dir"
+    else
+        gum style --foreground "#00FF00" "✅ Found solution.yaml in: $dir"
+    fi
+    
+    # Show blocc config for the single solution
+    show_solution_contexts "$dir"
+    
+    # Confirm before proceeding with sync (unless force flag is used)
+    if [ "$FORCE" != true ]; then
+        sync_message="Proceed with blocc sync"
+        if [ "$BUILD_LOCALLY" = true ]; then
+            sync_message="$sync_message (with local builds)"
+        fi
+        
+        confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
+        
+        if [ "$confirmation" != "Yes" ]; then
+            gum style --foreground "#FFA500" "🛑 Sync cancelled"
+            exit 0
+        fi
+    fi
     
     run_blocc_sync "$dir"
+    show_namespace_summary
 else
     # Multiple solution.yaml files found, let user select
     gum style --foreground "#00BFFF" --bold "📂 Multiple blocc solutions found:"
@@ -111,8 +430,17 @@ else
         display_options+=("${solution_names[i]} (${solution_dirs[i]})")
     done
     
-    # Multi-select mode - always allow multiple selection
-    selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select solutions to sync (space to select, enter to confirm):")
+    # Select solutions based on mode
+    if [ "$MULTI_SELECT" = true ] && [ -n "$SOLUTION_FILTER" ]; then
+        # Auto-select all matches when using fuzzy search with -m flag
+        selected_options=$(printf '%s\n' "${display_options[@]}")
+        gum style --foreground "#00FF00" "✅ Auto-selected ${#display_options[@]} solutions matching '$SOLUTION_FILTER'"
+    elif [ "$MULTI_SELECT" = true ]; then
+        selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select solutions to sync (space to select, enter to confirm):")
+    else
+        selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --header="Select solution to sync:")
+    fi
+    
     if [ -z "$selected_options" ]; then
         gum style --foreground "#FF4444" "❌ No selection made"
         exit 1
@@ -128,15 +456,44 @@ else
         gum style --foreground "#00FF00" "✅ Running blocc sync for ${#selected_array[@]} solutions:"
     fi
     
-    # Run blocc sync for each selected solution
+    # Get selected solution directories
+    selected_solution_dirs=()
     for selected_option in "${selected_array[@]}"; do
-        # Extract directory from selection
         for i in "${!display_options[@]}"; do
             if [ "${display_options[i]}" = "$selected_option" ]; then
-                dir="${solution_dirs[i]}"
-                run_blocc_sync "$dir"
+                selected_solution_dirs+=("${solution_dirs[i]}")
                 break
             fi
         done
     done
+    
+    # Show blocc config for all selected solutions
+    show_solution_contexts "${selected_solution_dirs[@]}"
+    
+    # Confirm before proceeding with sync (unless force flag is used)
+    if [ "$FORCE" != true ]; then
+        if [ ${#selected_solution_dirs[@]} -eq 1 ]; then
+            sync_message="Proceed with blocc sync"
+        else
+            sync_message="Proceed with blocc sync for ${#selected_solution_dirs[@]} solutions"
+        fi
+        
+        if [ "$BUILD_LOCALLY" = true ]; then
+            sync_message="$sync_message (with local builds)"
+        fi
+        
+        confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
+        
+        if [ "$confirmation" != "Yes" ]; then
+            gum style --foreground "#FFA500" "🛑 Sync cancelled"
+            exit 0
+        fi
+    fi
+    
+    # Run blocc sync for each selected solution
+    for dir in "${selected_solution_dirs[@]}"; do
+        run_blocc_sync "$dir"
+    done
+    
+    show_namespace_summary
 fi
