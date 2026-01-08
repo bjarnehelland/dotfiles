@@ -66,6 +66,11 @@ context_alias = "Intrum"
 context_pattern = "intrum-stacc-dev-aks"
 style = "bold green"
 
+[[kubernetes.contexts]]
+context_alias = "Intrum"
+context_pattern = "k8s-login-intrum-dev-stacc-dev-context"
+style = "bold green"
+
 [package]
 disabled = true
 

@@ -3,8 +3,11 @@ alias -- ...='cd ../..'
 alias -- ....='cd ../../..'
 alias -- .....='cd ../../../..'
 alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
-alias -- bsl='bs -l'
+alias -- bbs='bs --beta'
 alias -- c='clear'
+alias -- cl='claude'
+alias -- cld='claude --dangerously-skip-permissions'
+alias -- connect='az account set --subscription $(az account list --query "[].name" -o tsv | fzf)'
 alias -- dive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":"$(pwd)" -w "$(pwd)" -v "$HOME/.dive.yaml":"$HOME/.dive.yaml" wagoodman/dive:latest'
 alias -- eza='eza --icons auto --git'
 alias -- g='lazygit'
@@ -16,6 +19,7 @@ alias -- gs='git status'
 alias -- k=kubectl
 alias -- kc=kubectx
 alias -- kn=kubens
+alias -- kk='k9s -c pod'
 alias -- la='eza -a'
 alias -- ll='ls -l'
 alias -- lla='eza -la'
@@ -43,4 +47,5 @@ eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 eval "$(~/.local/bin/mise activate zsh)"
 
-alias claude="/Users/bjarnehelland/.claude/local/claude"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"

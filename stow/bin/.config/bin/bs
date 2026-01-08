@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Parse command line arguments
-MULTI_SELECT=false
-BUILD_LOCALLY=false
 FORCE=false
+USE_BETA=false
 SOLUTION_FILTER=""
 
 # Function to handle combined short options
@@ -13,21 +12,17 @@ parse_combined_flags() {
     for (( i=0; i<${#flags}; i++ )); do
         flag="${flags:$i:1}"
         case "$flag" in
-            m)
-                MULTI_SELECT=true
-                ;;
-            l)
-                BUILD_LOCALLY=true
-                ;;
             f)
                 FORCE=true
                 ;;
+            b)
+                USE_BETA=true
+                ;;
             *)
                 echo "Unknown option: -$flag"
-                echo "Usage: bs [-m|--multi] [-l|--build-locally] [-f|--force] [solution-name]"
-                echo "  -m, --multi          Allow multiple solution selection"
-                echo "  -l, --build-locally  Build component(s) locally with docker"
+                echo "Usage: bs [-f|--force] [-b|--beta] [solution-name]"
                 echo "  -f, --force          Skip confirmation prompt"
+                echo "  -b, --beta           Use blocc-beta sync -N"
                 echo "  solution-name        Fuzzy match solution names (optional)"
                 exit 1
                 ;;
@@ -37,28 +32,23 @@ parse_combined_flags() {
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -m|--multi)
-            MULTI_SELECT=true
-            shift
-            ;;
-        -l|--build-locally)
-            BUILD_LOCALLY=true
-            shift
-            ;;
         -f|--force)
             FORCE=true
             shift
             ;;
-        -[mlf]*)
+        -b|--beta)
+            USE_BETA=true
+            shift
+            ;;
+        -[fb]*)
             parse_combined_flags "$1"
             shift
             ;;
         -*)
             echo "Unknown option: $1"
-            echo "Usage: bs [-m|--multi] [-l|--build-locally] [-f|--force] [solution-name]"
-            echo "  -m, --multi          Allow multiple solution selection"
-            echo "  -l, --build-locally  Build component(s) locally with docker"
+            echo "Usage: bs [-f|--force] [-b|--beta] [solution-name]"
             echo "  -f, --force          Skip confirmation prompt"
+            echo "  -b, --beta           Use blocc-beta sync -N"
             echo "  solution-name        Fuzzy match solution names (optional)"
             exit 1
             ;;
@@ -88,6 +78,11 @@ fi
 
 if ! command -v blocc &>/dev/null; then
     gum style --foreground "#FF4444" "❌ blocc is required but not installed. Install with: brew install stacc/tap/blocc"
+    exit 1
+fi
+
+if [ "$USE_BETA" = true ] && ! command -v blocc-beta &>/dev/null; then
+    gum style --foreground "#FF4444" "❌ blocc-beta is required but not installed. Install with: brew install stacc/tap/blocc-beta"
     exit 1
 fi
 
@@ -219,13 +214,13 @@ run_blocc_sync() {
 
     # Add spacing before sync
     echo
-    
+
     # Build sync command with flags
     local sync_cmd="blocc sync"
     local spinner_title="🏗️ blocc sync in: $dir"
-    if [ "$BUILD_LOCALLY" = true ]; then
-        sync_cmd="$sync_cmd --build-locally"
-        spinner_title="🏗️ blocc sync --build-locally in: $dir"
+    if [ "$USE_BETA" = true ]; then
+        sync_cmd="blocc-beta sync -N"
+        spinner_title="🏗️ blocc-beta sync -N in: $dir"
     fi
     
     # Show title and run command with live output
@@ -290,9 +285,17 @@ run_blocc_sync() {
             tput cuu $lines_to_clear
             tput ed
         fi
-        gum style --foreground "#00FF00" --bold "✅ blocc sync completed successfully in: $dir"
+        local cmd_name="blocc sync"
+        if [ "$USE_BETA" = true ]; then
+            cmd_name="blocc-beta sync"
+        fi
+        gum style --foreground "#00FF00" --bold "✅ $cmd_name completed successfully in: $dir"
     else
-        gum style --foreground "#FF4444" --bold "❌ blocc sync failed in: $dir (exit code: $result)"
+        local cmd_name="blocc sync"
+        if [ "$USE_BETA" = true ]; then
+            cmd_name="blocc-beta sync"
+        fi
+        gum style --foreground "#FF4444" --bold "❌ $cmd_name failed in: $dir (exit code: $result)"
     fi
     
     # Add spacing after sync
@@ -310,10 +313,9 @@ if [[ -f "solution.yaml" ]]; then
     
     # Confirm before proceeding with sync
     sync_message="Proceed with blocc sync"
-    if [ "$BUILD_LOCALLY" = true ]; then
-        sync_message="$sync_message (with local builds)"
+    if [ "$USE_BETA" = true ]; then
+        sync_message="Proceed with blocc-beta sync"
     fi
-    
     confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
     
     if [ "$confirmation" != "Yes" ]; then
@@ -407,18 +409,17 @@ elif [ ${#solution_dirs[@]} -eq 1 ]; then
     # Confirm before proceeding with sync (unless force flag is used)
     if [ "$FORCE" != true ]; then
         sync_message="Proceed with blocc sync"
-        if [ "$BUILD_LOCALLY" = true ]; then
-            sync_message="$sync_message (with local builds)"
+        if [ "$USE_BETA" = true ]; then
+            sync_message="Proceed with blocc-beta sync"
         fi
-        
         confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
-        
+
         if [ "$confirmation" != "Yes" ]; then
             gum style --foreground "#FFA500" "🛑 Sync cancelled"
             exit 0
         fi
     fi
-    
+
     run_blocc_sync "$dir"
     show_namespace_summary
 else
@@ -431,14 +432,12 @@ else
     done
     
     # Select solutions based on mode
-    if [ "$MULTI_SELECT" = true ] && [ -n "$SOLUTION_FILTER" ]; then
-        # Auto-select all matches when using fuzzy search with -m flag
+    if [ -n "$SOLUTION_FILTER" ]; then
+        # Auto-select all matches when using fuzzy search
         selected_options=$(printf '%s\n' "${display_options[@]}")
         gum style --foreground "#00FF00" "✅ Auto-selected ${#display_options[@]} solutions matching '$SOLUTION_FILTER'"
-    elif [ "$MULTI_SELECT" = true ]; then
-        selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select solutions to sync (space to select, enter to confirm):")
     else
-        selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --header="Select solution to sync:")
+        selected_options=$(printf '%s\n' "${display_options[@]}" | gum choose --no-limit --header="Select solutions to sync (space to select, enter to confirm):")
     fi
     
     if [ -z "$selected_options" ]; then
@@ -472,24 +471,24 @@ else
     
     # Confirm before proceeding with sync (unless force flag is used)
     if [ "$FORCE" != true ]; then
+        local cmd_name="blocc sync"
+        if [ "$USE_BETA" = true ]; then
+            cmd_name="blocc-beta sync"
+        fi
         if [ ${#selected_solution_dirs[@]} -eq 1 ]; then
-            sync_message="Proceed with blocc sync"
+            sync_message="Proceed with $cmd_name"
         else
-            sync_message="Proceed with blocc sync for ${#selected_solution_dirs[@]} solutions"
+            sync_message="Proceed with $cmd_name for ${#selected_solution_dirs[@]} solutions"
         fi
-        
-        if [ "$BUILD_LOCALLY" = true ]; then
-            sync_message="$sync_message (with local builds)"
-        fi
-        
+
         confirmation=$(gum choose --header="$sync_message?" "Yes" "No")
-        
+
         if [ "$confirmation" != "Yes" ]; then
             gum style --foreground "#FFA500" "🛑 Sync cancelled"
             exit 0
         fi
     fi
-    
+
     # Run blocc sync for each selected solution
     for dir in "${selected_solution_dirs[@]}"; do
         run_blocc_sync "$dir"

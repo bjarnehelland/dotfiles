@@ -1,20 +1,20 @@
 #!/bin/sh
 
-if gum spin --spinner globe --title "Logging into blocc registry" -- az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
+if gum spin --spinner globe --show-error --title "Logging into blocc registry" -- az acr login -n blocc --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
     echo "✅ Logged into blocc registry"
 else
     echo "❌ Failed to log into blocc registry"
     exit 1
 fi
 
-if gum spin --spinner globe --title "Logging into bloccephe registry" -- az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
+if gum spin --spinner globe --show-error --title "Logging into bloccephe registry" -- az acr login -n bloccephe --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
     echo "✅ Logged into bloccephe registry"
 else
     echo "❌ Failed to log into bloccephe registry"
     exit 1
 fi
 
-if gum spin --spinner globe --title "Logging into bloccdev registry" -- az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
+if gum spin --spinner globe --show-error --title "Logging into bloccdev registry" -- az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
     echo "✅ Logged into bloccdev registry"
 else
     echo "❌ Failed to log into bloccdev registry"

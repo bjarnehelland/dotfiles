@@ -63,7 +63,7 @@ cask "raycast"
 cask "runjs"
 cask "slack"
 cask "spotify"
-cask "tableplus"
+cask "superwhisper"
 cask "visual-studio-code"
 mas "Amphetamine", id: 937984704
 mas "Boop", id: 1518425043
