@@ -471,7 +471,7 @@ else
     
     # Confirm before proceeding with sync (unless force flag is used)
     if [ "$FORCE" != true ]; then
-        local cmd_name="blocc sync"
+        cmd_name="blocc sync"
         if [ "$USE_BETA" = true ]; then
             cmd_name="blocc-beta sync"
         fi
