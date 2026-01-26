@@ -152,7 +152,9 @@ show_solution_contexts() {
                     local context=$(echo "$context_output" | grep -A 10 "deploy:" | grep "context:" | awk '{print $2}')
                     local environment=$(echo "$context_output" | grep -A 10 "deploy:" | grep "environment:" | awk '{print $2}')
                     
-                    if [ -n "$environment" ]; then
+                    if [ -n "$context" ] && [ -n "$environment" ]; then
+                        printf "%s%s\n" "$(gum style --foreground "#FFA500" "📂 $dir: ")" "$(gum style --foreground "#90EE90" "$context/$environment")"
+                    elif [ -n "$environment" ]; then
                         printf "%s%s\n" "$(gum style --foreground "#FFA500" "📂 $dir: ")" "$(gum style --foreground "#90EE90" "$environment")"
                     else
                         gum style --foreground "#FFA500" "📂 $dir:"

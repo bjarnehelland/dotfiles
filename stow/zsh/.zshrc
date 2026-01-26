@@ -35,7 +35,7 @@ alias -- take='(){  mkdir -p $1 && cd $_; }'
 alias -- vimdiff='nvim -d'
 alias -- paths="echo $PATH | tr ':' '\n' | nl"
 alias -- bpmn='files=$(fd -e bpmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{print $NF"\t"$0}'\'' | fzf --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
-alias -- dmn='files=$(fd -e dmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{print $(NF-2)"/"$(NF-1)"/"$NF"\t"$0}'\'' | fzf --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
+alias -- dmn='files=$(fd -e dmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{paths[NR]=$0; files[NR]=$NF; count[$NF]++} END{for(i=1;i<=NR;i++){if(count[files[i]]>1){n=split(paths[i],a,"/"); print files[i]"\t"a[n-1]"/"a[n]"\t"paths[i]}else{print files[i]"\t"files[i]"\t"paths[i]}}}'\'' | sort -t$'\''\t'\'' -k1 | cut -f2- | fzf --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
 
 export PATH="$HOME/.config/bin:$PATH"
 export FZF_DEFAULT_OPTS='--ansi --border rounded --color="16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic" --marker=" " --no-info --no-separator --pointer="👉" --reverse'
