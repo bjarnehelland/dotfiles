@@ -13,7 +13,7 @@ alias -- eza='eza --icons auto --git'
 alias -- g='lazygit'
 alias -- gp='git pull'
 alias -- gpa='git pull --rebase --autostash  --prune'
-alias -- gpp='git pull --prune'
+alias -- gpp='git pull --prune && git branch -vv | grep ": gone]" | awk "{print \$1}" | xargs git branch -D'
 alias -- gpush='git push'
 alias -- gs='git status'
 alias -- k=kubectl
@@ -41,6 +41,7 @@ export PATH="$HOME/.config/bin:$PATH"
 export FZF_DEFAULT_OPTS='--ansi --border rounded --color="16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic" --marker=" " --no-info --no-separator --pointer="👉" --reverse'
 export EDITOR=nvim
 source <(fzf --zsh)
+autoload -Uz compinit && compinit
 source ~/Code/playgrounds/flow-dev/flow-dev/completions/_flow-dev
 
 eval "$(direnv hook zsh)"
