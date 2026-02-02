@@ -30,6 +30,7 @@ alias -- lt5='eza --tree --level=5'
 alias -- s='cd "$(zoxide query --list | sed "s|$HOME|~|g" | fzf | sed "s|~|$HOME|g")"'
 alias -- sz='source ~/.zshrc'
 alias -- take='(){  mkdir -p $1 && cd $_; }'
+alias -- timeout='gtimeout'
 alias -- vimdiff='nvim -d'
 alias -- paths="echo $PATH | tr ':' '\n' | nl"
 alias -- bpmn='files=$(fd -e bpmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{print $NF"\t"$0}'\'' | fzf --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
