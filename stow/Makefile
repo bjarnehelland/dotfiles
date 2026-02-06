@@ -1,6 +1,7 @@
 link:
 	stow agents
 	stow bin
+	stow claude
 	stow direnv
 	stow ghostty
 	stow k9s
@@ -12,6 +13,7 @@ link:
 unlink:
 	stow -D agents
 	stow -D bin
+	stow -D claude
 	stow -D direnv
 	stow -D ghostty
 	stow -D k9s
