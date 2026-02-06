@@ -1,4 +1,5 @@
 link:
+	stow agents
 	stow bin
 	stow direnv
 	stow ghostty
@@ -8,7 +9,8 @@ link:
 	stow streamdeck
 	stow zsh
 
-unlink: 
+unlink:
+	stow -D agents
 	stow -D bin
 	stow -D direnv
 	stow -D ghostty
