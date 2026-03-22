@@ -1,72 +1,46 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# tmux rename-session -t $(tmux display-message -p '#S') "🌎 updating"
+set -o errexit
+
+DOTFILES_DIR="$HOME/Code/bjarnehelland/dotfiles"
+LOG="/tmp/u-$(date +%Y-%m-%d-%H-%M-%S).txt"
 
 gum style \
     --foreground 12 --border-foreground 12 --border double \
     --align center --width 60 --margin "1 0" --padding "1 0" \
-    '██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗
-██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
-██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗  
-██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝  
-╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗
- ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝'
+    "$(printf '%s\n' \
+    '██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗' \
+    '██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝' \
+    '██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗  ' \
+    '██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝  ' \
+    '╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗' \
+    ' ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝')"
 
-NOW=$(date +"%Y-%m-%d-%H-%M-%S")
-echo "$NOW\n" >>/tmp/u-$NOW.txt
+step() {
+    local emoji="$1" title="$2"
+    shift 2
+    gum spin --spinner globe --title "$emoji $title" --show-output -- "$@" >> "$LOG" 2>&1
+    echo "" >> "$LOG"
+    echo "$emoji $title done"
+}
 
-gum spin --spinner globe --title "🐙 gh extensions upgrading..." --show-output -- gh extension upgrade --all >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🐙 gh extensions upgraded"
+step "🐙" "gh extensions upgrading..." gh extension upgrade --all
+step "💤" "lazy.nvim syncing..." nvim --headless "+Lazy! sync" +qa
+step "🌳" "nvim-treesitter updating..." nvim --headless "+TSUpdate" +qa
 
-gum spin --spinner globe --title "🪟 tpm plugins updating..." --show-output -- ~/.config/tmux/plugins/tpm/bin/update_plugins all >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🪟 tpm plugins updated"
-
-gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- nvim --headless "+Lazy! sync" +qa
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 💤 lazy.nvim synced"
-
-# FIX: mason update isn't triggering updating of tools
-# gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+MasonUpdate" +qa
-# echo "\n" >>/tmp/u-$NOW.txt
-# echo "✅ 🧰 mason.nvim updated"
-# gum spin --spinner globe --title "🧰 mason.nvim tools updating" -- nvim --headless "+MasonToolsUpdate" +qa
-# echo "\n" >>/tmp/u-$NOW.txt
-# echo "✅ 🧰 mason.nvim tools updated"
-
-gum spin --spinner globe --title "🌳 nvim-treesitter updating" -- nvim --headless "+TSUpdate" +qa
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🌳 nvim-treesitter updated"
-
-gum spin --spinner globe --title "🍻 brew updating" --show-output -- brew update >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🍻 brew updated"
-
-OUTDATED=$(brew outdated)
-echo $OUTDATED >>/tmp/u-$NOW.txt
-
-if [[ -n "$OUTDATED" ]]; then
-    # gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- brew upgrade >>/tmp/u-$NOW.txt
-    echo "\n" >>/tmp/u-$NOW.txt
-    echo "✅ 🍻 brew upgraded"
-
-    # gum spin --spinner globe --title "🍻 brew cleaning up" --show-output -- brew cleanup --prune=all >>/tmp/u-$NOW.txt
-    echo "\n" >>/tmp/u-$NOW.txt
-    echo "✅ 🍻 brew cleaned up"
-else
-    echo "No outdated brew packages" >>/tmp/u-$NOW.txt
+step "🍻" "brew updating..." brew update
+step "🍻" "brew upgrading..." brew upgrade
+step "🍻" "brew cleaning up..." brew cleanup --prune=all
+step "🍻" "brew doctoring..." brew doctor || true
+echo "🍻 brew bundle (personal)..."
+brew bundle --file="$DOTFILES_DIR/brew/Brewfile" | tee -a "$LOG"
+if [ -f "$DOTFILES_DIR/brew/Brewfile.work" ]; then
+    echo "🍻 brew bundle (work)..."
+    brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work" | tee -a "$LOG"
 fi
 
-gum spin --spinner globe --title "🍻 brew doctoring" --show-output -- brew doctor >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🍻 brew doctored"
+step "🍎" "mas upgrading..." mas upgrade
 
-gum spin --spinner globe --title "🍎 mas upgrading" --show-output -- mas upgrade >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🍎 mas upgraded"
-
-echo "✅ 🧾 logged to /tmp/u-$NOW.txt"
-man /tmp/u-$NOW.txt
-
-# tmux rename-session -t $(tmux display-message -p '#S') "✅ update done"
+echo ""
+echo "🧾 logged to $LOG"
+less "$LOG"
