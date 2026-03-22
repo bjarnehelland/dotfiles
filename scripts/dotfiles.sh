@@ -78,14 +78,15 @@ setup_ssh() {
     bash "$DOTFILES_DIR/scripts/generate_github_ssh.sh"
   fi
 
-  echo ""
-  info "Your SSH public key has been copied to the clipboard."
-  info "Add it to GitHub: https://github.com/settings/keys"
-  echo ""
-  read -rp "Press Enter after adding the key to GitHub to switch the remote to SSH..."
+  info "Logging in to GitHub CLI..."
+  gh auth login
+
+  info "Adding SSH key to GitHub for authentication and signing..."
+  gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$(scutil --get ComputerName)" --type authentication
+  gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$(scutil --get ComputerName)" --type signing
 
   git -C "$DOTFILES_DIR" remote set-url origin git@github.com:bjarnehelland/dotfiles.git
-  success "Remote switched to SSH"
+  success "SSH key added to GitHub and remote switched to SSH"
 }
 
 info "########################"
