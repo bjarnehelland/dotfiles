@@ -18,3 +18,9 @@ unstow:
 
 brew:
 	brew bundle --file=brew/Brewfile
+	@if [ -f brew/Brewfile.work ]; then \
+		read -p "Install work (Stacc) packages? [y/N] " work; \
+		if [ "$$work" = "y" ] || [ "$$work" = "Y" ]; then \
+			brew bundle --file=brew/Brewfile.work; \
+		fi; \
+	fi

@@ -57,6 +57,13 @@ install_homebrew() {
 install_packages() {
   info "Installing packages from Brewfile..."
   brew bundle --file="$DOTFILES_DIR/brew/Brewfile"
+
+  echo ""
+  read -rp "Install work (Stacc) packages? [y/N] " work
+  if [[ "$work" =~ ^[Yy]$ ]]; then
+    info "Installing work packages from Brewfile.work..."
+    brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work"
+  fi
 }
 
 stow_dotfiles() {
