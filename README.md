@@ -4,17 +4,48 @@ This is the home of all my dotfiles. These are files that add custom configurati
 
 ## How to install
 
-My dotfiles are managed by [Homebrew](https://brew.sh) and [GNU Stow](https://www.gnu.org/software/stow/).
-
-1. Install [Homebrew](https://brew.sh/)
-2. Install packages from the Brewfile:
+1. Clone this repo:
 ```sh
-brew bundle --file=brew/Brewfile
+git clone git@github.com:bjarnehelland/dotfiles.git ~/Code/bjarnehelland/dotfiles
+cd ~/Code/bjarnehelland/dotfiles
 ```
 
-Random commands:
+2. Run the setup script (installs Xcode CLI tools, Homebrew, packages, and stows dotfiles):
 ```sh
-chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
+make setup
+```
+
+3. Configure macOS defaults:
+```sh
+make macos
+```
+
+## Usage
+
+```sh
+make brew   # Install/update Homebrew packages from Brewfile
+make stow   # Re-stow all dotfiles
+make macos  # Apply macOS defaults
+```
+
+## Structure
+
+```
+brew/Brewfile    # Homebrew packages, casks, and VS Code extensions
+stow/            # Dotfiles managed by GNU Stow
+  agents/        # Claude agents config
+  bin/           # Custom CLI tools
+  claude/        # Claude Code settings
+  direnv/        # direnv config
+  ghostty/       # Ghostty terminal config
+  git/           # Git config
+  k9s/           # k9s Kubernetes UI config
+  nvim/          # Neovim config (LazyVim)
+  starship/      # Starship prompt config
+  streamdeck/    # Stream Deck config
+  television/    # Television file picker config
+  zsh/           # Zsh shell config
+scripts/         # Setup and utility scripts
 ```
 
 ## Software
@@ -24,13 +55,9 @@ chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
 - Multiplexer: [tmux](https://github.com/tmux/tmux/wiki)
 - Editor: [Neovim](https://neovim.io)
 - Git: [lazygit](https://github.com/jesseduffield/lazygit)
-- macOS package manager: [Homebrew](https://brew.sh)
+- Package manager: [Homebrew](https://brew.sh)
 
 ## Hardware
 
-- Laptop: [MacBook Pro](https://www.apple.com/macbook-pro) (13-inch, 2020, Apple M1 Chip, 16GB RAM)
-- Mouse: Apple trackpad
-
-## Keyboards
-
-- [HHKB hybrid type-s](https://www.hhkeyboard.com/uk/products/hybrid-type-s) (daily driver)
+- Laptop: [MacBook Pro](https://www.apple.com/macbook-pro) (Apple M1 Chip, 16GB RAM)
+- Keyboard: [HHKB hybrid type-s](https://www.hhkeyboard.com/uk/products/hybrid-type-s)

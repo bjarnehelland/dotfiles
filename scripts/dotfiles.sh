@@ -2,8 +2,7 @@
 
 set -o errexit
 
-REPO_URL=https://github.com/bjarnehelland/dotfiles.git
-REPO_PATH="$HOME/Code/bjarnehelland/dotfiles"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 reset_color=$(tput sgr 0)
 
@@ -15,16 +14,12 @@ success() {
   printf "%s[*] %s%s\n" "$(tput setaf 2)" "$1" "$reset_color"
 }
 
-err() {
-  printf "%s[*] %s%s\n" "$(tput setaf 1)" "$1" "$reset_color"
-}
-
 warn() {
   printf "%s[*] %s%s\n" "$(tput setaf 3)" "$1" "$reset_color"
 }
 
 install_xcode() {
-  if xcode-select -p >/dev/null; then
+  if xcode-select -p >/dev/null 2>&1; then
     warn "xCode Command Line Tools already installed"
   else
     info "Installing xCode Command Line Tools..."
@@ -34,33 +29,38 @@ install_xcode() {
 }
 
 install_homebrew() {
-  export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-  if ! command -v brew &>/dev/null; then
-    info "Installing homebrew..."
-    sudo --validate # reset `sudo` timeout to use Homebrew install in noninteractive mode
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  else
+  if command -v brew &>/dev/null; then
     warn "Homebrew already installed"
+  else
+    info "Installing Homebrew..."
+    sudo --validate
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+}
+
+install_packages() {
+  info "Installing packages from Brewfile..."
+  brew bundle --file="$DOTFILES_DIR/brew/Brewfile"
+}
+
+stow_dotfiles() {
+  info "Stowing dotfiles..."
+  local packages
+  packages=$(find "$DOTFILES_DIR/stow" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
+
+  for pkg in $packages; do
+    info "  Stowing $pkg"
+    stow -d "$DOTFILES_DIR/stow" --target "$HOME" "$pkg"
+  done
 }
 
 info "########################"
 info "####### dotfiles #######"
 info "########################"
-read -p "Press enter to start:"
-info "Bootstraping..."
 
 install_xcode
 install_homebrew
+install_packages
+stow_dotfiles
 
-
-info "Installing Git"
-brew install git
-
-# info "Cloning .dotfiles repo from $REPO_URL into $REPO_PATH"
-# git clone "$REPO_URL" "$REPO_PATH"
-
-# info "Change path to $REPO_PATH"
-# cd "$REPO_PATH" >/dev/null
-
-# /bin/bash ./install.sh
+success "Done! Run 'scripts/macos-setup.sh' to configure macOS defaults."
