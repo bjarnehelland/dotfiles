@@ -14,6 +14,13 @@ else
     exit 1
 fi
 
+if gum spin --spinner globe --show-error --title "Logging into staccproxy registry" -- az acr login -n staccproxy --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
+    echo "✅ Logged into staccproxy registry"
+else
+    echo "❌ Failed to log into staccproxy registry"
+    exit 1
+fi
+
 if gum spin --spinner globe --show-error --title "Logging into bloccdev registry" -- az acr login -n bloccdev --subscription 5b37ef96-b4b4-483f-9955-92f7a3e74ee1; then
     echo "✅ Logged into bloccdev registry"
 else

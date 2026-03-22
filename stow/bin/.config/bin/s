@@ -1,0 +1,43 @@
+#!/bin/bash
+
+selected=$(zoxide query --list | sed "s|$HOME|~|g" | fzf | sed "s|~|$HOME|g")
+
+if [ -z "$selected" ]; then
+    exit 0
+fi
+
+to_title() {
+    echo "$1" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1'
+}
+
+name=$(to_title "$(basename "$selected")")
+workspaces=$(cmux list-workspaces 2>/dev/null)
+
+# Walk up the path to find a matching workspace (by name or path)
+path="$selected"
+existing=""
+while [ "$path" != "/" ] && [ "$path" != "$HOME" ]; do
+    segment=$(basename "$path")
+    title=$(to_title "$segment")
+    suffix="${path#$HOME}"
+
+    existing=$(echo "$workspaces" | grep -E "($suffix|  $title( |$))" | head -1 | grep -o 'workspace:[0-9]*')
+    if [ -n "$existing" ]; then
+        break
+    fi
+    path=$(dirname "$path")
+done
+
+if [ -n "$existing" ]; then
+    cmux select-workspace --workspace "$existing" >/dev/null 2>&1
+    # If selected path is a child of the matched workspace, cd into it
+    if [ "$path" != "$selected" ]; then
+        cmux send --workspace "$existing" "cd $selected && clear\n" >/dev/null 2>&1
+    fi
+else
+    ref=$(cmux new-workspace --cwd "$selected" 2>/dev/null | awk '{print $2}')
+    if [ -n "$ref" ]; then
+        cmux select-workspace --workspace "$ref" >/dev/null 2>&1
+        cmux workspace-action rename --workspace "$ref" --title "$name" >/dev/null 2>&1
+    fi
+fi

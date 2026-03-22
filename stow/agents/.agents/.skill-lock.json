@@ -18,6 +18,15 @@
       "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
       "installedAt": "2026-02-06T07:47:09.042Z",
       "updatedAt": "2026-02-06T07:50:12.191Z"
+    },
+    "mobile-ios-design": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/wshobson/agents.git",
+      "skillPath": "plugins/ui-design/skills/mobile-ios-design/SKILL.md",
+      "skillFolderHash": "a0495e3279b32c6375a0a3107b1ae3834687c21c",
+      "installedAt": "2026-02-15T14:13:20.397Z",
+      "updatedAt": "2026-02-15T14:13:20.397Z"
     }
   },
   "dismissed": {

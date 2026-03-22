@@ -4,3 +4,4 @@ node_modules
 nix-darwin/result
 k9s.log
 stow/k9s/Library/Application Support/k9s/clusters
+stow/agents/.agents/skills/

@@ -1,4 +1,29 @@
 {
+	"env": {
+		"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+	},
+	"permissions": {
+		"allow": ["mcp__pencil"],
+		"deny": [
+			"Read(.env*)",
+			"Read(**/.env*)",
+			"Bash(cat .env*)",
+			"Bash(cat */.env*)",
+			"Bash(rm -rf *)",
+			"Bash(git push --force*)",
+			"Bash(git reset --hard*)",
+			"Read(**/id_rsa*)",
+			"Read(**/id_ed25519*)",
+			"Read(**/id_ecdsa*)",
+			"Read(**/id_dsa*)",
+			"Read(**/.ssh/id_*)",
+			"Read(**/.aws/credentials)",
+			"Read(**/.aws/config)",
+			"Read(~/.claude/settings.json)",
+			"Edit(~/.claude/settings.json)",
+			"Write(~/.claude/settings.json)"
+		]
+	},
 	"statusLine": {
 		"type": "command",
 		"command": "bash ~/.claude/statusline-command.sh"
@@ -8,12 +33,22 @@
 		"frontend-design@claude-plugins-official": true,
 		"context7@claude-plugins-official": true,
 		"typescript-lsp@claude-plugins-official": true,
-		"feature-dev@claude-plugins-official": true,
 		"code-review@claude-plugins-official": true,
-		"commit-commands@claude-plugins-official": true,
-		"security-guidance@claude-plugins-official": true
+		"security-guidance@claude-plugins-official": true,
+		"swift-lsp@claude-plugins-official": true,
+		"superpowers@claude-plugins-official": true,
+		"blocc@agentic-marketplace": true,
+		"telegram@claude-plugins-official": true
 	},
-	"env": {
-		"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-	}
+	"extraKnownMarketplaces": {
+		"agentic-marketplace": {
+			"source": {
+				"source": "github",
+				"repo": "stacc/skills-marketplace"
+			},
+			"autoUpdate": true
+		}
+	},
+	"voiceEnabled": true,
+	"skipDangerousModePermissionPrompt": true
 }
