@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -o errexit
-
 DOTFILES_DIR="$HOME/Code/bjarnehelland/dotfiles"
 LOG="/tmp/u-$(date +%Y-%m-%d-%H-%M-%S).txt"
 
@@ -16,31 +14,75 @@ gum style \
     '╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗' \
     ' ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝')"
 
+ERRORS=()
+
 step() {
     local emoji="$1" title="$2"
     shift 2
-    gum spin --spinner globe --title "$emoji $title" --show-output -- "$@" >> "$LOG" 2>&1
+    gum spin --spinner globe --title "$emoji $title" -- "$@" >> "$LOG" 2>&1 || ERRORS+=("$title")
     echo "" >> "$LOG"
-    echo "$emoji $title done"
+    if printf '%s\n' "${ERRORS[@]}" | grep -qF "$title"; then
+        gum style --foreground 1 "  ✗ $title failed"
+    else
+        echo "  ✓ $title done"
+    fi
 }
 
-step "🐙" "gh extensions upgrading..." gh extension upgrade --all
-step "💤" "lazy.nvim syncing..." nvim --headless "+Lazy! sync" +qa
-step "🌳" "nvim-treesitter updating..." nvim --headless "+TSUpdate" +qa
-
-step "🍻" "brew updating..." brew update
-step "🍻" "brew upgrading..." brew upgrade
-step "🍻" "brew cleaning up..." brew cleanup --prune=all
-step "🍻" "brew doctoring..." brew doctor || true
-echo "🍻 brew bundle (personal)..."
-brew bundle --file="$DOTFILES_DIR/brew/Brewfile" | tee -a "$LOG"
-if [ -f "$DOTFILES_DIR/brew/Brewfile.work" ]; then
-    echo "🍻 brew bundle (work)..."
-    brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work" | tee -a "$LOG"
-fi
-
-step "🍎" "mas upgrading..." mas upgrade
+bundle() {
+    local label="$1" file="$2"
+    echo "  … $label"
+    local output
+    output=$(brew bundle --file="$file" 2>&1) || true
+    echo "$output" >> "$LOG"
+    local installed upgraded failed
+    installed=$(echo "$output" | grep -c "^Installing" || true)
+    upgraded=$(echo "$output" | grep -c "^Upgrading" || true)
+    failed=$(echo "$output" | grep -c "^Error:" || true)
+    if [ "$failed" -gt 0 ]; then
+        ERRORS+=("$label")
+        echo "$output" | grep "^Installing\|^Upgrading\|^Error:" | sed 's/^/    /'
+        gum style --foreground 1 "  ✗ $label: $failed error(s)"
+    elif [ "$installed" -gt 0 ] || [ "$upgraded" -gt 0 ]; then
+        echo "$output" | grep "^Installing\|^Upgrading" | sed 's/^/    /'
+        echo "  ✓ $label: $installed installed, $upgraded upgraded"
+    else
+        echo "  ✓ $label: up to date"
+    fi
+}
 
 echo ""
-echo "🧾 logged to $LOG"
-less "$LOG"
+gum style --foreground 4 --bold "Tools"
+step "🐙" "gh extensions" gh extension upgrade --all
+step "💤" "lazy.nvim" nvim --headless "+Lazy! sync" +qa
+step "🌳" "treesitter" nvim --headless "+TSUpdate" +qa
+
+echo ""
+gum style --foreground 4 --bold "Homebrew"
+step "🍻" "brew update" brew update
+step "🍻" "brew upgrade" brew upgrade
+step "🍻" "brew cleanup" brew cleanup --prune=all
+step "🍻" "brew doctor" brew doctor
+
+echo ""
+gum style --foreground 4 --bold "Packages"
+bundle "brewfile (personal)" "$DOTFILES_DIR/brew/Brewfile"
+if [ -f "$DOTFILES_DIR/brew/Brewfile.work" ]; then
+    bundle "brewfile (work)" "$DOTFILES_DIR/brew/Brewfile.work"
+fi
+
+echo ""
+gum style --foreground 4 --bold "App Store"
+step "🍎" "mas upgrade" mas upgrade
+
+echo ""
+if [ ${#ERRORS[@]} -gt 0 ]; then
+    gum style --foreground 1 --bold "⚠ ${#ERRORS[@]} error(s):"
+    for err in "${ERRORS[@]}"; do
+        gum style --foreground 1 "  • $err"
+    done
+else
+    gum style --foreground 2 --bold "All up to date ✓"
+fi
+
+echo ""
+echo "Log: $LOG"
