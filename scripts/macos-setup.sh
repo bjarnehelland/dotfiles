@@ -69,24 +69,6 @@ apply_changes() {
     echo "✅ Changes applied"
 }
 
-update_blocc_cron() {
-    local interval="${1:-2}"  # Default to every 2 hours if not specified
-    local bl_path="$(which bl)"
-    
-    # Remove any existing bl cron entries (broken or old versions)
-    local cleaned_cron=$(crontab -l 2>/dev/null | grep -v "bl$" | grep -v "$bl_path")
-    
-    # Add the new cron job with suppressed output
-    local new_job="$bl_path >/dev/null 2>&1"
-    local schedule="0 */$interval * * *"
-    
-    echo "$cleaned_cron" | (cat; echo "$schedule $new_job") | crontab -
-    
-    echo "✅ Updated blocc cron job: runs every $interval hour(s)"
-    echo "   Schedule: $schedule"
-    echo "   Command: $new_job"
-}
-
 # Main execution
 main() {
     echo "🚀 Starting macOS configuration..."
@@ -94,7 +76,6 @@ main() {
     configure_touchid_sudo
     configure_macos_defaults
     apply_changes
-    update_blocc_cron 2  # Update blocc cron job to run every 2 hours
     
     echo "🎉 macOS configuration complete!"
     echo "💡 You may need to restart some applications or log out/in for all changes to take effect"
