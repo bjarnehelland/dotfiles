@@ -60,6 +60,7 @@ echo ""
 gum style --foreground 4 --bold "Homebrew"
 step "🍻" "brew update" brew update
 step "🍻" "brew upgrade" brew upgrade
+step "🍻" "brew autoremove" brew autoremove
 step "🍻" "brew cleanup" brew cleanup --prune=all
 step "🍻" "brew doctor" brew doctor
 
@@ -68,6 +69,25 @@ gum style --foreground 4 --bold "Packages"
 bundle "brewfile (personal)" "$DOTFILES_DIR/brew/Brewfile"
 if [ -f "$DOTFILES_DIR/brew/Brewfile.work" ]; then
     bundle "brewfile (work)" "$DOTFILES_DIR/brew/Brewfile.work"
+fi
+
+# Remove packages not listed in any Brewfile
+combined=$(mktemp)
+cat "$DOTFILES_DIR/brew/Brewfile" > "$combined"
+[ -f "$DOTFILES_DIR/brew/Brewfile.work" ] && cat "$DOTFILES_DIR/brew/Brewfile.work" >> "$combined"
+orphans=$(brew bundle cleanup --file="$combined" 2>&1) || true
+rm -f "$combined"
+if [ -n "$orphans" ]; then
+    echo "  Packages not in Brewfile:"
+    echo "$orphans" | sed 's/^/    /'
+    if gum confirm "  Uninstall orphaned packages?"; then
+        echo "$orphans" | xargs brew uninstall >> "$LOG" 2>&1
+        echo "  ✓ orphans removed"
+    else
+        echo "  … skipped"
+    fi
+else
+    echo "  ✓ no orphaned packages"
 fi
 
 echo ""
