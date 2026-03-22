@@ -4,13 +4,12 @@ This is the home of all my dotfiles. These are files that add custom configurati
 
 ## How to install
 
-My dotfiles are managed by [Nix](https://nixos.org/).
+My dotfiles are managed by [Homebrew](https://brew.sh) and [GNU Stow](https://www.gnu.org/software/stow/).
 
 1. Install [Homebrew](https://brew.sh/)
-2. Install Nix package manager via [Nix Official](https://nixos.org/download.html#nix-install-macos)
-3. Run the following command to install the dotfiles: 
+2. Install packages from the Brewfile:
 ```sh
-make setup
+brew bundle --file=brew/Brewfile
 ```
 
 Random commands:
@@ -23,7 +22,6 @@ chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
 - Terminal: [Ghostty](https://ghostty.dev)
 - Shell: [zsh](https://www.zsh.org)
 - Multiplexer: [tmux](https://github.com/tmux/tmux/wiki)
-  - Session manager: [sesh](https://github.com/joshmedeski/sesh)
 - Editor: [Neovim](https://neovim.io)
 - Git: [lazygit](https://github.com/jesseduffield/lazygit)
 - macOS package manager: [Homebrew](https://brew.sh)
@@ -36,12 +34,3 @@ chmod 755 generate_github_ssh.sh && ./generate_github_ssh.sh
 ## Keyboards
 
 - [HHKB hybrid type-s](https://www.hhkeyboard.com/uk/products/hybrid-type-s) (daily driver)
-
-
-## Notes
-
-- [NixOS](https://nixos.org)
-- [Home Manager](https://nix-community.github.io/home-manager)
-- [Nix packages](https://search.nixos.org/packages)
-- [Nix darwin](https://daiderd.com/nix-darwin/manual/index.html)
-- [Alternative Nix installer (DeterminateSystems)](https://github.com/DeterminateSystems/nix-installer)
