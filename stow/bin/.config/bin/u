@@ -76,12 +76,11 @@ combined=$(mktemp)
 cat "$DOTFILES_DIR/brew/Brewfile" > "$combined"
 [ -f "$DOTFILES_DIR/brew/Brewfile.work" ] && cat "$DOTFILES_DIR/brew/Brewfile.work" >> "$combined"
 orphans=$(brew bundle cleanup --file="$combined" 2>&1) || true
-rm -f "$combined"
 if [ -n "$orphans" ]; then
     echo "  Packages not in Brewfile:"
     echo "$orphans" | sed 's/^/    /'
     if gum confirm "  Uninstall orphaned packages?"; then
-        echo "$orphans" | xargs brew uninstall >> "$LOG" 2>&1
+        brew bundle cleanup --force --file="$combined" >> "$LOG" 2>&1
         echo "  ✓ orphans removed"
     else
         echo "  … skipped"
@@ -89,6 +88,7 @@ if [ -n "$orphans" ]; then
 else
     echo "  ✓ no orphaned packages"
 fi
+rm -f "$combined"
 
 echo ""
 gum style --foreground 4 --bold "App Store"
