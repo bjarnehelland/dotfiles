@@ -8,6 +8,10 @@
 		"allow": [
 			"WebFetch",
 
+			"Bash(find:*)",
+			"Bash(ls:*)",
+			"Bash(make:*)",
+
 			"Bash(npm run *)",
 			"Bash(bun run *)",
 			"Bash(pnpm run *)",
