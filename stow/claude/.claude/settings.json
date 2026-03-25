@@ -6,6 +6,12 @@
 	"permissions": {
 		"defaultMode": "acceptEdits",
 		"allow": [
+			"WebFetch",
+
+			"Bash(npm run *)",
+			"Bash(bun run *)",
+			"Bash(pnpm run *)",
+
 			"Bash(git status:*)",
 			"Bash(git diff:*)",
 			"Bash(git log:*)",
@@ -14,9 +20,6 @@
 			"Bash(git branch:*)",
 			"Bash(git checkout:*)",
 			"Bash(git switch:*)",
-			"Bash(npm run *)",
-			"Bash(bun run *)",
-			"Bash(pnpm run *)",
 
 			"Bash(gh pr create:*)",
 			"Bash(gh pr view:*)",
@@ -25,9 +28,26 @@
 			"Bash(gh pr review:*)",
 			"Bash(gh issue:*)",
 
+			"Bash(kubectl get:*)",
+			"Bash(kubectl describe:*)",
+			"Bash(kubectl logs:*)",
+			"Bash(kubectl top:*)",
+			"Bash(kubectl explain:*)",
+			"Bash(kubectl diff:*)",
+			"Bash(kubectl config:*)",
+
 			"mcp__pencil"
 		],
-		"ask": ["Bash(git push:*)"],
+		"ask": [
+			"Bash(git push:*)",
+
+			"Bash(kubectl apply:*)",
+			"Bash(kubectl delete:*)",
+			"Bash(kubectl rollout:*)",
+			"Bash(kubectl scale:*)",
+			"Bash(kubectl exec:*)",
+			"Bash(kubectl port-forward:*)"
+		],
 		"deny": [
 			"Read(**/.env)",
 			"Read(**/.env.*)",
@@ -42,7 +62,8 @@
 			"Read(~/.claude/settings.json)",
 			"Edit(~/.claude/settings.json)",
 			"Write(~/.claude/settings.json)",
-			"Bash(rm -rf:*)"
+			"Bash(rm -rf:*)",
+			"Bash(sudo:*)"
 		]
 	},
 	"statusLine": {
