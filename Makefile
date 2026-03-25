@@ -1,3 +1,5 @@
+.PHONY: setup macos stow unstow brew
+
 setup:
 	bash scripts/dotfiles.sh
 

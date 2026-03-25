@@ -1,6 +1,20 @@
 ---
-name: review-pr
+name: pr-review
 description: Handle an open pull request — check CI status, diagnose failures, read review comments, propose fixes, and reply to reviewers. Use this skill whenever the user says "review PR", "check my PR", "handle PR comments", "fix CI", "PR status", or gives a PR number to work on. Also trigger when the user wants to address reviewer feedback, investigate failing checks, or manage any aspect of an in-progress pull request.
+allowed-tools:
+  - Bash(gh pr view:*)
+  - Bash(gh pr checks:*)
+  - Bash(gh pr diff:*)
+  - Bash(gh pr comment:*)
+  - Bash(gh run view:*)
+  - Bash(gh api:*)
+  - Bash(git checkout:*)
+  - Bash(git fetch:*)
+  - Bash(git log:*)
+  - Bash(git diff:*)
+  - Bash(git add:*)
+  - Bash(git commit:*)
+  - Bash(gh pr list:*)
 ---
 
 # Review PR
