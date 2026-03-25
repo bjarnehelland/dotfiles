@@ -4,15 +4,34 @@
 		"CLAUDE_CODE_NEW_INIT": "true"
 	},
 	"permissions": {
-		"allow": ["mcp__pencil"],
+		"defaultMode": "acceptEdits",
+		"allow": [
+			"Bash(git status:*)",
+			"Bash(git diff:*)",
+			"Bash(git log:*)",
+			"Bash(git add:*)",
+			"Bash(git commit:*)",
+			"Bash(git branch:*)",
+			"Bash(git checkout:*)",
+			"Bash(git switch:*)",
+			"Bash(npm run *)",
+			"Bash(bun run *)",
+			"Bash(pnpm run *)",
+
+			"Bash(gh pr create:*)",
+			"Bash(gh pr view:*)",
+			"Bash(gh pr list:*)",
+			"Bash(gh pr comments:*)",
+			"Bash(gh pr review:*)",
+			"Bash(gh issue:*)",
+
+			"mcp__pencil"
+		],
+		"ask": ["Bash(git push:*)"],
 		"deny": [
-			"Read(.env*)",
-			"Read(**/.env*)",
-			"Bash(cat .env*)",
-			"Bash(cat */.env*)",
-			"Bash(rm -rf *)",
-			"Bash(git push --force*)",
-			"Bash(git reset --hard*)",
+			"Read(**/.env)",
+			"Read(**/.env.*)",
+			"Read(**/.envrc)",
 			"Read(**/id_rsa*)",
 			"Read(**/id_ed25519*)",
 			"Read(**/id_ecdsa*)",
@@ -22,7 +41,8 @@
 			"Read(**/.aws/config)",
 			"Read(~/.claude/settings.json)",
 			"Edit(~/.claude/settings.json)",
-			"Write(~/.claude/settings.json)"
+			"Write(~/.claude/settings.json)",
+			"Bash(rm -rf:*)"
 		]
 	},
 	"statusLine": {
@@ -52,6 +72,6 @@
 		}
 	},
 	"voiceEnabled": true,
-	"skipDangerousModePermissionPrompt": true,
+	"skipDangerousModePermissionPrompt": false,
 	"autoDreamEnabled": true
 }
