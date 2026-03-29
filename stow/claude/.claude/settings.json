@@ -4,18 +4,14 @@
 		"CLAUDE_CODE_NEW_INIT": "true"
 	},
 	"permissions": {
-		"defaultMode": "acceptEdits",
 		"allow": [
 			"WebFetch",
-
 			"Bash(find:*)",
 			"Bash(ls:*)",
 			"Bash(make:*)",
-
 			"Bash(npm run *)",
 			"Bash(bun run *)",
 			"Bash(pnpm run *)",
-
 			"Bash(git status:*)",
 			"Bash(git diff:*)",
 			"Bash(git log:*)",
@@ -24,14 +20,13 @@
 			"Bash(git branch:*)",
 			"Bash(git checkout:*)",
 			"Bash(git switch:*)",
-
 			"Bash(gh pr create:*)",
 			"Bash(gh pr view:*)",
 			"Bash(gh pr list:*)",
 			"Bash(gh pr comments:*)",
 			"Bash(gh pr review:*)",
+			"Bash(gh run view:*)",
 			"Bash(gh issue:*)",
-
 			"Bash(kubectl get:*)",
 			"Bash(kubectl describe:*)",
 			"Bash(kubectl logs:*)",
@@ -39,18 +34,7 @@
 			"Bash(kubectl explain:*)",
 			"Bash(kubectl diff:*)",
 			"Bash(kubectl config:*)",
-
 			"mcp__pencil"
-		],
-		"ask": [
-			"Bash(git push:*)",
-
-			"Bash(kubectl apply:*)",
-			"Bash(kubectl delete:*)",
-			"Bash(kubectl rollout:*)",
-			"Bash(kubectl scale:*)",
-			"Bash(kubectl exec:*)",
-			"Bash(kubectl port-forward:*)"
 		],
 		"deny": [
 			"Read(**/.env)",
@@ -68,14 +52,23 @@
 			"Write(~/.claude/settings.json)",
 			"Bash(rm -rf:*)",
 			"Bash(sudo:*)"
-		]
+		],
+		"ask": [
+			"Bash(git push:*)",
+			"Bash(kubectl apply:*)",
+			"Bash(kubectl delete:*)",
+			"Bash(kubectl rollout:*)",
+			"Bash(kubectl scale:*)",
+			"Bash(kubectl exec:*)",
+			"Bash(kubectl port-forward:*)"
+		],
+		"defaultMode": "acceptEdits"
 	},
 	"statusLine": {
 		"type": "command",
 		"command": "bash ~/.claude/statusline-command.sh"
 	},
 	"enabledPlugins": {
-		"safety-net@cc-marketplace": true,
 		"frontend-design@claude-plugins-official": true,
 		"context7@claude-plugins-official": true,
 		"typescript-lsp@claude-plugins-official": true,
@@ -84,7 +77,6 @@
 		"swift-lsp@claude-plugins-official": true,
 		"superpowers@claude-plugins-official": true,
 		"blocc@agentic-marketplace": true,
-		"telegram@claude-plugins-official": true,
 		"skill-creator@claude-plugins-official": true
 	},
 	"extraKnownMarketplaces": {
@@ -97,6 +89,6 @@
 		}
 	},
 	"voiceEnabled": true,
-	"skipDangerousModePermissionPrompt": false,
-	"autoDreamEnabled": true
+	"autoDreamEnabled": true,
+	"skipDangerousModePermissionPrompt": true
 }

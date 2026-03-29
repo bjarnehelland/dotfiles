@@ -95,17 +95,77 @@ For each **unresolved** thread:
 3. Propose a fix to the user — do NOT implement without approval
 4. Once the user approves a fix:
    - Implement the change
-   - Reply to the comment on GitHub explaining what was changed
-   - Resolve the conversation:
-     ```bash
-     gh api graphql -f query='
-       mutation($threadId: ID!) {
-         resolveReviewThread(input: {threadId: $threadId}) {
-           thread { isResolved }
-         }
-       }
-     ' -f threadId="$THREAD_ID"
-     ```
+   - Reply to the comment AND resolve the thread (see below)
+
+### Replying and resolving — every thread must be addressed
+
+A PR cannot be merged with unresolved conversations. After fixing code (or deciding not to), **reply to every unresolved thread** explaining what was done, then **resolve it**. This applies to all threads, not just ones with code changes:
+
+- **Fixed**: explain what changed (e.g., "Fixed — widened type to `Record<string, unknown>`.")
+- **Deferred**: acknowledge and explain why (e.g., "Acknowledged — deferring to a follow-up since the production code has the same limitation.")
+- **Won't fix / known trade-off**: explain the reasoning (e.g., "This is a known trade-off discussed during design. The watch failures are caught and warned.")
+- **Already resolved by other changes**: note what resolved it (e.g., "Resolved — this import was removed when the file was split.")
+
+**How to reply to a review thread:**
+
+```bash
+gh api graphql -f query='
+  mutation($body: String!, $threadId: ID!) {
+    addPullRequestReviewThreadReply(input: {
+      body: $body,
+      pullRequestReviewThreadId: $threadId
+    }) {
+      comment { id }
+    }
+  }
+' -f body="Your reply here" -f threadId="$THREAD_ID"
+```
+
+**How to resolve a thread:**
+
+```bash
+gh api graphql -f query='
+  mutation($threadId: ID!) {
+    resolveReviewThread(input: {threadId: $threadId}) {
+      thread { isResolved }
+    }
+  }
+' -f threadId="$THREAD_ID"
+```
+
+Always reply first, then resolve. Do both for every thread — do not leave any conversations open.
+
+**Important:** Run each `gh api graphql` call as a separate Bash command — do not wrap them in shell functions. The allowed-tools permissions match on the command prefix (`gh api`), so shell function wrappers will be blocked.
+
+### Fetching thread IDs
+
+When fetching review threads, include the thread `id` field so you can reply and resolve:
+
+```bash
+gh api graphql -f query='
+  query($owner: String!, $repo: String!, $pr: Int!) {
+    repository(owner: $owner, name: $repo) {
+      pullRequest(number: $pr) {
+        reviewThreads(first: 100) {
+          nodes {
+            id
+            isResolved
+            comments(first: 50) {
+              nodes {
+                author { login }
+                body
+                path
+                line
+                createdAt
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+' -f owner="{owner}" -f repo="{repo}" -F pr=$PR
+```
 
 If there are no unresolved comments, say so.
 
