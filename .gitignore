@@ -4,3 +4,14 @@ node_modules
 k9s.log
 stow/k9s/Library/Application Support/k9s/clusters
 stow/agents/.agents/skills/
+stow/claude/.claude/plugins/cache
+stow/claude/.claude/sessions
+stow/claude/.claude/shell-snapshots
+stow/claude/.claude/plugins/marketplaces
+stow/claude/.claude/backups
+stow/claude/.claude/projects
+stow/claude/.claude/file-history
+stow/claude/.claude/cache
+
+stow/claude/.claude/history.jsonl
+stow/claude/.claude/mcp-needs-auth-cache.json

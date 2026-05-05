@@ -42,7 +42,6 @@ export EDITOR=nvim
 source <(fzf --zsh)
 fpath=(/Users/bjarnehelland/.docker/completions $fpath)
 autoload -Uz compinit && compinit
-source ~/Code/playgrounds/flow-dev/flow-dev/completions/_flow-dev
 
 
 
@@ -50,7 +49,7 @@ source ~/Code/playgrounds/flow-dev/flow-dev/completions/_flow-dev
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
-eval "$(~/.local/bin/mise activate zsh)"
+command -v mise >/dev/null && eval "$(mise activate zsh)"
 
 
 

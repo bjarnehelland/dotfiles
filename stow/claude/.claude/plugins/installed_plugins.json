@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "plugins": {
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T19:00:04.990Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "context7@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/context7/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T19:00:04.985Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "typescript-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/typescript-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "code-review@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/code-review/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T19:00:04.993Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "security-guidance@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/security-guidance/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T19:00:04.988Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "swift-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ],
+    "blocc@agentic-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/agentic-marketplace/blocc/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "gitCommitSha": "b09ff347149b0b808b50e40c35ac254394dd013d"
+      }
+    ],
+    "skill-creator@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown",
+        "version": "unknown",
+        "installedAt": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-05T19:00:04.997Z",
+        "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
+      }
+    ]
+  }
+}

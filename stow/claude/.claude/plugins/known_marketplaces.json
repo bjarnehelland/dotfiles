@@ -1,0 +1,18 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "/Users/bjarnehelland/.claude/plugins/marketplaces/claude-plugins-official",
+    "lastUpdated": "2026-05-05T19:00:03.929Z"
+  },
+  "agentic-marketplace": {
+    "source": {
+      "source": "github",
+      "repo": "stacc/skills-marketplace"
+    },
+    "installLocation": "/Users/bjarnehelland/.claude/plugins/marketplaces/agentic-marketplace",
+    "lastUpdated": "2026-05-05T19:00:03.781Z"
+  }
+}
