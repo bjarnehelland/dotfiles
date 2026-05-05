@@ -1,94 +1,102 @@
 {
-	"env": {
-		"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-		"CLAUDE_CODE_NEW_INIT": "true"
-	},
-	"permissions": {
-		"allow": [
-			"WebFetch",
-			"Bash(find:*)",
-			"Bash(ls:*)",
-			"Bash(make:*)",
-			"Bash(npm run *)",
-			"Bash(bun run *)",
-			"Bash(pnpm run *)",
-			"Bash(git status:*)",
-			"Bash(git diff:*)",
-			"Bash(git log:*)",
-			"Bash(git add:*)",
-			"Bash(git commit:*)",
-			"Bash(git branch:*)",
-			"Bash(git checkout:*)",
-			"Bash(git switch:*)",
-			"Bash(gh pr create:*)",
-			"Bash(gh pr view:*)",
-			"Bash(gh pr list:*)",
-			"Bash(gh pr comments:*)",
-			"Bash(gh pr review:*)",
-			"Bash(gh run view:*)",
-			"Bash(gh issue:*)",
-			"Bash(kubectl get:*)",
-			"Bash(kubectl describe:*)",
-			"Bash(kubectl logs:*)",
-			"Bash(kubectl top:*)",
-			"Bash(kubectl explain:*)",
-			"Bash(kubectl diff:*)",
-			"Bash(kubectl config:*)",
-			"mcp__pencil"
-		],
-		"deny": [
-			"Read(**/.env)",
-			"Read(**/.env.*)",
-			"Read(**/.envrc)",
-			"Read(**/id_rsa*)",
-			"Read(**/id_ed25519*)",
-			"Read(**/id_ecdsa*)",
-			"Read(**/id_dsa*)",
-			"Read(**/.ssh/id_*)",
-			"Read(**/.aws/credentials)",
-			"Read(**/.aws/config)",
-			"Read(~/.claude/settings.json)",
-			"Edit(~/.claude/settings.json)",
-			"Write(~/.claude/settings.json)",
-			"Bash(rm -rf:*)",
-			"Bash(sudo:*)"
-		],
-		"ask": [
-			"Bash(git push:*)",
-			"Bash(kubectl apply:*)",
-			"Bash(kubectl delete:*)",
-			"Bash(kubectl rollout:*)",
-			"Bash(kubectl scale:*)",
-			"Bash(kubectl exec:*)",
-			"Bash(kubectl port-forward:*)"
-		],
-		"defaultMode": "acceptEdits"
-	},
-	"statusLine": {
-		"type": "command",
-		"command": "bash ~/.claude/statusline-command.sh"
-	},
-	"enabledPlugins": {
-		"frontend-design@claude-plugins-official": true,
-		"context7@claude-plugins-official": true,
-		"typescript-lsp@claude-plugins-official": true,
-		"code-review@claude-plugins-official": true,
-		"security-guidance@claude-plugins-official": true,
-		"swift-lsp@claude-plugins-official": true,
-		"superpowers@claude-plugins-official": true,
-		"blocc@agentic-marketplace": true,
-		"skill-creator@claude-plugins-official": true
-	},
-	"extraKnownMarketplaces": {
-		"agentic-marketplace": {
-			"source": {
-				"source": "github",
-				"repo": "stacc/skills-marketplace"
-			},
-			"autoUpdate": true
-		}
-	},
-	"voiceEnabled": true,
-	"autoDreamEnabled": true,
-	"skipDangerousModePermissionPrompt": true
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_NEW_INIT": "1"
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(make:*)",
+      "Bash(npm run *)",
+      "Bash(npm ls:*)",
+      "Bash(npm why:*)",
+      "Bash(npm audit:*)",
+      "Bash(bun run:*)",
+      "Bash(pnpm run:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr comments:*)",
+      "Bash(gh pr review:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(git push:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh issue:*)",
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl top:*)",
+      "Bash(kubectl explain:*)",
+      "Bash(kubectl diff:*)",
+      "Bash(kubectl config:*)",
+      "mcp__pencil"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.envrc)",
+      "Read(**/id_rsa*)",
+      "Read(**/id_ed25519*)",
+      "Read(**/id_ecdsa*)",
+      "Read(**/id_dsa*)",
+      "Read(**/.ssh/id_*)",
+      "Read(**/.aws/credentials)",
+      "Read(**/.aws/config)",
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)"
+    ],
+    "ask": [
+      "Bash(kubectl apply:*)",
+      "Bash(kubectl delete:*)",
+      "Bash(kubectl rollout:*)",
+      "Bash(kubectl scale:*)",
+      "Bash(kubectl exec:*)",
+      "Bash(kubectl port-forward:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "blocc@agentic-marketplace": true,
+    "skill-creator@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true,
+    "notion@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "agentic-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "stacc/skills-marketplace"
+      },
+      "autoUpdate": true
+    }
+  },
+  "effortLevel": "high",
+  "autoDreamEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true,
+  "skipAutoPermissionPrompt": true
 }

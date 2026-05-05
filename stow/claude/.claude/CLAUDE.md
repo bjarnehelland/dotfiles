@@ -1,1 +1,6 @@
-Before running `git push`, always show the unpushed commits (e.g. `git log origin/<branch>..HEAD --oneline`) so the user can review what will be pushed.
+Before running `git push`, always show the unpushed commits (e.g.
+`git log origin/<branch>..HEAD --oneline`) so the user can review what will be
+pushed.
+
+When running `kubectl`, keep the `-n` for namespace after the command to allowed
+tool calling

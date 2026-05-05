@@ -6,7 +6,11 @@ input=$(cat)
 # Extract values from JSON
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 context_used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
-input_tokens=$(echo "$input" | jq -r '.context_window.total_input_tokens // empty')
+input_tokens=$(echo "$input" | jq -r '
+  (.context_window.current_usage.input_tokens // 0) +
+  (.context_window.current_usage.cache_creation_input_tokens // 0) +
+  (.context_window.current_usage.cache_read_input_tokens // 0)
+')
 model_id=$(echo "$input" | jq -r '.model.id // empty')
 
 # Change to the working directory
