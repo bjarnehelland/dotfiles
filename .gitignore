@@ -17,3 +17,4 @@ stow/claude/.claude/image-cache
 
 stow/claude/.claude/history.jsonl
 stow/claude/.claude/mcp-needs-auth-cache.json
+stow/claude/.claude/plugins/known_marketplaces.json
