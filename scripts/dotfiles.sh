@@ -62,9 +62,36 @@ clone_dotfiles() {
 install_homebrew() {
   if command -v brew &>/dev/null; then
     warn "Homebrew already installed"
+    return 0
+  fi
+
+  info "Installing Homebrew..."
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  # Locate the brew binary (Apple Silicon vs Intel)
+  local brew_path
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    brew_path="/opt/homebrew/bin/brew"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    brew_path="/usr/local/bin/brew"
   else
-    info "Installing Homebrew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    warn "Could not locate brew binary after install — aborting"
+    exit 1
+  fi
+
+  # Make brew available for the rest of this script
+  eval "$("$brew_path" shellenv)"
+
+  # Persist to ~/.zprofile so future shells pick brew up (matches the
+  # post-install instructions Homebrew prints)
+  local zprofile="$HOME/.zprofile"
+  local shellenv_line="eval \"\$($brew_path shellenv)\""
+  if ! grep -qF "$shellenv_line" "$zprofile" 2>/dev/null; then
+    info "Adding Homebrew shellenv to ~/.zprofile..."
+    {
+      echo ""
+      echo "$shellenv_line"
+    } >> "$zprofile"
   fi
 }
 
@@ -77,6 +104,24 @@ install_packages() {
   if [[ "$work" =~ ^[Yy]$ ]]; then
     info "Installing work packages from Brewfile.work..."
     brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work"
+  fi
+}
+
+install_claude() {
+  if [[ -e "$HOME/.local/bin/claude" ]]; then
+    warn "Claude Code already installed at ~/.local/bin/claude"
+  else
+    info "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
+}
+
+install_pi() {
+  if npm list -g @mariozechner/pi-coding-agent --depth=0 >/dev/null 2>&1; then
+    warn "pi-coding-agent already installed"
+  else
+    info "Installing pi-coding-agent..."
+    npm install -g @mariozechner/pi-coding-agent
   fi
 }
 
@@ -175,6 +220,8 @@ install_xcode
 clone_dotfiles
 install_homebrew
 install_packages
+install_claude
+install_pi
 stow_dotfiles
 setup_ssh
 

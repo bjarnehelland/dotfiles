@@ -13,6 +13,7 @@ stow/claude/.claude/projects
 stow/claude/.claude/file-history
 stow/claude/.claude/cache
 stow/claude/.claude/paste-cache
+stow/claude/.claude/image-cache
 
 stow/claude/.claude/history.jsonl
 stow/claude/.claude/mcp-needs-auth-cache.json
