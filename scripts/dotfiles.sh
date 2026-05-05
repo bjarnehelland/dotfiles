@@ -91,6 +91,29 @@ stow_dotfiles() {
   done
 }
 
+# Populate ~/.config/git/allowed_signers so git can verify SSH signatures
+# locally (git log --show-signature, git verify-commit). The stowed
+# gitconfig already enables signing and points at this file.
+configure_git_signing() {
+  local signers_file="$HOME/.config/git/allowed_signers"
+  local pub
+  pub=$(cat "$HOME/.ssh/id_ed25519.pub")
+  local email
+  email=$(git config --global user.email)
+  local entry="$email $pub"
+
+  mkdir -p "$(dirname "$signers_file")"
+  touch "$signers_file"
+
+  if grep -qF "$pub" "$signers_file"; then
+    warn "Allowed-signers already contains this key"
+  else
+    info "Adding SSH key to git allowed_signers..."
+    printf '%s\n' "$entry" >> "$signers_file"
+    success "Allowed-signers updated"
+  fi
+}
+
 setup_ssh() {
   if [ -f "$HOME/.ssh/id_ed25519" ]; then
     warn "SSH key already exists"
@@ -106,19 +129,33 @@ setup_ssh() {
     gh auth login
   fi
 
-  # Detect the existing key on GitHub by matching a prefix of its base64 body
+  # Detect the existing key on GitHub by matching a prefix of its base64 body.
+  # GitHub stores auth and signing as separate registrations even for the same
+  # key, so we check each type independently.
   local key_prefix
   key_prefix=$(awk '{print $2}' "$HOME/.ssh/id_ed25519.pub" | cut -c1-40)
   local title
   title=$(scutil --get ComputerName)
 
-  if gh ssh-key list 2>/dev/null | grep -qF "$key_prefix"; then
-    warn "SSH key already added to GitHub"
+  # gh ssh-key list output is tab-separated: TITLE\tKEY\tADDED\tID\tTYPE
+  local registered_types
+  registered_types=$(gh ssh-key list 2>/dev/null | awk -F'\t' -v k="$key_prefix" 'index($2, k) { print $5 }')
+
+  if echo "$registered_types" | grep -qx "authentication"; then
+    warn "SSH key already registered on GitHub for authentication"
   else
-    info "Adding SSH key to GitHub for authentication and signing..."
+    info "Adding SSH key to GitHub for authentication..."
     gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$title" --type authentication
+  fi
+
+  if echo "$registered_types" | grep -qx "signing"; then
+    warn "SSH key already registered on GitHub for signing"
+  else
+    info "Adding SSH key to GitHub for signing..."
     gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$title" --type signing
   fi
+
+  configure_git_signing
 
   local ssh_remote="git@github.com:bjarnehelland/dotfiles.git"
   if [[ "$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null)" == "$ssh_remote" ]]; then
