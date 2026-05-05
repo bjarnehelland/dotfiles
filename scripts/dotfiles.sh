@@ -19,6 +19,21 @@ warn() {
   printf "%s[*] %s%s\n" "$(tput setaf 3)" "$1" "$reset_color"
 }
 
+# Prompt for sudo once, then refresh the timestamp in the background so
+# long-running steps (brew bundle casks, xcodebuild) don't re-prompt.
+keep_sudo_alive() {
+  info "Caching sudo credentials (asked once, kept alive in background)..."
+  sudo --validate
+  (
+    while sudo --non-interactive true 2>/dev/null; do
+      sleep 60
+      kill -0 "$$" 2>/dev/null || exit
+    done
+  ) &
+  SUDO_KEEPALIVE_PID=$!
+  trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true' EXIT
+}
+
 install_xcode() {
   if xcode-select -p >/dev/null 2>&1; then
     warn "xCode Command Line Tools already installed"
@@ -49,7 +64,6 @@ install_homebrew() {
     warn "Homebrew already installed"
   else
     info "Installing Homebrew..."
-    sudo --validate
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 }
@@ -85,21 +99,41 @@ setup_ssh() {
     bash "$DOTFILES_DIR/scripts/generate_github_ssh.sh"
   fi
 
-  info "Logging in to GitHub CLI..."
-  gh auth login
+  if gh auth status >/dev/null 2>&1; then
+    warn "Already logged in to GitHub CLI"
+  else
+    info "Logging in to GitHub CLI..."
+    gh auth login
+  fi
 
-  info "Adding SSH key to GitHub for authentication and signing..."
-  gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$(scutil --get ComputerName)" --type authentication
-  gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$(scutil --get ComputerName)" --type signing
+  # Detect the existing key on GitHub by matching a prefix of its base64 body
+  local key_prefix
+  key_prefix=$(awk '{print $2}' "$HOME/.ssh/id_ed25519.pub" | cut -c1-40)
+  local title
+  title=$(scutil --get ComputerName)
 
-  git -C "$DOTFILES_DIR" remote set-url origin git@github.com:bjarnehelland/dotfiles.git
-  success "SSH key added to GitHub and remote switched to SSH"
+  if gh ssh-key list 2>/dev/null | grep -qF "$key_prefix"; then
+    warn "SSH key already added to GitHub"
+  else
+    info "Adding SSH key to GitHub for authentication and signing..."
+    gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$title" --type authentication
+    gh ssh-key add "$HOME/.ssh/id_ed25519.pub" --title "$title" --type signing
+  fi
+
+  local ssh_remote="git@github.com:bjarnehelland/dotfiles.git"
+  if [[ "$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null)" == "$ssh_remote" ]]; then
+    warn "Dotfiles remote already set to SSH"
+  else
+    git -C "$DOTFILES_DIR" remote set-url origin "$ssh_remote"
+    success "Dotfiles remote switched to SSH"
+  fi
 }
 
 info "########################"
 info "####### dotfiles #######"
 info "########################"
 
+keep_sudo_alive
 install_xcode
 clone_dotfiles
 install_homebrew
