@@ -1,10 +1,13 @@
-.PHONY: setup macos stow unstow brew
+.PHONY: setup macos stow unstow brew repos
 
 setup:
 	bash scripts/dotfiles.sh
 
 macos:
 	bash scripts/macos-setup.sh
+
+repos:
+	bash scripts/clone_repos.sh
 
 stow:
 	@for pkg in $$(ls -d stow/*/); do \

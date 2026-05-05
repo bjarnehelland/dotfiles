@@ -70,6 +70,8 @@ configure_dock() {
         "/Applications/Claude.app"
         "/Applications/cmux.app"
         "/Applications/Visual Studio Code.app"
+        "/Applications/Docker.app"
+        "/Applications/Bruno.app"
         "/Applications/Slack.app"
         "/Applications/Microsoft Teams.app"
         "/Applications/Microsoft Outlook.app"
