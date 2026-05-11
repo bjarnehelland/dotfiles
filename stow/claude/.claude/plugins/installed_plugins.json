@@ -7,7 +7,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/frontend-design/unknown",
         "version": "unknown",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T19:00:04.990Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -17,7 +17,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/context7/unknown",
         "version": "unknown",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T19:00:04.985Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -27,7 +27,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/typescript-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -37,7 +37,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/code-review/unknown",
         "version": "unknown",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T19:00:04.993Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -47,7 +47,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/security-guidance/unknown",
         "version": "unknown",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T19:00:04.988Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -57,7 +57,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ],
@@ -67,7 +67,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/agentic-marketplace/blocc/1.0.0",
         "version": "1.0.0",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T18:57:00.479Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "b09ff347149b0b808b50e40c35ac254394dd013d"
       }
     ],
@@ -77,7 +77,7 @@
         "installPath": "/Users/bjarnehelland/.claude/plugins/cache/claude-plugins-official/skill-creator/unknown",
         "version": "unknown",
         "installedAt": "2026-05-05T18:57:00.479Z",
-        "lastUpdated": "2026-05-05T19:00:04.997Z",
+        "lastUpdated": "2026-05-11T10:32:03.998Z",
         "gitCommitSha": "ac45fdae4b7af187b5624599ab054090dedadd94"
       }
     ]

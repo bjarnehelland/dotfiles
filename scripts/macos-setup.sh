@@ -114,6 +114,34 @@ configure_keyboard() {
     echo "✅ ABC set as default (logout/login required to fully apply)"
 }
 
+# Free up hotkeys for Raycast (https://manual.raycast.com/v1/hotkey)
+configure_raycast_hotkeys() {
+    echo "🪐 Freeing hotkeys for Raycast..."
+
+    local plist="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+    # Symbolic hotkey IDs:
+    #   64 = Spotlight search       (⌘Space)
+    #   65 = Spotlight Finder win.  (⌥⌘Space)
+    #   60 = Previous input source  (⌃Space)
+    #   61 = Next input source      (⌃⌥Space)
+    local ids=(64 65 60 61)
+
+    for id in "${ids[@]}"; do
+        /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:$id:enabled false" "$plist" 2>/dev/null \
+            || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:$id:enabled bool false" "$plist" 2>/dev/null \
+            || true
+    done
+
+    # Reload hotkey daemon so changes take effect without logout.
+    # cfprefsd caches the plist in memory and will overwrite it on exit otherwise.
+    killall cfprefsd 2>/dev/null || true
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
+
+    echo "✅ Disabled Spotlight & input-source shortcuts"
+    echo "💡 Siri press-and-hold: change manually in System Settings > Apple Intelligence & Siri"
+}
+
 # Apply changes
 apply_changes() {
     echo "🔄 Applying changes..."
@@ -134,6 +162,7 @@ main() {
     configure_macos_defaults
     configure_dock
     configure_keyboard
+    configure_raycast_hotkeys
     apply_changes
     
     echo "🎉 macOS configuration complete!"
