@@ -114,6 +114,51 @@ configure_keyboard() {
     echo "✅ ABC set as default (logout/login required to fully apply)"
 }
 
+# Remap Caps Lock to Control (applies now + LaunchAgent persists across reboots)
+configure_caps_to_control() {
+    echo "⌨️  Remapping Caps Lock → Control..."
+
+    # 0x700000039 (Caps Lock) → 0x7000000E0 (Left Control)
+    local mapping='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0}]}'
+
+    hidutil property --set "$mapping" >/dev/null
+
+    local agent_dir="$HOME/Library/LaunchAgents"
+    local agent_plist="$agent_dir/com.local.KeyRemapping.plist"
+    mkdir -p "$agent_dir"
+
+    # Some installers create ~/Library/LaunchAgents as root:wheel — fix it so we can write
+    if [[ ! -w "$agent_dir" ]]; then
+        echo "🔧 Fixing ownership of $agent_dir (currently not user-writable)"
+        sudo chown -R "$USER":staff "$agent_dir"
+    fi
+
+    cat > "$agent_plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.KeyRemapping</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0}]}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+PLIST
+
+    launchctl unload "$agent_plist" 2>/dev/null || true
+    launchctl load "$agent_plist"
+
+    echo "✅ Caps Lock remapped to Control (persists across reboots)"
+}
+
 # Free up hotkeys for Raycast (https://manual.raycast.com/v1/hotkey)
 configure_raycast_hotkeys() {
     echo "🪐 Freeing hotkeys for Raycast..."
@@ -162,6 +207,7 @@ main() {
     configure_macos_defaults
     configure_dock
     configure_keyboard
+    configure_caps_to_control
     configure_raycast_hotkeys
     apply_changes
     
