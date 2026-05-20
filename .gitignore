@@ -20,3 +20,5 @@ stow/claude/.claude/mcp-needs-auth-cache.json
 stow/claude/.claude/plugins/known_marketplaces.json
 stow/claude/.claude/plugins/install-counts-cache.json
 stow/claude/.claude/.last-cleanup
+stow/claude/.claude/security_warnings*.json
+
