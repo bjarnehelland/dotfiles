@@ -234,7 +234,7 @@ run_blocc_sync() {
     fi
 
     # Build sync command with flags
-    local sync_cmd="blocc sync"
+    local sync_cmd="blocc sync --legacy=all"
     local spinner_title="🏗️ blocc sync in: $dir"
     if [ "$USE_BETA" = true ]; then
         sync_cmd="blocc-beta sync -N --limit-concurrency 4"
