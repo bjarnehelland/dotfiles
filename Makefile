@@ -10,6 +10,7 @@ repos:
 	bash scripts/clone_repos.sh
 
 stow:
+	@mkdir -p $(HOME)/.claude/skills
 	@for pkg in $$(ls -d stow/*/); do \
 		echo "Stowing $$(basename $$pkg)"; \
 		stow -d stow --target $(HOME) $$(basename $$pkg); \
@@ -23,9 +24,3 @@ unstow:
 
 brew:
 	brew bundle --file=brew/Brewfile
-	@if [ -f brew/Brewfile.work ]; then \
-		read -p "Install work (Stacc) packages? [y/N] " work; \
-		if [ "$$work" = "y" ] || [ "$$work" = "Y" ]; then \
-			brew bundle --file=brew/Brewfile.work; \
-		fi; \
-	fi

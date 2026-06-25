@@ -4,21 +4,11 @@ node_modules
 k9s.log
 stow/k9s/Library/Application Support/k9s/clusters
 stow/agents/.agents/skills/
-stow/claude/.claude/plugins/cache
-stow/claude/.claude/sessions
-stow/claude/.claude/shell-snapshots
-stow/claude/.claude/plugins/marketplaces
-stow/claude/.claude/backups
-stow/claude/.claude/projects
-stow/claude/.claude/file-history
-stow/claude/.claude/cache
-stow/claude/.claude/paste-cache
-stow/claude/.claude/image-cache
-
-stow/claude/.claude/history.jsonl
-stow/claude/.claude/mcp-needs-auth-cache.json
-stow/claude/.claude/plugins/known_marketplaces.json
-stow/claude/.claude/plugins/install-counts-cache.json
-stow/claude/.claude/.last-cleanup
-stow/claude/.claude/security_warnings*.json
-
+# Claude: only track the keep-list below; everything else in ~/.claude is
+# runtime data (sessions, caches, history, plugins, projects, ...) and is
+# ignored. Add a new file + its `!` negation here to start tracking it.
+stow/claude/.claude/*
+!stow/claude/.claude/CLAUDE.md
+!stow/claude/.claude/settings.json
+!stow/claude/.claude/statusline-command.sh
+!stow/claude/.claude/skills/

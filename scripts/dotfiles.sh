@@ -127,6 +127,13 @@ install_pi() {
 
 stow_dotfiles() {
   info "Stowing dotfiles..."
+
+  # Ensure ~/.claude (and skills/) exist as real directories before stowing so
+  # stow symlinks individual keep-list files instead of folding the whole tree
+  # into one symlink (which would make Claude write all its runtime data into
+  # the repo).
+  mkdir -p "$HOME/.claude/skills"
+
   local packages
   packages=$(find "$DOTFILES_DIR/stow" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
 
