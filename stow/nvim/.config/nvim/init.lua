@@ -1,6 +1,10 @@
 -- Minimal native Neovim 0.12 setup
 -- Run with: NVIM_APPNAME=nvim_native nvim
 
+-- Byte-compilation cache for Lua modules. Must be first: only requires that
+-- happen after this call go through the cache.
+vim.loader.enable()
+
 -- ── Options ──────────────────────────────────────────────────────
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -32,17 +36,28 @@ vim.o.list = true
 vim.o.listchars = 'tab:  ,trail:·,nbsp:␣'
 
 -- ── Plugins (native vim.pack, no plugin manager needed) ──────────
+-- Rebuild treesitter parsers when the plugin itself changes; parser ABI is
+-- tied to the plugin version, so a bare update leaves them stale.
+-- Must be registered *before* vim.pack.add(), which fires PackChanged inline.
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    if ev.data.spec.name == 'nvim-treesitter' and ev.data.kind == 'update' then
+      -- Updates can happen while the plugin is unloaded, so :TSUpdate may not exist yet
+      if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+      vim.cmd('TSUpdate')
+    end
+  end,
+})
+
 vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig', -- ready-made LSP server configs
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
-  'https://github.com/nvim-mini/mini.pick', -- fuzzy finder
-  'https://github.com/nvim-mini/mini.clue', -- keymap hints
-  'https://github.com/nvim-mini/mini.files', -- file explorer
-  'https://github.com/nvim-mini/mini.diff', -- git signs in gutter
-  'https://github.com/nvim-mini/mini-git', -- git integration (branch, :Git)
-  'https://github.com/nvim-mini/mini.statusline', -- statusline
-  'https://github.com/nvim-mini/mini.pairs', -- auto-close brackets
-  'https://github.com/nvim-mini/mini.surround', -- surround actions
+  -- The whole mini.nvim collection: 46 modules, all require-on-demand (the repo
+  -- ships no plugin/ dir), so unused ones cost nothing at startup. Using
+  -- mini.pick, mini.clue, mini.files, mini.diff, mini.git, mini.statusline,
+  -- mini.pairs, mini.surround — plus its colors/ (miniwinter, minicyan, ...).
+  -- Pinned to `stable`; `main` is where breaking changes land.
+  { src = 'https://github.com/nvim-mini/mini.nvim', version = 'stable' },
 })
 
 -- ── Treesitter ───────────────────────────────────────────────────

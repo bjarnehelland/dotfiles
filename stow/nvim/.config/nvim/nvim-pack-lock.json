@@ -1,36 +1,9 @@
 {
   "plugins": {
-    "mini-git": {
-      "rev": "62aa54f41c50181dceff90b55f989efe69ad198c",
-      "src": "https://github.com/nvim-mini/mini-git"
-    },
-    "mini.clue": {
-      "rev": "4d506660e7030a15748ab073bebfe3ed03884000",
-      "src": "https://github.com/nvim-mini/mini.clue"
-    },
-    "mini.diff": {
-      "rev": "626b8a5b93874c4d05ca25aedec56cfff0b378fb",
-      "src": "https://github.com/nvim-mini/mini.diff"
-    },
-    "mini.files": {
-      "rev": "f6d1367483b6c0695b5084c04f7cd83bf2353a3e",
-      "src": "https://github.com/nvim-mini/mini.files"
-    },
-    "mini.pairs": {
-      "rev": "b1c5a726921b7a8c9321e9a7a208aa0571de5810",
-      "src": "https://github.com/nvim-mini/mini.pairs"
-    },
-    "mini.pick": {
-      "rev": "04e73ab07222508361095bb6e27621b315e6b9f1",
-      "src": "https://github.com/nvim-mini/mini.pick"
-    },
-    "mini.statusline": {
-      "rev": "127997ebef7ef632161203b960c5ef9d158f4810",
-      "src": "https://github.com/nvim-mini/mini.statusline"
-    },
-    "mini.surround": {
-      "rev": "8d5d0c5aa92449368ac251e85451d79d8f69d296",
-      "src": "https://github.com/nvim-mini/mini.surround"
+    "mini.nvim": {
+      "rev": "1345d191bb3da9c7b0e977f4387c5761f9bff68d",
+      "src": "https://github.com/nvim-mini/mini.nvim",
+      "version": "'stable'"
     },
     "nvim-lspconfig": {
       "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
