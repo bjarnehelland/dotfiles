@@ -1,4 +1,4 @@
-.PHONY: setup macos stow unstow brew repos
+.PHONY: setup macos stow unstow brew repos streamdeck
 
 setup:
 	bash scripts/dotfiles.sh
@@ -24,3 +24,6 @@ unstow:
 
 brew:
 	brew bundle --file=brew/Brewfile
+
+streamdeck:
+	bash scripts/streamdeck-backup.sh

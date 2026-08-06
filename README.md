@@ -20,7 +20,8 @@ make macos
 ## Usage
 
 ```sh
-make brew   # Install/update Homebrew packages from Brewfile
-make stow   # Re-stow all dotfiles
-make macos  # Apply macOS defaults
+make brew        # Install/update Homebrew packages from Brewfile
+make stow        # Re-stow all dotfiles
+make macos       # Apply macOS defaults
+make streamdeck  # Snapshot Elgato Stream Deck profiles (see streamdeck/README.md)
 ```
