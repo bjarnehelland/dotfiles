@@ -11,33 +11,75 @@ to_title() {
 }
 
 name=$(to_title "$(basename "$selected")")
-workspaces=$(cmux list-workspaces 2>/dev/null)
 
-# Walk up the path to find a matching workspace (by name or path)
-path="$selected"
-existing=""
-while [ "$path" != "/" ] && [ "$path" != "$HOME" ]; do
-    segment=$(basename "$path")
-    title=$(to_title "$segment")
-    suffix="${path#$HOME}"
+open_herdr() {
+    # herdr panes report a real cwd, so match on that instead of walking the
+    # path: take the deepest workspace whose cwd is $selected or an ancestor.
+    local panes match ws cwd pane
+    panes=$(herdr pane list 2>/dev/null)
+    match=$(echo "$panes" | jq -r --arg p "$selected" '
+        [.result.panes[] | select(.cwd != null and (.cwd as $c | $p == $c or ($p | startswith($c + "/"))))]
+        | sort_by(.cwd | length) | last
+        | if . == null then empty else "\(.workspace_id)\t\(.cwd)" end' 2>/dev/null)
 
-    existing=$(echo "$workspaces" | grep -E "($suffix|  $title( |$))" | head -1 | grep -o 'workspace:[0-9]*')
+    if [ -z "$match" ]; then
+        # --label at create time, so no follow-up rename is needed
+        herdr workspace create --cwd "$selected" --label "$name" --focus >/dev/null 2>&1
+        return
+    fi
+
+    ws=${match%%$'\t'*}
+    cwd=${match#*$'\t'}
+    herdr workspace focus "$ws" >/dev/null 2>&1
+    [ "$cwd" = "$selected" ] && return
+
+    # Selected path is a child of the matched workspace, so cd into it — but
+    # only in a pane with no agent attached, never into a running Claude/agent.
+    pane=$(echo "$panes" | jq -r --arg ws "$ws" '
+        [.result.panes[] | select(.workspace_id == $ws and (has("agent") | not))]
+        | (map(select(.focused)) + .) | first | .pane_id // empty' 2>/dev/null)
+    if [ -n "$pane" ]; then
+        herdr pane run "$pane" "cd $(printf '%q' "$selected") && clear" >/dev/null 2>&1
+    fi
+}
+
+open_cmux() {
+    local workspaces path existing segment title suffix ref
+    workspaces=$(cmux list-workspaces 2>/dev/null)
+
+    # Walk up the path to find a matching workspace (by name or path)
+    path="$selected"
+    existing=""
+    while [ "$path" != "/" ] && [ "$path" != "$HOME" ]; do
+        segment=$(basename "$path")
+        title=$(to_title "$segment")
+        suffix="${path#$HOME}"
+
+        existing=$(echo "$workspaces" | grep -E "($suffix|  $title( |$))" | head -1 | grep -o 'workspace:[0-9]*')
+        if [ -n "$existing" ]; then
+            break
+        fi
+        path=$(dirname "$path")
+    done
+
     if [ -n "$existing" ]; then
-        break
+        cmux select-workspace --workspace "$existing" >/dev/null 2>&1
+        # If selected path is a child of the matched workspace, cd into it
+        if [ "$path" != "$selected" ]; then
+            cmux send --workspace "$existing" "cd $selected && clear\n" >/dev/null 2>&1
+        fi
+    else
+        ref=$(cmux new-workspace --cwd "$selected" 2>/dev/null | awk '{print $2}')
+        if [ -n "$ref" ]; then
+            cmux select-workspace --workspace "$ref" >/dev/null 2>&1
+            cmux workspace-action rename --workspace "$ref" --title "$name" >/dev/null 2>&1
+        fi
     fi
-    path=$(dirname "$path")
-done
+}
 
-if [ -n "$existing" ]; then
-    cmux select-workspace --workspace "$existing" >/dev/null 2>&1
-    # If selected path is a child of the matched workspace, cd into it
-    if [ "$path" != "$selected" ]; then
-        cmux send --workspace "$existing" "cd $selected && clear\n" >/dev/null 2>&1
-    fi
+# Whichever multiplexer we're sitting in wins; outside both, fall back to cmux.
+if [ -n "$HERDR_PANE_ID" ]; then
+    open_herdr
 else
-    ref=$(cmux new-workspace --cwd "$selected" 2>/dev/null | awk '{print $2}')
-    if [ -n "$ref" ]; then
-        cmux select-workspace --workspace "$ref" >/dev/null 2>&1
-        cmux workspace-action rename --workspace "$ref" --title "$name" >/dev/null 2>&1
-    fi
+    open_cmux
 fi
