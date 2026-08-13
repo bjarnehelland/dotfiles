@@ -79,8 +79,12 @@ local accents = {
 vim.api.nvim_create_autocmd('ColorScheme', {
   pattern = 'catppuccin',
   callback = function()
-    for _, group in ipairs({ 'Normal', 'NormalNC', 'NormalFloat', 'SignColumn', 'EndOfBuffer' }) do
-      vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group }), { bg = 'NONE', ctermbg = 'NONE' }))
+    for _, group in ipairs({ 'Normal', 'NormalNC', 'NormalFloat', 'FloatBorder', 'FloatTitle', 'SignColumn', 'EndOfBuffer' }) do
+      -- Resolve links first: NormalFloat & friends are `link = Pmenu`, and
+      -- nvim_set_hl ignores every other attribute when `link` is present.
+      local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+      hl.bg, hl.ctermbg = nil, nil
+      vim.api.nvim_set_hl(0, group, hl)
     end
     local palette = accents[vim.o.background]
     for _, mode in ipairs({ 'Normal', 'Insert', 'Visual', 'Replace', 'Command', 'Other' }) do
@@ -251,6 +255,12 @@ vim.keymap.set('n', '<leader>e', function()
   local path = vim.api.nvim_buf_get_name(0)
   mf.open(vim.uv.fs_stat(path) and path or nil)
 end, { desc = 'File explorer' })
+-- Same, but rooted at the project: nearest .git above the current file, else cwd
+vim.keymap.set('n', '<leader>E', function()
+  local mf = require('mini.files')
+  if mf.close() then return end
+  mf.open(vim.fs.root(0, '.git') or vim.uv.cwd())
+end, { desc = 'File explorer (project root)' })
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
