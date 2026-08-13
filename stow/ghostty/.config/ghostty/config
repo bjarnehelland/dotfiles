@@ -1,1 +1,8 @@
 unfocused-split-opacity = 0.5
+
+# Neovim's colorscheme clears its own background, so this is what shows through.
+# Blur keeps code legible over whatever is behind the window. Leaving
+# background-opacity-cells at its default (false) means only the default
+# background goes transparent — statusline blocks, Pmenu and Visual stay solid.
+background-opacity = 0.85
+background-blur = true
