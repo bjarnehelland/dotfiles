@@ -62,3 +62,5 @@
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [lfs]
 	fetchexclude = prebuilt
+[fetch]
+	prune = true
