@@ -8,8 +8,9 @@ vim.keymap.set('n', '<leader>go', function()
   require('mini.diff').toggle_overlay()
 end, { desc = 'Toggle git diff overlay' })
 
--- Statusline
+-- Statusline, and a tabline listing open buffers
 require('mini.statusline').setup()
+require('mini.tabline').setup()
 
 -- Editing helpers
 require('mini.pairs').setup()
