@@ -12,10 +12,21 @@ to_title() {
 
 name=$(to_title "$(basename "$selected")")
 
+# Fresh workspaces get a vertical split, with the right column split again
+# horizontally: left stays full height, right becomes top/bottom. --no-focus
+# throughout so the cursor stays in the left pane.
+herdr_default_panes() {
+    local root=$1 right
+    right=$(herdr pane split "$root" --direction right --cwd "$selected" --no-focus 2>/dev/null |
+        jq -r '.result.pane.pane_id // empty' 2>/dev/null)
+    [ -z "$right" ] && return
+    herdr pane split "$right" --direction down --cwd "$selected" --no-focus >/dev/null 2>&1
+}
+
 open_herdr() {
     # herdr panes report a real cwd, so match on that instead of walking the
     # path: take the deepest workspace whose cwd is $selected or an ancestor.
-    local panes match ws cwd pane
+    local panes match ws cwd pane root
     panes=$(herdr pane list 2>/dev/null)
     match=$(echo "$panes" | jq -r --arg p "$selected" '
         [.result.panes[] | select(.cwd != null and (.cwd as $c | $p == $c or ($p | startswith($c + "/"))))]
@@ -24,7 +35,9 @@ open_herdr() {
 
     if [ -z "$match" ]; then
         # --label at create time, so no follow-up rename is needed
-        herdr workspace create --cwd "$selected" --label "$name" --focus >/dev/null 2>&1
+        root=$(herdr workspace create --cwd "$selected" --label "$name" --focus 2>/dev/null |
+            jq -r '.result.root_pane.pane_id // empty' 2>/dev/null)
+        [ -n "$root" ] && herdr_default_panes "$root"
         return
     fi
 
