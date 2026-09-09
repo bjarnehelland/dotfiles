@@ -1,5 +1,4 @@
 -- Plugin-free keymaps. Plugin keymaps live next to their plugin in lua/plugins/.
--- Buffer next/prev: ]b and [b are Neovim defaults, no mapping needed.
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<cr>')
 
@@ -8,6 +7,10 @@ vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Focus left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Focus lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Focus upper window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Focus right window' })
+
+-- Cycle buffers (]b / [b still work too). Shadows H/L screen-top/bottom jumps.
+vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Previous buffer' })
 
 -- Splits
 vim.keymap.set('n', '<leader>v', '<cmd>vsplit<cr>', { desc = 'Vertical split' })
