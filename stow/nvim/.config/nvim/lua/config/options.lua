@@ -1,6 +1,6 @@
-require("vim._core.ui2").enable({})
-vim.g.mapleader = " " -- space leader key
-vim.g.maplocalleader = " " -- space leader key
+require('vim._core.ui2').enable({})
+vim.g.mapleader = ' ' -- space leader key
+vim.g.maplocalleader = ' ' -- space leader key
 
 vim.o.termguicolors = true -- enable 24-bit colors
 vim.o.updatetime = 200 -- save swap file with 200ms debouncing
@@ -9,21 +9,21 @@ vim.o.backup = false -- disable backup on q
 vim.o.autoread = true -- auto update file if changed outside of nvim
 vim.o.undofile = true -- persistant undo history
 vim.o.confirm = true -- ask to save on :q instead of erroring
-vim.o.clipboard = "unnamedplus" -- yank/paste go through the system clipboard
+vim.o.clipboard = 'unnamedplus' -- yank/paste go through the system clipboard
 vim.o.number = true -- enable line numbers
 vim.o.relativenumber = true -- enable relative line numbers
 
-vim.o.completeopt = "menuone,noselect,fuzzy,popup" -- fuzzy matching + docs popup for native LSP completion
+vim.o.completeopt = 'menuone,noselect,fuzzy,popup' -- fuzzy matching + docs popup for native LSP completion
 vim.o.pumheight = 10 -- max height of completion menu
-vim.o.winborder = "rounded" -- rounded border
+vim.o.winborder = 'rounded' -- rounded border
 vim.o.showmode = false -- disable showing mode below statusline
 
 vim.o.cursorline = true -- enable cursor line
-vim.o.signcolumn = "yes" -- always show sign column
+vim.o.signcolumn = 'yes' -- always show sign column
 vim.o.ignorecase = true -- case-insensitive search
 vim.o.smartcase = true -- until search pattern contains upper case characters
 vim.o.incsearch = true -- enable highlighting search in progress
-vim.o.inccommand = "split" -- preview :s substitutions in a split
+vim.o.inccommand = 'split' -- preview :s substitutions in a split
 
 vim.o.tabstop = 2 -- how many spaces tab inserts
 vim.o.softtabstop = 2 -- how many spaces tab inserts
@@ -38,9 +38,9 @@ vim.o.splitright = true -- better splitting
 
 vim.o.wrap = false -- disable wrapping
 vim.o.breakindent = true -- prevent line wrapping
--- vim.opt.fillchars = { vert = " " } -- remove line divider between splits
-vim.opt.fillchars = { eob = " " }
+-- vim.opt.fillchars = { vert = ' ' } -- remove line divider between splits
+vim.opt.fillchars = { eob = ' ' }
 vim.o.laststatus = 3 -- global statusline
 
 vim.o.list = true -- show invisible characters
-vim.o.listchars = "tab:  ,trail:·,nbsp:␣"
+vim.o.listchars = 'tab:  ,trail:·,nbsp:␣'
