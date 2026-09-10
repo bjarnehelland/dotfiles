@@ -10,7 +10,6 @@ vim.pack.add({
 })
 
 -- One file per plugin/feature, alphabetical; none depend on another's order.
-require('plugins.clue')
 require('plugins.colorscheme')
 require('plugins.diagnostics')
 require('plugins.files')
