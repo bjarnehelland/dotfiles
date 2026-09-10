@@ -1,5 +1,4 @@
--- mini.nvim modules that need no more than setup(). Bigger ones get their own
--- file: pick.lua, files.lua.
+-- mini.nvim modules; all need no more than setup().
 
 -- Git
 require('mini.diff').setup()
