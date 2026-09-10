@@ -23,6 +23,8 @@ vim.api.nvim_create_autocmd('PackChanged', {
 telescope.setup({
   defaults = {
     path_display = { 'truncate', 'filename_first' },
+    -- hidden = true below would otherwise surface .git internals
+    file_ignore_patterns = { '^%.git/' },
     mappings = {
       i = { ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist },
       n = { ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist },
@@ -51,14 +53,17 @@ local function project_root()
   return vim.fs.root(0, '.git') or vim.fs.root(vim.uv.cwd(), '.git') or vim.uv.cwd()
 end
 
-vim.keymap.set('n', '<leader>f', function()
+-- Search prefix: <leader>s + what to search for
+vim.keymap.set('n', '<leader>sf', function()
   telescope.extensions.frecency.frecency({ cwd = project_root(), workspace = 'CWD', hidden = true })
 end, { desc = 'Find files (frecency)' })
-vim.keymap.set('n', '<leader>F', function()
-  builtin.find_files({ cwd = project_root() })
-end, { desc = 'Find all files' })
-vim.keymap.set('n', '<leader>/', function()
+vim.keymap.set('n', '<leader>sF', function()
+  builtin.find_files({ cwd = project_root(), hidden = true })
+end, { desc = 'Find all files (incl. hidden)' })
+vim.keymap.set('n', '<leader>sg', function()
   builtin.live_grep({ cwd = project_root() })
 end, { desc = 'Live grep' })
-vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Buffers' })
-vim.keymap.set('n', '<leader>h', builtin.help_tags, { desc = 'Help tags' })
+vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = 'Search buffers' })
+vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Search diagnostics' })
+vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Search help' })
+vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'Search keymaps' })

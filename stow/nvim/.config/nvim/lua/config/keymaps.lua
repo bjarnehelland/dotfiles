@@ -12,9 +12,9 @@ vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Focus right window' })
 vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Previous buffer' })
 
--- Splits
+-- Splits (<leader>s is the telescope search prefix, so horizontal is <leader>-)
 vim.keymap.set('n', '<leader>v', '<cmd>vsplit<cr>', { desc = 'Vertical split' })
-vim.keymap.set('n', '<leader>s', '<cmd>split<cr>', { desc = 'Horizontal split' })
+vim.keymap.set('n', '<leader>-', '<cmd>split<cr>', { desc = 'Horizontal split' })
 
 -- Save / quit / restart
 vim.keymap.set('n', '<leader>w', '<cmd>w<cr>', { desc = 'Save file' })
