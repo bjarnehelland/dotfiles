@@ -1,10 +1,9 @@
 tap "azure/kubelogin", trusted: true
-tap "manaflow-ai/cmux", trusted: true
 tap "oven-sh/bun", trusted: true
-tap "sst/tap", trusted: true
 brew "azure-cli"
 brew "gettext"
 brew "bat"
+brew "curl"
 brew "deno"
 brew "direnv"
 brew "dockutil"
@@ -14,6 +13,7 @@ brew "fzf"
 brew "gh"
 brew "gnupg"
 brew "gum"
+brew "herdr"
 brew "k9s"
 brew "killport"
 brew "kubectx"
@@ -40,24 +40,24 @@ brew "zoxide"
 brew "zsh-completions"
 brew "azure/kubelogin/kubelogin"
 brew "oven-sh/bun/bun"
-brew "sst/tap/opencode"
 cask "1password"
 cask "1password-cli"
 cask "bruno"
+cask "chatgpt"
 cask "claude"
-cask "cmux"
-cask "discord"
+cask "claude-code@latest"
+cask "codex"
 cask "docker-desktop"
 cask "elgato-stream-deck"
 cask "font-sf-pro"
+cask "ghostty"
 cask "google-chrome"
-cask "notchnook"
-cask "notion"
+cask "homebrew-app"
 cask "ollama-app"
+cask "openscad@snapshot"
 cask "raindropio"
 cask "raycast"
 cask "runjs"
-cask "slack"
 cask "spotify"
 cask "visual-studio-code"
 cask "camunda-modeler"
@@ -72,5 +72,3 @@ mas "Amphetamine", id: 937984704
 mas "Boop", id: 1518425043
 mas "Save to Raindrop.io", id: 1549370672
 mas "Xcode", id: 497799835
-
-
