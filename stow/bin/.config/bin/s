@@ -1,32 +1,88 @@
 #!/bin/bash
+# Launcher. Two sources, switched with the ctrl- keys in the fzf header:
+#   projects   zoxide history, creates or focuses a workspace
+#   trees      Git worktrees of the current repo
+# Spaces are cmd+shift+1..9 and agents are in the sidebar, so neither needs a
+# picker here.
+# Bound to cmd+k as a Herdr popup, so it also works over a busy pane.
+# Outside Herdr only projects makes sense, and that falls back to cmux.
 
-selected=$(zoxide query --list | sed "s|$HOME|~|g" | fzf | sed "s|~|$HOME|g")
+self=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
 
-if [ -z "$selected" ]; then
-    exit 0
-fi
+# Herdr's server runs under launchd, so a popup inherits PATH=/usr/bin:/bin:
+# /usr/sbin:/sbin and no shell init ever runs. Put back what this script needs.
+export PATH="$HOME/.local/bin:$HOME/.config/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+
+# A Herdr popup closes the instant this exits, so a missing tool has to say so
+# on screen instead of flashing past.
+for tool in fzf jq zoxide; do
+    command -v "$tool" >/dev/null 2>&1 && continue
+    printf 's: %s not found\n\nPATH=%s\n\nPress enter to close.\n' "$tool" "$PATH"
+    read -r _
+    exit 1
+done
 
 to_title() {
     echo "$1" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1'
 }
 
-name=$(to_title "$(basename "$selected")")
+# Rows are mode<TAB>payload<TAB>display. The mode travels with the row because
+# fzf reloads the list on a mode switch and cannot tell us which source won.
+list_projects() {
+    zoxide query --list | awk -v home="$HOME" 'BEGIN { OFS = "\t" }
+        { d = $0; if (index(d, home) == 1) d = "~" substr(d, length(home) + 1); print "p", $0, d }'
+}
+
+list_trees() {
+    herdr worktree list 2>/dev/null | jq -r '
+        .result.worktrees[]
+        | ["t", .path, "\(.branch // "detached")  \(.label)\(if .open_workspace_id then "  (open)" else "" end)"]
+        | @tsv' 2>/dev/null
+}
+
+preview() {
+    local mode=$1 payload=$2
+    case "$mode" in
+        p | t)
+            if git -C "$payload" rev-parse --git-dir >/dev/null 2>&1; then
+                git -C "$payload" -c color.ui=always log --oneline --decorate -15
+            else
+                ls -A "$payload"
+            fi
+            ;;
+    esac
+}
+
+case "$1" in
+    --list)
+        case "$2" in
+            p) list_projects ;;
+            t) list_trees ;;
+        esac
+        exit 0
+        ;;
+    --preview)
+        preview "$2" "$3"
+        exit 0
+        ;;
+esac
 
 # Fresh workspaces get a vertical split, with the right column split again
 # horizontally: left stays full height, right becomes top/bottom. --no-focus
 # throughout so the cursor stays in the left pane.
 herdr_default_panes() {
-    local root=$1 right
-    right=$(herdr pane split "$root" --direction right --cwd "$selected" --no-focus 2>/dev/null |
+    local root=$1 cwd=$2 right
+    right=$(herdr pane split "$root" --direction right --cwd "$cwd" --no-focus 2>/dev/null |
         jq -r '.result.pane.pane_id // empty' 2>/dev/null)
     [ -z "$right" ] && return
-    herdr pane split "$right" --direction down --cwd "$selected" --no-focus >/dev/null 2>&1
+    herdr pane split "$right" --direction down --cwd "$cwd" --no-focus >/dev/null 2>&1
 }
 
 open_herdr() {
     # herdr panes report a real cwd, so match on that instead of walking the
     # path: take the deepest workspace whose cwd is $selected or an ancestor.
-    local panes match ws cwd pane root
+    local selected=$1 name panes match ws cwd pane root
+    name=$(to_title "$(basename "$selected")")
     panes=$(herdr pane list 2>/dev/null)
     match=$(echo "$panes" | jq -r --arg p "$selected" '
         [.result.panes[] | select(.cwd != null and (.cwd as $c | $p == $c or ($p | startswith($c + "/"))))]
@@ -37,7 +93,7 @@ open_herdr() {
         # --label at create time, so no follow-up rename is needed
         root=$(herdr workspace create --cwd "$selected" --label "$name" --focus 2>/dev/null |
             jq -r '.result.root_pane.pane_id // empty' 2>/dev/null)
-        [ -n "$root" ] && herdr_default_panes "$root"
+        [ -n "$root" ] && herdr_default_panes "$root" "$selected"
         return
     fi
 
@@ -57,7 +113,8 @@ open_herdr() {
 }
 
 open_cmux() {
-    local workspaces path existing segment title suffix ref
+    local selected=$1 name workspaces path existing segment title suffix ref
+    name=$(to_title "$(basename "$selected")")
     workspaces=$(cmux list-workspaces 2>/dev/null)
 
     # Walk up the path to find a matching workspace (by name or path)
@@ -90,9 +147,39 @@ open_cmux() {
     fi
 }
 
-# Whichever multiplexer we're sitting in wins; outside both, fall back to cmux.
-if [ -n "$HERDR_PANE_ID" ]; then
-    open_herdr
-else
-    open_cmux
+open_tree() {
+    local path=$1 ws
+    ws=$(herdr worktree list 2>/dev/null | jq -r --arg p "$path" '
+        .result.worktrees[] | select(.path == $p) | .open_workspace_id // empty' 2>/dev/null)
+    if [ -n "$ws" ]; then
+        herdr workspace focus "$ws" >/dev/null 2>&1
+    else
+        herdr worktree open --path "$path" >/dev/null 2>&1
+    fi
+}
+
+# Outside Herdr the worktree source is empty, so keep the plain picker.
+if [ -z "$HERDR_ENV" ]; then
+    selected=$(list_projects | cut -f3 | fzf | sed "s|^~|$HOME|")
+    [ -n "$selected" ] && open_cmux "$selected"
+    exit 0
 fi
+
+row=$(list_projects | fzf \
+    --delimiter='\t' --with-nth=3 --ansi \
+    --layout=reverse --height=100% --border \
+    --prompt='projects> ' \
+    --header='ctrl-p projects · ctrl-t trees' \
+    --preview="$self --preview {1} {2}" --preview-window='right,55%,border-left' \
+    --bind="ctrl-p:change-prompt(projects> )+reload($self --list p)" \
+    --bind="ctrl-t:change-prompt(trees> )+reload($self --list t)")
+
+[ -z "$row" ] && exit 0
+
+mode=$(echo "$row" | cut -f1)
+payload=$(echo "$row" | cut -f2)
+
+case "$mode" in
+    p) open_herdr "$payload" ;;
+    t) open_tree "$payload" ;;
+esac

@@ -2,7 +2,8 @@
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<cr>')
 
--- Move between splits with Ctrl-h/j/k/l
+-- Move between splits with Ctrl-h/j/k/l. These stay inside Neovim: Herdr panes
+-- are Cmd+Alt+arrows, so each modifier owns exactly one layer.
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Focus left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Focus lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Focus upper window' })

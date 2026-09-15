@@ -1,0 +1,56 @@
+# Only this file is stowed — ~/.config/herdr also holds sockets, logs and
+# session.json, which are runtime state and must stay untracked.
+
+onboarding = false
+
+[ui.toast]
+delivery = "system"
+
+[ui]
+agent_panel_sort = "priority"
+
+# Cmd chords for everything that manages panes, tabs and workspaces, mirroring
+# the ones Ghostty uses for its own splits and tabs (Ghostty unbinds them in
+# stow/ghostty/.config/ghostty/config so the keys reach Herdr). Setting a key
+# here replaces its prefix default, so prefix+v etc. are gone — ctrl+b still
+# opens prefix mode for everything left at its default, which is what keeps
+# `herdr --remote` and nested sessions usable.
+[keys]
+prefix = "ctrl+b"
+
+zoom = "cmd+shift+enter"       # Ghostty's own toggle_split_zoom chord
+split_vertical = "cmd+d"
+split_horizontal = "cmd+shift+d"
+close_pane = "cmd+w"
+new_tab = "cmd+t"
+switch_tab = "cmd+1..9"
+previous_tab = "cmd+shift+left"   # free in Ghostty, no unbind needed
+next_tab = "cmd+shift+right"
+
+# Spaces sit next to the tab keys. Not cmd+shift+1..9: macOS takes
+# cmd+shift+3/4/5 for screenshots before any app sees them. Up/down rather
+# than left/right because the sidebar stacks spaces vertically.
+switch_workspace = "cmd+ctrl+1..9"
+previous_workspace = "cmd+shift+up"
+next_workspace = "cmd+shift+down"
+workspace_picker = "cmd+shift+o"
+focus_pane_left = "cmd+alt+left"
+focus_pane_down = "cmd+alt+down"
+focus_pane_up = "cmd+alt+up"
+focus_pane_right = "cmd+alt+right"
+resize_pane_left = "cmd+ctrl+left"
+resize_pane_down = "cmd+ctrl+down"
+resize_pane_up = "cmd+ctrl+up"
+resize_pane_right = "cmd+ctrl+right"
+toggle_sidebar = "cmd+b"
+
+# Launcher. A popup works from any pane, including one with an agent running,
+# so it never has to wait for an idle shell prompt.
+[[keys.command]]
+key = "cmd+k"
+type = "popup"
+# Absolute: Herdr execs this with a bare environment, so neither PATH lookup
+# nor $HOME expansion can be relied on. The script repairs its own PATH.
+command = "/Users/bjarnehelland/.config/bin/s"
+width = "70%"
+height = "60%"
