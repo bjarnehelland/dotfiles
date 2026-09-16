@@ -56,14 +56,15 @@ command = "/Users/bjarnehelland/.config/bin/s"
 width = "70%"
 height = "60%"
 
-# Same popup treatment for git. Herdr runs custom commands from the focused
-# pane's cwd, so this lands in whatever repo that pane is in. zsh -c (not the
-# bare binary) because .zshenv sets PATH for every zsh, interactive or not:
-# lazygit shells out to $EDITOR and friends, which a bare-PATH popup misses.
+# Same popup treatment for git. Herdr only runs the command from the focused
+# pane's cwd when it can detect one, so cd to HERDR_ACTIVE_PANE_CWD explicitly
+# to land in whatever repo that pane is in. zsh -c (not the bare binary)
+# because .zshenv sets PATH for every zsh, interactive or not: lazygit shells
+# out to $EDITOR and friends, which a bare-PATH popup misses.
 [[keys.command]]
 key = "cmd+g"
 type = "popup"
-command = "exec /bin/zsh -c lazygit"
+command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec /bin/zsh -c lazygit"
 description = "lazygit"
 width = "90%"
 height = "90%"
