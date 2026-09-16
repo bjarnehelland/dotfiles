@@ -107,15 +107,6 @@ install_packages() {
   fi
 }
 
-install_claude() {
-  if [[ -e "$HOME/.local/bin/claude" ]]; then
-    warn "Claude Code already installed at ~/.local/bin/claude"
-  else
-    info "Installing Claude Code..."
-    curl -fsSL https://claude.ai/install.sh | bash
-  fi
-}
-
 install_pi() {
   if npm list -g @mariozechner/pi-coding-agent --depth=0 >/dev/null 2>&1; then
     warn "pi-coding-agent already installed"
@@ -123,6 +114,22 @@ install_pi() {
     info "Installing pi-coding-agent..."
     npm install -g @mariozechner/pi-coding-agent
   fi
+}
+
+# Herdr plugins are a git checkout plus a binary built on install, so they are
+# installed rather than stowed — only config.toml belongs in the repo. The
+# build step shells out to go, which the Brewfile provides.
+install_herdr_plugins() {
+  local plugins=("kryptamine/herdr-auto-title")
+
+  for repo in "${plugins[@]}"; do
+    if herdr plugin list 2>/dev/null | grep -qF "github:$repo@"; then
+      warn "Herdr plugin $repo already installed"
+    else
+      info "Installing Herdr plugin $repo..."
+      herdr plugin install --yes "$repo"
+    fi
+  done
 }
 
 stow_dotfiles() {
@@ -227,8 +234,8 @@ install_xcode
 clone_dotfiles
 install_homebrew
 install_packages
-install_claude
 install_pi
+install_herdr_plugins
 stow_dotfiles
 setup_ssh
 
