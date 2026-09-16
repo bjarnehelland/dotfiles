@@ -8,6 +8,7 @@ delivery = "system"
 
 [ui]
 agent_panel_sort = "priority"
+prompt_new_tab_name = false
 
 # Cmd chords for everything that manages panes, tabs and workspaces, mirroring
 # the ones Ghostty uses for its own splits and tabs (Ghostty unbinds them in
@@ -54,3 +55,15 @@ type = "popup"
 command = "/Users/bjarnehelland/.config/bin/s"
 width = "70%"
 height = "60%"
+
+# Same popup treatment for git. Herdr runs custom commands from the focused
+# pane's cwd, so this lands in whatever repo that pane is in. zsh -c (not the
+# bare binary) because .zshenv sets PATH for every zsh, interactive or not:
+# lazygit shells out to $EDITOR and friends, which a bare-PATH popup misses.
+[[keys.command]]
+key = "cmd+g"
+type = "popup"
+command = "exec /bin/zsh -c lazygit"
+description = "lazygit"
+width = "90%"
+height = "90%"
