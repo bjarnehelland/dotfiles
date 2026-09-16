@@ -12,3 +12,4 @@ stow/claude/.claude/*
 !stow/claude/.claude/settings.json
 !stow/claude/.claude/statusline-command.sh
 !stow/claude/.claude/skills/
+!stow/claude/.claude/hooks/

@@ -1,0 +1,10 @@
+# Claude Code owns ~/.claude/settings.json and rewrites it in place, which would
+# clobber a stow symlink. The repo copy is a filtered mirror maintained by
+# .claude/hooks/claude-settings-mirror.sh, not a source to link from.
+^/\.claude/settings\.json$
+
+# stow defaults (a local ignore file replaces the built-in list)
+\.git
+\.gitignore
+.+~
+\#.*\#

@@ -10,12 +10,9 @@
       "Bash(find:*)",
       "Bash(ls:*)",
       "Bash(make:*)",
-      "Bash(npm run *)",
       "Bash(npm ls:*)",
       "Bash(npm why:*)",
       "Bash(npm audit:*)",
-      "Bash(bun run:*)",
-      "Bash(pnpm run:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
@@ -57,6 +54,21 @@
       "Read(**/.aws/credentials)",
       "Read(**/.aws/config)",
       "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -Rf:*)",
+      "Bash(rm -fR:*)",
+      "Bash(rm -rfv:*)",
+      "Bash(rm -frv:*)",
+      "Bash(rm -r -f:*)",
+      "Bash(rm -f -r:*)",
+      "Bash(rm -R -f:*)",
+      "Bash(rm -f -R:*)",
+      "Bash(rm --recursive:*)",
+      "Bash(rm --force:*)",
+      "Bash(/usr/bin/sudo:*)",
+      "Bash(env sudo:*)",
+      "Bash(command sudo:*)",
+      "Bash(doas:*)",
       "Bash(sudo:*)"
     ],
     "ask": [
@@ -69,23 +81,39 @@
     ],
     "defaultMode": "auto"
   },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/bjarnehelland/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "context7@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": false,
     "blocc@agentic-marketplace": true,
-    "skill-creator@claude-plugins-official": true,
-    "notion@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "figma@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": false,
+    "notion@claude-plugins-official": false,
+    "claude-code-setup@claude-plugins-official": false,
+    "code-simplifier@claude-plugins-official": false,
+    "figma@claude-plugins-official": false,
+    "lua-lsp@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "agentic-marketplace": {
@@ -101,6 +129,5 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "model": "claude-fable-5[1m]"
+  "voiceEnabled": true
 }
