@@ -132,14 +132,32 @@ install_herdr_plugins() {
   done
 }
 
+# Herdr's agent-state hooks are generated per agent and stamped with an
+# integration version ("managed by herdr; reinstalling or updating the
+# integration overwrites this file"), so they are installed rather than
+# stowed — herdr owns the file and rewrites it on every update.
+install_herdr_integrations() {
+  local integrations=("claude" "pi")
+
+  for name in "${integrations[@]}"; do
+    if herdr integration status 2>/dev/null | grep -qE "^${name}: current"; then
+      warn "Herdr integration $name already current"
+    else
+      info "Installing Herdr integration $name..."
+      herdr integration install "$name"
+    fi
+  done
+}
+
 stow_dotfiles() {
   info "Stowing dotfiles..."
 
-  # Ensure ~/.claude (and skills/) exist as real directories before stowing so
-  # stow symlinks individual keep-list files instead of folding the whole tree
-  # into one symlink (which would make Claude write all its runtime data into
-  # the repo).
-  mkdir -p "$HOME/.claude/skills"
+  # Ensure ~/.claude (and skills/, hooks/) exist as real directories before
+  # stowing so stow symlinks individual keep-list files instead of folding the
+  # whole tree into one symlink (which would make Claude write all its runtime
+  # data into the repo). hooks/ matters especially: herdr generates its own
+  # hook in there, and a folded symlink would land it inside the repo.
+  mkdir -p "$HOME/.claude/skills" "$HOME/.claude/hooks"
 
   local packages
   packages=$(find "$DOTFILES_DIR/stow" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
@@ -237,6 +255,7 @@ install_packages
 install_pi
 install_herdr_plugins
 stow_dotfiles
+install_herdr_integrations
 setup_ssh
 
 success "Done! Run 'make macos' to configure macOS defaults."
