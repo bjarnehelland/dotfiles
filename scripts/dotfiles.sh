@@ -107,6 +107,18 @@ install_packages() {
   fi
 }
 
+# Claude Code is installed with its native installer rather than the Homebrew
+# cask so the binary can auto-update itself. It lands in ~/.local/bin, which
+# .zshenv puts ahead of /opt/homebrew/bin on PATH.
+install_claude_code() {
+  if [ -x "$HOME/.local/bin/claude" ]; then
+    warn "Claude Code already installed"
+  else
+    info "Installing Claude Code (native installer)..."
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
+}
+
 install_pi() {
   if npm list -g @mariozechner/pi-coding-agent --depth=0 >/dev/null 2>&1; then
     warn "pi-coding-agent already installed"
@@ -252,6 +264,7 @@ install_xcode
 clone_dotfiles
 install_homebrew
 install_packages
+install_claude_code
 install_pi
 install_herdr_plugins
 stow_dotfiles
