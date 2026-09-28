@@ -13,3 +13,6 @@ stow/claude/.claude/*
 !stow/claude/.claude/statusline-command.sh
 !stow/claude/.claude/skills/
 !stow/claude/.claude/hooks/
+# lazygit: only config.yml is tracked; state.yml etc. are runtime data.
+stow/lazygit/Library/Application Support/lazygit/*
+!stow/lazygit/Library/Application Support/lazygit/config.yml

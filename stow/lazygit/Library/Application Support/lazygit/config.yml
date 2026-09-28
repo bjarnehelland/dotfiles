@@ -1,0 +1,9 @@
+# Render diffs through delta (installed via the Brewfile). Press `|` in
+# lazygit to cycle between the pagers below. The first one drops the
+# gitconfig side-by-side feature, which is cramped in lazygit's diff panel.
+git:
+  diffRenderers:
+    - colorArg: always
+      command: delta --paging=never --features=
+    - colorArg: always
+      command: delta --paging=never

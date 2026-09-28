@@ -171,6 +171,10 @@ stow_dotfiles() {
   # hook in there, and a folded symlink would land it inside the repo.
   mkdir -p "$HOME/.claude/skills" "$HOME/.claude/hooks"
 
+  # Same for lazygit: it writes state.yml next to config.yml, which would
+  # land in the repo if stow folded the directory into a symlink.
+  mkdir -p "$HOME/Library/Application Support/lazygit"
+
   local packages
   packages=$(find "$DOTFILES_DIR/stow" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
 
