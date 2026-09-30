@@ -68,7 +68,10 @@ configure_dock() {
     local dock_apps=(
         "/Applications/Google Chrome.app"
         "/Applications/Claude.app"
+        "/Applications/ChatGPT.app"
+        "/System/Applications/Siri.app"
         "/Applications/cmux.app"
+        "/Applications/Ghostty.app"
         "/Applications/Visual Studio Code.app"
         "/Applications/Docker.app"
         "/Applications/Bruno.app"
