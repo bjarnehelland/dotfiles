@@ -204,7 +204,24 @@ configure_git_signing() {
   fi
 }
 
+configure_github_known_hosts() {
+  local known_hosts="$HOME/.ssh/known_hosts"
+
+  if ssh-keygen -F github.com -f "$known_hosts" >/dev/null 2>&1; then
+    warn "GitHub SSH host key already configured"
+    return 0
+  fi
+
+  # Published by GitHub; avoid trusting an unverified ssh-keyscan response.
+  # https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+  info "Adding GitHub SSH host key..."
+  mkdir -p "$HOME/.ssh"
+  printf '\ngithub.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl\n' >> "$known_hosts"
+}
+
 setup_ssh() {
+  configure_github_known_hosts
+
   if [ -f "$HOME/.ssh/id_ed25519" ]; then
     warn "SSH key already exists"
   else
