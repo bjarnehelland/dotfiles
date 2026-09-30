@@ -98,13 +98,6 @@ install_homebrew() {
 install_packages() {
   info "Installing packages from Brewfile..."
   brew bundle --file="$DOTFILES_DIR/brew/Brewfile"
-
-  echo ""
-  read -rp "Install work (Stacc) packages? [y/N] " work
-  if [[ "$work" =~ ^[Yy]$ ]]; then
-    info "Installing work packages from Brewfile.work..."
-    brew bundle --file="$DOTFILES_DIR/brew/Brewfile.work"
-  fi
 }
 
 # Claude Code is installed with its native installer rather than the Homebrew
@@ -150,6 +143,10 @@ install_herdr_plugins() {
 # stowed — herdr owns the file and rewrites it on every update.
 install_herdr_integrations() {
   local integrations=("claude" "pi")
+
+  # Installing pi's npm package does not create its runtime directories.
+  # Herdr requires the extension directory to exist before installing its hook.
+  mkdir -p "$HOME/.pi/agent/extensions"
 
   for name in "${integrations[@]}"; do
     if herdr integration status 2>/dev/null | grep -qE "^${name}: current"; then
@@ -215,11 +212,18 @@ setup_ssh() {
     bash "$DOTFILES_DIR/scripts/generate_github_ssh.sh"
   fi
 
-  if gh auth status >/dev/null 2>&1; then
+  if gh auth status --hostname github.com >/dev/null 2>&1; then
     warn "Already logged in to GitHub CLI"
   else
     info "Logging in to GitHub CLI..."
-    gh auth login
+    gh auth login --hostname github.com --scopes admin:ssh_signing_key
+  fi
+
+  # Existing logins may predate signing-key registration in setup.
+  if ! gh api --hostname github.com user/ssh_signing_keys >/dev/null 2>&1; then
+    info "Requesting GitHub SSH signing-key access..."
+    gh auth refresh --hostname github.com --scopes admin:ssh_signing_key
+    gh api --hostname github.com user/ssh_signing_keys >/dev/null
   fi
 
   # Detect the existing key on GitHub by matching a prefix of its base64 body.
@@ -232,7 +236,9 @@ setup_ssh() {
 
   # gh ssh-key list output is tab-separated: TITLE\tKEY\tADDED\tID\tTYPE
   local registered_types
-  registered_types=$(gh ssh-key list 2>/dev/null | awk -F'\t' -v k="$key_prefix" 'index($2, k) { print $5 }')
+  local registered_keys
+  registered_keys=$(gh ssh-key list)
+  registered_types=$(printf '%s\n' "$registered_keys" | awk -F'\t' -v k="$key_prefix" 'index($2, k) { print $5 }')
 
   if echo "$registered_types" | grep -qx "authentication"; then
     warn "SSH key already registered on GitHub for authentication"
