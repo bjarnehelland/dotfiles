@@ -1,0 +1,3 @@
+[user]
+	email = bjarne.helland@hederbank.no
+	signingkey = ~/.ssh/id_ed25519_heder.pub

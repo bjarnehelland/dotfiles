@@ -52,6 +52,8 @@
 	process = git-lfs filter-process
 	required = true
 
+[includeIf "gitdir/i:~/code/heder/"]
+	path = ~/.gitconfig-heder
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential

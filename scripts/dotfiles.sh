@@ -186,20 +186,29 @@ stow_dotfiles() {
 # gitconfig already enables signing and points at this file.
 configure_git_signing() {
   local signers_file="$HOME/.config/git/allowed_signers"
-  local pub
-  pub=$(cat "$HOME/.ssh/id_ed25519.pub")
-  local email
-  email=$(git config --global user.email)
-  local entry="$email $pub"
 
   mkdir -p "$(dirname "$signers_file")"
   touch "$signers_file"
 
+  add_allowed_signer "$signers_file" "$(git config --global user.email)" "$HOME/.ssh/id_ed25519.pub"
+
+  # Heder key is provisioned separately; trust it once it exists.
+  if [ -f "$HOME/.ssh/id_ed25519_heder.pub" ]; then
+    add_allowed_signer "$signers_file" \
+      "$(git config --file "$DOTFILES_DIR/stow/git/.gitconfig-heder" user.email)" \
+      "$HOME/.ssh/id_ed25519_heder.pub"
+  fi
+}
+
+add_allowed_signer() {
+  local signers_file="$1" email="$2" pub
+  pub=$(cat "$3")
+
   if grep -qF "$pub" "$signers_file"; then
-    warn "Allowed-signers already contains this key"
+    warn "Allowed-signers already contains $3"
   else
-    info "Adding SSH key to git allowed_signers..."
-    printf '%s\n' "$entry" >> "$signers_file"
+    info "Adding $3 to git allowed_signers..."
+    printf '%s %s\n' "$email" "$pub" >> "$signers_file"
     success "Allowed-signers updated"
   fi
 }
