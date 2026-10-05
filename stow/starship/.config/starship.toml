@@ -3,12 +3,6 @@ command_timeout = 2000
 [aws]
 disabled = true
 
-[custom.blocc]
-command = "blocc-env"
-detect_files = ["solution.yaml"]
-format = "🧱[$output]($style) "
-ignore_timeout = true
-
 [directory]
 style = "blue bold"
 
@@ -47,31 +41,6 @@ disabled = true
 
 [kubernetes]
 disabled = false
-
-[[kubernetes.contexts]]
-context_alias = "OPF"
-context_pattern = "k8s-flow-login-test-1-opf-stacc-dev-context"
-style = "bold green"
-
-[[kubernetes.contexts]]
-context_alias = "OPF"
-context_pattern = "scc-prod-opf-01-aks-admin"
-style = "bold red"
-
-[[kubernetes.contexts]]
-context_alias = "LBA"
-context_pattern = "k8s-login-lba-link-stacc-dev-context"
-style = "bold green"
-
-[[kubernetes.contexts]]
-context_alias = "Intrum"
-context_pattern = "intrum-stacc-dev-aks"
-style = "bold green"
-
-[[kubernetes.contexts]]
-context_alias = "Intrum"
-context_pattern = "k8s-login-intrum-dev-stacc-dev-context"
-style = "bold green"
 
 [package]
 disabled = true

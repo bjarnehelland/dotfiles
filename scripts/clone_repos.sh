@@ -9,7 +9,7 @@ set -o errexit
 set -o pipefail
 
 CODE_ROOT="${CODE_ROOT:-$HOME/Code}"
-OWNERS=("bjarnehelland" "stacc")
+OWNERS=("bjarnehelland")
 GH_LIMIT=1000
 
 reset_color=$(tput sgr 0)

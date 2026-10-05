@@ -5,8 +5,8 @@
 #   wt-clone <repo-url> [target-dir]
 #
 # Example:
-#   wt-clone git@github.com:stacc/bolig-opf.git
-#   wt-clone git@github.com:stacc/bolig-opf.git ~/code/bolig-opf
+#   wt-clone git@github.com:bjarnehelland/dotfiles.git
+#   wt-clone git@github.com:bjarnehelland/dotfiles.git ~/code/dotfiles
 
 set -euo pipefail
 
@@ -18,8 +18,8 @@ fi
 REPO_URL="$1"
 
 # Derive target dir from repo URL if not given:
-#   git@github.com:stacc/bolig-opf.git -> bolig-opf
-#   https://github.com/stacc/bolig-opf -> bolig-opf
+#   git@github.com:bjarnehelland/dotfiles.git -> dotfiles
+#   https://github.com/bjarnehelland/dotfiles -> dotfiles
 if [[ $# -eq 2 ]]; then
   TARGET="$2"
 else

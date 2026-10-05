@@ -52,8 +52,6 @@
 	process = git-lfs filter-process
 	required = true
 
-[includeIf "gitdir:~/code/stacc/"]
-	path = ~/.gitconfig-stacc
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential

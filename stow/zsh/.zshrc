@@ -3,7 +3,6 @@ alias -- ...='cd ../..'
 alias -- ....='cd ../../..'
 alias -- .....='cd ../../../..'
 alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
-alias -- bbs='bs --beta'
 alias -- c='clear'
 alias -- cl='claude'
 alias -- cla='claude agents'
@@ -36,7 +35,6 @@ alias -- vimdiff='nvim -d'
 alias -- paths="echo $PATH | tr ':' '\n' | nl"
 alias -- bpmn='files=$(fd -e bpmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{print $NF"\t"$0}'\'' | fzf --height=~50% --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
 alias -- dmn='files=$(fd -e dmn); [ -z "$files" ] && echo "🔍 no diagrams found" || { file=$(echo "$files" | awk -F/ '\''{paths[NR]=$0; files[NR]=$NF; count[$NF]++} END{for(i=1;i<=NR;i++){if(count[files[i]]>1){n=split(paths[i],a,"/"); print files[i]"\t"a[n-1]"/"a[n]"\t"paths[i]}else{print files[i]"\t"files[i]"\t"paths[i]}}}'\'' | sort -t$'\''\t'\'' -k1 | cut -f2- | fzf --height=~50% --with-nth=1 -d$'\''\t'\'' | cut -f2) && [ -n "$file" ] && open "$file"; }'
-alias -- flow-dev='bun /Users/bjarnehelland/Code/stacc/dev-server/flow-dev/src/bin.ts'
 
 # PATH and FZF_DEFAULT_OPTS moved to .zshenv so non-interactive shells get them too.
 export EDITOR=nvim
