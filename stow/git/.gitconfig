@@ -64,3 +64,9 @@
 	fetchexclude = prebuilt
 [fetch]
 	prune = true
+[credential "https://heder-bank.ghe.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.heder-bank.ghe.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

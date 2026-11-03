@@ -3,6 +3,8 @@ alias -- ...='cd ../..'
 alias -- ....='cd ../../..'
 alias -- .....='cd ../../../..'
 alias -- brewod='brew outdated | fzf --multi | xargs brew upgrade'
+alias -- ar='aspire run --apphost business-applications/src/OnlineBank.AppHost --no-build --detach'
+alias -- ab='dotnet build business-applications/OnlineBank.slnx && dotnet build Card/OnlineBank.Card.slnx'
 alias -- c='clear'
 alias -- cl='claude'
 alias -- cla='claude agents'
@@ -55,3 +57,4 @@ command -v mise >/dev/null && eval "$(mise activate zsh)"
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
 export CLAUDE_CODE_DISABLE_AUTO_MEMORY=0
 source ~/.config/television/shell/init.zsh
+export GH_HOST=heder-bank.ghe.com
