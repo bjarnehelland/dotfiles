@@ -5,7 +5,10 @@
 # Spaces are cmd+shift+1..9 and agents are in the sidebar, so neither needs a
 # picker here.
 # Bound to cmd+k as a Herdr popup, so it also works over a busy pane.
-# Outside Herdr only projects makes sense, and that falls back to cmux.
+# In Rex, cmd+k runs the "launcher" action in ~/.config/rex/init.lua, which
+# opens this in a floating pane. Projects map to Rex sessions, trees come from
+# git worktree list.
+# Outside both, only projects makes sense, and that falls back to cmux.
 
 self=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
 
@@ -34,6 +37,18 @@ list_projects() {
 }
 
 list_trees() {
+    if [ -n "$REX_SESSION" ]; then
+        # Run from the focused pane's cwd (the launcher action passes it), so
+        # this is the current repo's worktrees.
+        git worktree list --porcelain 2>/dev/null | awk -v home="$HOME" '
+            BEGIN { OFS = "\t" }
+            /^worktree / { p = substr($0, 10); b = "detached" }
+            /^branch /   { b = substr($0, 8); sub("^refs/heads/", "", b) }
+            /^$/ && p != "" { d = p; if (index(d, home) == 1) d = "~" substr(d, length(home) + 1)
+                              print "t", p, b "  " d; p = "" }
+            END { if (p != "") { d = p; if (index(d, home) == 1) d = "~" substr(d, length(home) + 1); print "t", p, b "  " d } }'
+        return
+    fi
     herdr worktree list 2>/dev/null | jq -r '
         .result.worktrees[]
         | ["t", .path, "\(.branch // "detached")  \(.label)\(if .open_workspace_id then "  (open)" else "" end)"]
@@ -99,6 +114,67 @@ open_herdr() {
     fi
 }
 
+# One row per terminal pane in every Rex session: session, block, the shell's
+# cwd, and the foreground program. The shell is the outermost process with a
+# cwd, so a pane running Claude still reports where its shell sits.
+rex_panes() {
+    local s b
+    for s in $(rex ls --json | jq -r '.sessions[].session_id'); do
+        rex block ls -s "$s" --json | jq -r --arg s "$s" '.blocks[]
+            | select(.creator_name == "com.superlogical.terminal" and .placement == "placed")
+            | [$s, .block_id] | @tsv'
+    done | while IFS=$'\t' read -r s b; do
+        [ "$b" = "$REX_BLOCK" ] && continue # this popup
+        rex block call -s "$s" -b "$b" process 2>/dev/null | jq -r --arg s "$s" --arg b "$b" '
+            ([.foreground] + (.ancestors // []) | map(select(. != null and .cwd != null)) | last) as $sh
+            | select($sh != null)
+            | [$s, $b, $sh.cwd, ((.foreground.argv0 // "") | ltrimstr("-"))] | @tsv'
+    done
+}
+
+# Switching the app's visible session is a client action, which the app only
+# accepts with Remote Control on. The popup closes when this exits, so say so.
+rex_select() {
+    rex do session.select session_id="$1" >/dev/null 2>&1 && return
+    printf 's: could not switch Rex session.\nTurn on Settings > Server > Client Info > Remote Control.\n\nPress enter to close.\n'
+    read -r _
+}
+
+open_rex() {
+    # Same rule as Herdr: the deepest session with a pane whose cwd is
+    # $selected or an ancestor. A shell sitting in ~ would match everything,
+    # so it doesn't count.
+    local selected=$1 name panes match sid cwd pane focused
+    name=$(to_title "$(basename "$selected")")
+    panes=$(rex_panes)
+    match=$(echo "$panes" | awk -F'\t' -v p="$selected" -v home="$HOME" '
+        $3 != home && $3 != "/" && ($3 == p || index(p, $3 "/") == 1) && length($3) > best { best = length($3); m = $1 "\t" $3 }
+        END { print m }')
+
+    if [ -z "$match" ]; then
+        sid=$(rex new "$name" -c "$selected" --json 2>/dev/null | jq -r '.session_id // empty')
+        [ -n "$sid" ] && rex_select "$sid"
+        return
+    fi
+
+    sid=${match%%$'\t'*}
+    cwd=${match#*$'\t'}
+    rex_select "$sid"
+    [ "$cwd" = "$selected" ] && return
+
+    # Selected path is a child of the matched session, so cd into it — but
+    # only in a pane sitting at a shell prompt, never into a running agent.
+    focused=$(rex session inspect "$sid" --json 2>/dev/null | jq -r '
+        .active_window_id as $w | .windows[] | select(.window_id == $w) | .focused_block_id // empty')
+    pane=$(echo "$panes" | awk -F'\t' -v s="$sid" -v f="$focused" '
+        $1 == s && $4 ~ /^(zsh|bash|fish|sh)$/ { if ($2 == f) { print $2; found = 1; exit } if (first == "") first = $2 }
+        END { if (!found && first != "") print first }')
+    if [ -n "$pane" ]; then
+        rex send -s "$sid" -b "$pane" "cd $(printf '%q' "$selected") && clear" >/dev/null 2>&1 &&
+            rex send-key -s "$sid" -b "$pane" enter >/dev/null 2>&1
+    fi
+}
+
 open_cmux() {
     local selected=$1 name workspaces path existing segment title suffix ref
     name=$(to_title "$(basename "$selected")")
@@ -145,8 +221,8 @@ open_tree() {
     fi
 }
 
-# Outside Herdr the worktree source is empty, so keep the plain picker.
-if [ -z "$HERDR_ENV" ]; then
+# Outside Herdr and Rex the worktree source is empty, so keep the plain picker.
+if [ -z "$HERDR_ENV" ] && [ -z "$REX_SESSION" ]; then
     selected=$(list_projects | cut -f3 | fzf | sed "s|^~|$HOME|")
     [ -n "$selected" ] && open_cmux "$selected"
     exit 0
@@ -166,7 +242,12 @@ row=$(list_projects | fzf \
 mode=$(echo "$row" | cut -f1)
 payload=$(echo "$row" | cut -f2)
 
-case "$mode" in
-    p) open_herdr "$payload" ;;
-    t) open_tree "$payload" ;;
-esac
+if [ -n "$HERDR_ENV" ]; then
+    case "$mode" in
+        p) open_herdr "$payload" ;;
+        t) open_tree "$payload" ;;
+    esac
+else
+    # A worktree is just another directory to Rex.
+    open_rex "$payload"
+fi
