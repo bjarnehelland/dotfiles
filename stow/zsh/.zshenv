@@ -6,6 +6,10 @@
 typeset -U path PATH
 path=("$HOME/.local/bin" "$HOME/.config/bin" /opt/homebrew/bin /opt/homebrew/sbin "$HOME/.dotnet/tools" $path)
 
+# pnpm: globally installed packages (`pnpm add -g`) land in $PNPM_HOME/bin.
+export PNPM_HOME="$HOME/Library/pnpm"
+path=("$PNPM_HOME/bin" $path)
+
 # .NET: global tools (`dotnet tool install -g`) land in ~/.dotnet/tools above.
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_NOLOGO=1

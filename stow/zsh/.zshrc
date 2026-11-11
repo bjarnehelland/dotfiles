@@ -58,3 +58,7 @@ command -v mise >/dev/null && eval "$(mise activate zsh)"
 export CLAUDE_CODE_DISABLE_AUTO_MEMORY=0
 source ~/.config/television/shell/init.zsh
 export GH_HOST=heder-bank.ghe.com
+
+# Load SSH keys from the macOS Keychain into the agent, so git commit signing
+# never prompts for a passphrase (the agent starts empty after a reboot).
+ssh-add --apple-load-keychain -q 2>/dev/null
